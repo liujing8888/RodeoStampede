@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>疯狂动物园 · 官方玩家社区</title>
+  <link rel="icon" id="favicon" href="assets/logo.svg">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body id="top">
+
+  <!-- 顶部公告条 -->
+  <div class="promo-bar"><span id="promoText"></span><a href="#versions">查看版本动态 →</a></div>
+
+  <!-- 导航栏：logo + 三个栏目 + 右上角搜索 -->
+  <header class="nav">
+    <a class="nav__logo" href="#top">
+      <img id="navLogoImg" src="assets/logo.svg" alt="疯狂动物园 logo">
+      <img data-slot="brand:logo" alt="" class="nav__logo-up">
+      <span id="navTitle">疯狂动物园</span>
+    </a>
+    <nav class="nav__links">
+      <a href="#wallpapers" id="navPromo">宣传图</a>
+      <a href="#creators" id="navCreator">优秀创作者</a>
+      <a href="#social" id="navSocial">社区社媒</a>
+      <a href="#checkin" id="navCheckin">到此一游</a>
+    </nav>
+    <div class="nav__search">
+      <input id="searchInput" type="search" placeholder="🔍 搜索动物，如：黄金·狮子" autocomplete="off">
+      <div class="search-results" id="searchResults"></div>
+    </div>
+    <button class="nav__burger" id="navBurger" aria-label="菜单">☰</button>
+  </header>
+
+  <!-- 首屏：顶部宣传图 -->
+  <section class="hero">
+    <img class="hero__banner" src="assets/banner.svg" alt="">
+    <img class="hero__banner-up" data-slot="brand:banner" alt="">
+    <div class="hero__inner">
+      <img class="hero__logo" src="assets/logo.svg" alt="logo">
+      <img class="hero__logo-up" data-slot="brand:logo" alt="">
+      <h1 id="heroTitle">疯狂动物园</h1>
+      <p id="heroSub"></p>
+      <div class="hero__btns">
+        <a class="btn btn--primary btn--lg" href="#codex">📖 进入图鉴</a>
+        <a class="btn btn--ghost btn--lg" href="#versions">🆕 版本动态</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 版本动态：活动图板块，点开看详情 -->
+  <section class="section" id="versions">
+    <div class="section__head"><h2>版本动态</h2><p class="section__desc">点击活动图查看版本详细内容</p></div>
+    <div class="ver-grid" id="versionGrid"></div>
+  </section>
+
+  <!-- 动物图鉴 -->
+  <section class="section section--alt" id="codex">
+    <div class="section__head"><h2>动物图鉴</h2><p class="section__desc" id="codexDesc">10 个区域 · 200 个物种 · 4000 个个体，每个物种包含 20 种不同个体</p></div>
+    <div class="cat-tabs" id="catTabs"></div>
+    <div class="filters" id="subTabs"></div>
+    <div class="sp-batchbar is-hidden" id="spBatchBar"></div>
+    <div class="species-grid" id="speciesGrid"></div>
+  </section>
+
+  <!-- 宣传图：3 张 16:9 轮播 -->
+  <section class="section" id="wallpapers">
+    <div class="section__head"><h2 id="secPromoTitle">宣传图</h2><p class="section__desc">16:9 高清宣传图，左右切换或等待自动轮播</p></div>
+    <div class="carousel" id="carousel">
+      <div class="carousel__track" id="carTrack"></div>
+      <button class="carousel__btn carousel__btn--prev" id="carPrev" aria-label="上一张">‹</button>
+      <button class="carousel__btn carousel__btn--next" id="carNext" aria-label="下一张">›</button>
+      <div class="carousel__dots" id="carDots"></div>
+    </div>
+  </section>
+
+  <!-- 优秀创作者 -->
+  <section class="section section--alt" id="creators">
+    <div class="section__head"><h2 id="secCreTitle">优秀创作者</h2><p class="section__desc">攻略、视频、数据、同人……感谢社区的每一位伙伴</p></div>
+    <div class="creator-grid" id="creatorGrid"></div>
+  </section>
+
+  <!-- 社区社媒 -->
+  <section class="section" id="social">
+    <div class="section__head"><h2 id="secSocTitle">社区社媒</h2><p class="section__desc">关注官方账号，获取活动福利与最新情报</p></div>
+    <div class="social-grid" id="socialGrid"></div>
+  </section>
+
+  <!-- 到此一游 · 全屏打卡纪念 -->
+  <section class="section checkin" id="checkin">
+    <div class="checkin__bg" aria-hidden="true">
+      <span class="checkin__orb checkin__orb--1"></span>
+      <span class="checkin__orb checkin__orb--2"></span>
+      <span class="checkin__orb checkin__orb--3"></span>
+      <span class="checkin__star" style="--x:8%;--y:18%;--d:0s"></span>
+      <span class="checkin__star" style="--x:22%;--y:62%;--d:1.2s"></span>
+      <span class="checkin__star" style="--x:40%;--y:30%;--d:.6s"></span>
+      <span class="checkin__star" style="--x:58%;--y:72%;--d:2s"></span>
+      <span class="checkin__star" style="--x:72%;--y:22%;--d:1.6s"></span>
+      <span class="checkin__star" style="--x:86%;--y:54%;--d:.9s"></span>
+      <span class="checkin__star" style="--x:92%;--y:84%;--d:2.4s"></span>
+    </div>
+    <div class="checkin__inner">
+      <div class="checkin__cowboy" id="checkinCowboy">🤠</div>
+      <p class="checkin__eyebrow">— 疯狂动物园 · 牛仔纪念打卡 —</p>
+      <h2 class="checkin__title">你是第 <span class="checkin__num" id="checkinNum">?</span> 位<br>光临动物园的<b>牛仔</b>！</h2>
+      <p class="checkin__sub" id="checkinSub">点击下方按钮，在牛仔名册上留下你的足迹</p>
+      <button class="checkin__btn" id="checkinBtn">🤠 我也要打卡</button>
+      <p class="checkin__hint" id="checkinHint"></p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <img src="assets/logo.svg" alt="" class="footer__logo">
+    <img data-slot="brand:logo" alt="" class="footer__logo-up">
+    <div class="footer__name" id="footerTitle">疯狂动物园</div>
+    <p>玩家社区网站 · 由社区共同维护</p>
+  </footer>
+
+  <!-- 右下角客服对话框 -->
+  <button class="chat-fab" id="chatFab" aria-label="客服">💬</button>
+  <div class="chat-panel" id="chatPanel">
+    <div class="chat-panel__head">
+      <span class="chat-panel__dot"></span> 在线客服
+      <button class="chat-panel__close" id="chatClose" aria-label="关闭">×</button>
+    </div>
+    <div class="chat-panel__body">
+      <div class="chat-msg chat-msg--bot">你好，园长！这里是疯狂动物园客服 🦁<br>请选择下方任意方式联系我们：</div>
+      <div class="chat-contacts" id="chatContacts"></div>
+    </div>
+  </div>
+
+  <!-- 编辑模式浮动按钮（左下角） -->
+  <div class="admin-fabs" id="adminFabs">
+    <button class="admin-fab" id="adminToggle" title="编辑网站">🛠</button>
+    <button class="admin-fab admin-fab--sub is-hidden" id="adminOpenPanel" title="管理面板">⚙</button>
+    <button class="admin-fab admin-fab--sub is-hidden" id="adminExit" title="退出编辑">✕</button>
+  </div>
+  <div class="edit-tip is-hidden" id="editTip">编辑模式已开启：图鉴分类/下级分类旁有 ✎改名、🗑删除；物种可改名、删除、批量传图；个体名字可直接修改</div>
+
+  <!-- 管理面板模态 -->
+  <div class="modal" id="adminModal" aria-hidden="true">
+    <div class="modal__backdrop" data-am-close></div>
+    <div class="modal__panel modal__panel--admin" role="dialog" aria-modal="true">
+      <button class="modal__close" data-am-close aria-label="关闭">×</button>
+      <h3 class="modal__title">网站管理面板</h3>
+      <div id="adminPanelBody"></div>
+    </div>
+  </div>
+
+  <!-- 编辑模式登录弹窗 -->
+  <div class="modal" id="loginModal" aria-hidden="true">
+    <div class="modal__backdrop" data-lm-close></div>
+    <div class="modal__panel modal__panel--login" role="dialog" aria-modal="true">
+      <button class="modal__close" data-lm-close aria-label="关闭">×</button>
+      <h3 class="modal__title">🔑 进入编辑模式</h3>
+      <p class="login-hint">请输入编辑密码（默认 <b>admin</b>）</p>
+      <input type="password" id="loginPassInput" class="login-input" placeholder="编辑密码" autocomplete="off" />
+      <p class="login-err is-hidden" id="loginErr">密码不正确，请重试</p>
+      <div class="login-actions">
+        <button class="btn btn--ghost" data-lm-close>取消</button>
+        <button class="btn btn--primary" id="loginGo">进入编辑模式</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 物种个体模态 -->
+  <div class="modal" id="speciesModal" aria-hidden="true">
+    <div class="modal__backdrop" data-close></div>
+    <div class="modal__panel modal__panel--wide" role="dialog" aria-modal="true">
+      <button class="modal__close" data-close aria-label="关闭">×</button>
+      <div id="speciesModalBody"></div>
+    </div>
+  </div>
+
+  <!-- 版本详情模态 -->
+  <div class="modal" id="versionModal" aria-hidden="true">
+    <div class="modal__backdrop" data-close></div>
+    <div class="modal__panel modal__panel--wide" role="dialog" aria-modal="true">
+      <button class="modal__close" data-close aria-label="关闭">×</button>
+      <div id="versionModalBody"></div>
+    </div>
+  </div>
+
+  <!-- 灯箱 -->
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <div class="lightbox__backdrop" data-close></div>
+    <button class="lightbox__close" data-close aria-label="关闭">×</button>
+    <img class="lightbox__img" id="lightboxImg" alt="">
+    <p class="lightbox__cap" id="lightboxCap"></p>
+  </div>
+
+  <!-- 通用输入弹窗（替代浏览器 prompt） -->
+  <div class="modal" id="askModal" aria-hidden="true">
+    <div class="modal__backdrop" data-ask-close></div>
+    <div class="modal__panel modal__panel--ask" role="dialog" aria-modal="true">
+      <h3 class="modal__title" id="askTitle">请输入</h3>
+      <input type="text" id="askInput" class="ask-input" placeholder="">
+      <div class="ask-actions">
+        <button class="btn btn--ghost btn--sm" id="askCancel">取消</button>
+        <button class="btn btn--primary btn--sm" id="askOk">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 通用确认弹窗（替代浏览器 confirm） -->
+  <div class="modal" id="confirmModal" aria-hidden="true">
+    <div class="modal__backdrop" data-confirm-close></div>
+    <div class="modal__panel modal__panel--ask" role="dialog" aria-modal="true">
+      <h3 class="modal__title">请确认</h3>
+      <p class="confirm-text" id="confirmText"></p>
+      <div class="ask-actions">
+        <button class="btn btn--ghost btn--sm" id="confirmCancel">取消</button>
+        <button class="btn btn--danger btn--sm" id="confirmOk">删除</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 移动物种到其他飞船 / 分类 -->
+  <div class="modal" id="moveSpModal" aria-hidden="true">
+    <div class="modal__backdrop" data-ms-close></div>
+    <div class="modal__panel modal__panel--ask" role="dialog" aria-modal="true">
+      <button class="modal__close" data-ms-close aria-label="关闭">×</button>
+      <h3 class="modal__title">移动物种到其他位置</h3>
+      <p class="modal__sub" id="moveSpName"></p>
+      <label class="fld"><span>目标分类（飞船）</span>
+        <select id="moveCatSel" class="sel"></select>
+      </label>
+      <label class="fld" id="moveSubWrap"><span>目标下级分类</span>
+        <select id="moveSubSel" class="sel"></select>
+      </label>
+      <div class="ask-actions">
+        <button class="btn btn--ghost btn--sm" data-ms-close>取消</button>
+        <button class="btn btn--primary btn--sm" id="moveSpConfirm">确认移动</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 移动个体到其他物种 -->
+  <div class="modal" id="moveVaModal" aria-hidden="true">
+    <div class="modal__backdrop" data-mv-close></div>
+    <div class="modal__panel modal__panel--ask" role="dialog" aria-modal="true">
+      <button class="modal__close" data-mv-close aria-label="关闭">×</button>
+      <h3 class="modal__title">移动个体到其他物种</h3>
+      <p class="modal__sub" id="moveVaName"></p>
+      <label class="fld"><span>目标分类（飞船）</span>
+        <select id="moveVaCatSel" class="sel"></select>
+      </label>
+      <label class="fld" id="moveVaSubWrap"><span>目标下级分类</span>
+        <select id="moveVaSubSel" class="sel"></select>
+      </label>
+      <label class="fld"><span>目标物种</span>
+        <select id="moveVaSpSel" class="sel"></select>
+      </label>
+      <div class="ask-actions">
+        <button class="btn btn--ghost btn--sm" data-mv-close>取消</button>
+        <button class="btn btn--primary btn--sm" id="moveVaConfirm">确认移动</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/checkin.js"></script>
+</body>
+</html>

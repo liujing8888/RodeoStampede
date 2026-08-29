@@ -1,0 +1,7 @@
+node_modules/
+*.log
+.DS_Store
+.workbuddy/
+# 不入库：弱密码文件、自动备份
+data/admin_pw.txt
+data/taxonomy.backup_*.json

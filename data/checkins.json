@@ -1,0 +1,35 @@
+[
+  {
+    "id": "d_mtegexnv_wn1dyviu",
+    "seq": 1,
+    "deviceType": "desktop",
+    "brand": "Windows",
+    "model": "",
+    "osVersion": "",
+    "locations": [
+      "#wallpapers",
+      "#creators",
+      "#codex",
+      "#versions",
+      "#social",
+      "#checkin"
+    ],
+    "visits": 6,
+    "firstAt": "2026-08-29T14:06:34.988Z",
+    "lastAt": "2026-08-29T14:06:55.775Z"
+  },
+  {
+    "id": "sec_test",
+    "seq": 2,
+    "deviceType": "desktop",
+    "brand": "Test",
+    "model": "",
+    "osVersion": "",
+    "locations": [
+      "#checkin"
+    ],
+    "visits": 1,
+    "firstAt": "2026-08-29T14:15:55.695Z",
+    "lastAt": "2026-08-29T14:15:55.695Z"
+  }
+]

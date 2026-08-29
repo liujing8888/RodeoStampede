@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: crazy-zoo-site
+    runtime: node
+    plan: free
+    branch: main
+    buildCommand: "node -e \"console.log('noop')\""
+    startCommand: "node server.js"
+    healthCheckPath: /api/ping
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: DATA_DIR
+        value: /var/data
+    disk:
+      name: zoo-data
+      mountPath: /var/data
+      sizeGB: 2

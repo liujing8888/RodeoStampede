@@ -210,12 +210,16 @@ const IMG = {
     return blob;
   },
   async set(id, blob){
-    let ok = false;
     if(API_OK){
-      try{ ok = (await fetch("/api/img/" + encodeURIComponent(id), { method:"PUT", headers: zooAuthHeaders(), body: blob })).ok; }
-      catch(e){ ok = false; }
+      try{
+        const r = await fetch("/api/img/" + encodeURIComponent(id), { method:"PUT", headers: zooAuthHeaders(), body: blob });
+        if(r.ok){ blobCache.set(id, blob); urlCache.delete(id); return true; }
+        /* 服务器可达但写入失败（多为未登录 / token 失效）→ 明确失败，不静默存本地 */
+        return false;
+      }catch(e){ return false; }
     }
-    if(!ok) ok = await idbSet(id, blob);   /* 服务器不可用时回退浏览器 */
+    /* 仅当服务器完全不可达时，才回退浏览器本地，避免数据彻底丢失 */
+    const ok = await idbSet(id, blob);
     if(ok){ blobCache.set(id, blob); urlCache.delete(id); }
     return ok;
   },
@@ -276,12 +280,16 @@ function pickFiles(accept, multiple){
 }
 
 async function uploadToSlot(slot, refresh){
+  if(!window.ADMIN_TOKEN){
+    toast("请先在右上角 🛠 登录编辑模式，再上传图片（否则无法保存到云端）");
+    return;
+  }
   const f = await pickFile("image/*");
   if(!f) return;
   const ok = await IMG.set(slot, f);
   toast(ok
-    ? (API_OK ? "图片已上传（已保存到服务器磁盘，不会丢失）" : "图片已上传（保存在本浏览器）")
-    : "上传失败");
+    ? "图片已保存到云端服务器，不会丢失 ✅"
+    : (API_OK ? "上传失败：请确认已登录编辑模式后重试" : "服务器不可达，图片已临时存本浏览器"));
   if(ok){
     if(slot === "brand:icon") applyFavicon();
     if(refresh) refresh(); else applyImages(document);

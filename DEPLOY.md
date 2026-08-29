@@ -18,6 +18,52 @@
 
 ---
 
+### 🚀 最省事路径：Git 推仓库（免装任何 CLI，强烈推荐）
+
+不想下载 railway.exe / 装 Node？走这条：Agent 已经在本项目完成了本地 `git init` + 首次提交（共 **1085 个文件**，含 923 张图与全部代码），你**只差最后一步 `git push`**，然后让平台连 GitHub 仓库自动部署。
+
+> **前提：本机必须有 git**。按下面顺序做，通常能省掉下载：
+> 1. **先查是否已装（0 下载）**：点开始菜单搜 **"Git Bash"**，若搜到 → 直接打开它（里面自带 git，无需安装）。或在 PowerShell 跑 `where git` 看是否返回路径。若已有 git，直接跳到下面的 push 步骤即可（注意：Git Bash 里路径写作 `/f/网站`，不是 `F:\网站`）。
+> 2. **若确实没装，用直链下载（点开即下载，不是目录页、不乱码）**：
+>    - 国内镜像（快）：`https://registry.npmmirror.com/-/binary/git-for-windows/v2.55.0.windows.5/Git-2.55.0.5-64-bit.exe`
+>    - 官方 GitHub（慢但稳）：`https://github.com/git-for-windows/git/releases/download/v2.55.0.windows.5/Git-2.55.0.5-64-bit.exe`
+>    - 下载后双击安装，一路 Next，**保持勾选「Add Git to the PATH」**（默认已勾），装完**重开 PowerShell**。
+> 3. 验证：重开 PowerShell 后跑 `git --version` 能看到版本号即成功。
+> - （`winget install --id Git.Git` 也可用，但 winget 默认从 GitHub 拉安装包，在国内可能也慢，故优先用上面的镜像 exe。）
+
+1. **建 GitHub 仓库**（在浏览器里操作，约 1 分钟）：
+   - 打开 https://github.com 并登录。若无账号先去 https://github.com/signup 用邮箱注册（免费、免手机）。
+   - 右上角点 **"+"** → 选 **"New repository"**。
+   - **Repository name**：填一个英文名，如 `crazy-zoo-site`（**不能含中文、空格、中文标点**）。
+   - **Description**：可留空，或写「疯狂动物园社区站」。
+   - 可见性选 **Public**（免费托管推荐；Private 也行，但要在平台授权时允许访问）。
+   - ⚠️ **不要**勾选下面的 "Add a README file" / "Add .gitignore" / "Choose a license"——因为本地已有完整项目，勾了会生成初始文件导致 push 冲突。
+   - 点 **"Create repository"**。
+   - 创建成功后页面会显示仓库地址，形如 `https://github.com/你的用户名/crazy-zoo-site.git`，**复制这一行**（后面要用）。
+2. **在你电脑 PowerShell 推送**：
+   ```powershell
+   cd F:\网站
+   git remote add origin https://github.com/你的用户名/crazy-zoo-site.git
+   git push -u origin master
+   ```
+   > 🔑 **认证坑（必看）**：GitHub 已不支持用「账号密码」push。若弹窗提示输入用户名/密码，**密码那一项要填 Personal Access Token（PAT）**，不是你的登录密码。
+   > 生成 PAT：登录 GitHub → 右上角头像 → **Settings** → 左侧最下方 **Developer settings** → **Personal access tokens** → **Tokens (classic)** → **Generate new token (classic)** → Note 随便填（如 `zoo-deploy`）→ **Expiration** 选 No expiration（或 90 days）→ 勾选 **repo**（全选该组）→ 拉到底点 **Generate token** → **立刻复制**那串 `ghp_xxx`（只显示一次）。
+   > 把 PAT 当密码粘贴即可。若想免去每次输入，可改用 SSH 密钥（进阶，需要再说）。
+3. **Railway 网页部署（免 CLI，推荐）**：
+   1. 打开 https://railway.app 登录（你邮箱注册的账号）。
+   2. 点 **New Project** → 选 **Deploy from GitHub repo**。
+   3. 首次会要求 **Connect GitHub**：点它 → 跳 GitHub 授权页 → 登录你的账号 → 授权 Railway 访问仓库（选 RodeoStampede 或 All repositories）。
+   4. 选 **RodeoStampede** 仓库 → Railway 自动 Build & Deploy（读 `package.json` 的 `npm start` 启动 `node server.js`）。
+   5. 部署完成后，项目 → **Settings** 可见分配的域名 `*.up.railway.app`，直接可访问。
+   6. **挂持久卷（防丢数据）**：项目 → **Volumes** → New Volume，Mount Path 填 `/data`，大小 1–2 GB。
+   7. **设环境变量**：项目 → **Variables** 加：`DATA_DIR` = `/data`；`SITE_ADMIN_PW` = 你的强密码（公开前必改）。
+   8. 改完点 **Redeploy**。服务首次启动检测到 `/data` 为空，会自动把内置 `data/` 复制进卷（日志可见 `已用内置 data/ 初始化持久卷`）。
+4. **Render 备选**：New Web Service → 连 GitHub 仓库（详见路线 B）。
+
+> 注：本地提交已忽略 `data/admin_pw.txt`（弱密码文件）与自动备份；部署后请用 `SITE_ADMIN_PW` 环境变量设强密码。
+
+---
+
 ## 二、路线 A：Railway（推荐，免 GitHub）
 
 ### 1. 准备（注册 Railway 账号，免 GitHub）

@@ -191,7 +191,7 @@ const server = http.createServer(async (req, res) => {
         if (fs.existsSync(f) && fs.statSync(f).isFile()) {
           res.writeHead(200, {
             "Content-Type": "image/png",
-            "Cache-Control": "no-store",
+            "Cache-Control": "public, max-age=86400",
             "Access-Control-Allow-Origin": "*"
           });
           return fs.createReadStream(f).pipe(res);

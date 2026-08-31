@@ -11,6 +11,7 @@
       },
       "Condition": {
         "StringEquals": {
+          "oidc:iss": "https://token.actions.githubusercontent.com",
           "oidc:aud": "sts.aliyuncs.com",
           "oidc:sub": "repo:Yodo1Games/Rodeo-CN-social-media:ref:refs/heads/main"
         }

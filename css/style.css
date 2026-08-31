@@ -376,6 +376,8 @@ body.is-edit .sp-card__media,body.is-edit .v-card__media{outline:2px dashed rgba
 .checkin__btn:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 14px 42px rgba(255,138,61,.75)}
 .checkin__btn:disabled{opacity:.72;cursor:default;transform:none}
 .checkin__hint{margin-top:18px;font-size:.85rem;color:#b9b2e0;min-height:1.2em}
+.fx-canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:9999}
+@media (prefers-reduced-motion: reduce){.fx-canvas{display:none}}
 
 /* ---------- 到此一游 · 管理面板数据 ---------- */
 .ck-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}

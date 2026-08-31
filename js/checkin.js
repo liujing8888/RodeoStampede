@@ -94,10 +94,105 @@
     requestAnimationFrame(step);
   }
 
+  /* ---------- 打卡音效（Web Audio 合成钟声，无外部音频文件） ---------- */
+  let _ac = null;
+  function getAC() {
+    if (!_ac) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return null;
+      _ac = new AC();
+    }
+    if (_ac.state === "suspended") _ac.resume();
+    return _ac;
+  }
+  function bellStrike(ac, t0, base) {
+    const partials = [
+      { r: 1.0,  g: 0.50, d: 1.6 },
+      { r: 2.0,  g: 0.22, d: 1.1 },
+      { r: 2.76, g: 0.16, d: 0.8 },
+      { r: 3.94, g: 0.10, d: 0.6 },
+      { r: 5.40, g: 0.05, d: 0.45 }
+    ];
+    partials.forEach(function (p) {
+      const osc = ac.createOscillator();
+      const gain = ac.createGain();
+      osc.type = "sine";
+      osc.frequency.value = base * p.r;
+      gain.gain.setValueAtTime(0.0001, t0);
+      gain.gain.exponentialRampToValueAtTime(p.g, t0 + 0.006);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t0 + p.d);
+      osc.connect(gain).connect(ac.destination);
+      osc.start(t0);
+      osc.stop(t0 + p.d + 0.05);
+    });
+  }
+  function playBell() {
+    const ac = getAC();
+    if (!ac) return;
+    const now = ac.currentTime;
+    bellStrike(ac, now, 523.25);        // C5
+    bellStrike(ac, now + 0.22, 783.99); // G5 —— 叮·咚 钟声
+  }
+
+  /* ---------- 烟花特效（Canvas 粒子，无图片资源） ---------- */
+  let _fx = null;
+  function getFxCanvas() {
+    if (_fx) return _fx;
+    const c = document.createElement("canvas");
+    c.className = "fx-canvas";
+    document.body.appendChild(c);
+    _fx = c;
+    return c;
+  }
+  function launchFireworks() {
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const c = getFxCanvas();
+    const ctx = c.getContext("2d");
+    c.width = window.innerWidth;
+    c.height = window.innerHeight;
+    const parts = [];
+    const colors = ["#ffd24a", "#ff6b9d", "#4f8ef7", "#7CFFB2", "#ff8a3d", "#c98bff"];
+    function burst(x, y) {
+      const n = 26 + Math.floor(Math.random() * 14);
+      const col = colors[Math.floor(Math.random() * colors.length)];
+      for (let i = 0; i < n; i++) {
+        const a = (Math.PI * 2 * i) / n + Math.random() * 0.3;
+        const sp = 2 + Math.random() * 4;
+        parts.push({ x: x, y: y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, life: 1, col: col });
+      }
+    }
+    burst(c.width * 0.5, c.height * 0.4);
+    setTimeout(function () { burst(c.width * 0.28, c.height * 0.5); }, 180);
+    setTimeout(function () { burst(c.width * 0.72, c.height * 0.46); }, 340);
+    const t0 = performance.now();
+    const dur = 1600;
+    function frame(now) {
+      const p = (now - t0) / dur;
+      ctx.clearRect(0, 0, c.width, c.height);
+      for (let i = parts.length - 1; i >= 0; i--) {
+        const pt = parts[i];
+        pt.x += pt.vx; pt.y += pt.vy;
+        pt.vy += 0.045; pt.vx *= 0.99; pt.vy *= 0.99;
+        pt.life -= 0.012;
+        if (pt.life <= 0) { parts.splice(i, 1); continue; }
+        ctx.globalAlpha = Math.max(0, pt.life);
+        ctx.fillStyle = pt.col;
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, 2.4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+      if (p < 1 || parts.length) requestAnimationFrame(frame);
+      else ctx.clearRect(0, 0, c.width, c.height);
+    }
+    requestAnimationFrame(frame);
+  }
+
   /* ---------- 打卡 ---------- */
   async function doCheckin() {
     const btn = document.getElementById("checkinBtn");
     if (btn) { btn.disabled = true; btn.textContent = "打卡中…"; }
+    try { getAC(); } catch (e) {}
     const dev = detectDevice();
     trackLocation();
     visited.add("#checkin");
@@ -143,6 +238,8 @@
     try { localStorage.setItem("zooCheckedIn", String(seq)); } catch (e) {}
     const cow = document.getElementById("checkinCowboy");
     if (cow) { cow.classList.remove("is-pop"); void cow.offsetWidth; cow.classList.add("is-pop"); }
+    playBell();
+    launchFireworks();
   }
 
   function initCheckin() {

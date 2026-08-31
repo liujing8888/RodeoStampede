@@ -1,9 +1,0 @@
-{
-  "name": "saveImage",
-  "version": "1.0.0",
-  "description": "保存图片 slot->fileID 映射",
-  "main": "index.js",
-  "dependencies": {
-    "wx-server-sdk": "~2.6.3"
-  }
-}

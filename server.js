@@ -21,6 +21,23 @@ const DATA_DIR = process.env.DATA_DIR ? path.resolve(process.env.DATA_DIR) : pat
 const IMG_DIR = path.join(DATA_DIR, "img");
 fs.mkdirSync(IMG_DIR, { recursive: true });
 
+const CORS_ORIGINS = (process.env.CORS_ORIGINS || "*")
+  .split(",")
+  .map(v => v.trim())
+  .filter(Boolean);
+
+function applyCors(req, res) {
+  const requestOrigin = req.headers.origin || "";
+  const allowOrigin = CORS_ORIGINS.includes("*")
+    ? "*"
+    : (CORS_ORIGINS.includes(requestOrigin) ? requestOrigin : "");
+  if (allowOrigin) res.setHeader("Access-Control-Allow-Origin", allowOrigin);
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, X-Admin-Token");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.setHeader("Access-Control-Max-Age", "600");
+  if (requestOrigin && allowOrigin !== "*") res.setHeader("Vary", "Origin");
+}
+
 const MIME = {
   ".html": "text/html; charset=utf-8",
   ".css": "text/css; charset=utf-8",
@@ -39,8 +56,7 @@ function send(res, code, body, type) {
   const buf = Buffer.isBuffer(body) ? body : Buffer.from(String(body));
   res.writeHead(code, {
     "Content-Type": type || "text/plain; charset=utf-8",
-    "Content-Length": buf.length,
-    "Access-Control-Allow-Origin": "*"
+    "Content-Length": buf.length
   });
   res.end(buf);
 }
@@ -81,8 +97,14 @@ function deny(res) {
 
 const server = http.createServer(async (req, res) => {
   try {
+    applyCors(req, res);
     const url = new URL(req.url, "http://localhost");
     const p = url.pathname;
+
+    if (req.method === "OPTIONS") {
+      res.writeHead(204, { "Content-Length": "0" });
+      return res.end();
+    }
 
     /* ---------- API ---------- */
     if (p === "/api/ping") return send(res, 200, "ok");
@@ -191,8 +213,7 @@ const server = http.createServer(async (req, res) => {
         if (fs.existsSync(f) && fs.statSync(f).isFile()) {
           res.writeHead(200, {
             "Content-Type": "image/png",
-            "Cache-Control": "public, max-age=86400",
-            "Access-Control-Allow-Origin": "*"
+            "Cache-Control": "public, max-age=86400"
           });
           return fs.createReadStream(f).pipe(res);
         }

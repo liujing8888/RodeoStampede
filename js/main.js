@@ -969,7 +969,7 @@ async function tryLogin(){
   const pw = loginInput.value;
   if(!pw){ loginErr.textContent = "请输入密码"; loginErr.classList.remove("is-hidden"); return; }
   try{
-    const r = await fetch("/api/login", { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ password: pw }) });
+    const r = await zooApiFetch("/api/login", { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ password: pw }) });
     if(r.ok){
       window.ADMIN_TOKEN = pw;
       sessionStorage.setItem("zooToken", pw);

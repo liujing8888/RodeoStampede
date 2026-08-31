@@ -1,0 +1,87 @@
+name: Deploy frontend to Alibaba OSS
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - index.html
+      - css/**
+      - js/**
+      - assets/**
+      - .github/workflows/deploy-frontend.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: rodeo-social-frontend-production
+  cancel-in-progress: true
+
+env:
+  ALIYUN_REGION: cn-beijing
+  OSS_BUCKET: bj-ali-cdn-rodeosocial-static
+  CDN_DOMAIN: rodeosocial.yodo1.cn
+  ALIYUN_ROLE_ARN: acs:ram::34737237:role/rodeosocialgithubactions
+  OIDC_PROVIDER_ARN: acs:ram::34737237:oidc-provider/github-actions-rodeosocial
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure Alibaba Cloud OIDC credentials
+        uses: aliyun/configure-aliyun-credentials-action@v1
+        with:
+          role-to-assume: ${{ env.ALIYUN_ROLE_ARN }}
+          oidc-provider-arn: ${{ env.OIDC_PROVIDER_ARN }}
+          audience: sts.aliyuncs.com
+
+      - name: Install Alibaba Cloud CLI
+        shell: bash
+        run: |
+          set -euo pipefail
+          cli_dir="$RUNNER_TEMP/aliyun-cli"
+          mkdir -p "$cli_dir"
+          curl -fsSL https://aliyuncli.alicdn.com/aliyun-cli-linux-latest-amd64.tgz -o "$RUNNER_TEMP/aliyun-cli.tgz"
+          tar -xzf "$RUNNER_TEMP/aliyun-cli.tgz" -C "$cli_dir"
+          install -m 0755 "$cli_dir/aliyun" "$RUNNER_TEMP/aliyun"
+          echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
+
+      - name: Upload static files
+        shell: bash
+        run: |
+          set -euo pipefail
+          aliyun_cmd() {
+            aliyun \
+              --mode StsToken \
+              --access-key-id "$ALIBABA_CLOUD_ACCESS_KEY_ID" \
+              --access-key-secret "$ALIBABA_CLOUD_ACCESS_KEY_SECRET" \
+              --sts-token "$ALIBABA_CLOUD_SECURITY_TOKEN" \
+              "$@"
+          }
+          aliyun_cmd oss cp index.html "oss://$OSS_BUCKET/index.html" -f --region "$ALIYUN_REGION" --meta "Cache-Control:no-cache"
+          aliyun_cmd oss cp css/ "oss://$OSS_BUCKET/css/" -r -f --region "$ALIYUN_REGION" --meta "Cache-Control:public,max-age=300"
+          aliyun_cmd oss cp js/ "oss://$OSS_BUCKET/js/" -r -f --region "$ALIYUN_REGION" --meta "Cache-Control:public,max-age=300"
+          aliyun_cmd oss cp assets/ "oss://$OSS_BUCKET/assets/" -r -f --region "$ALIYUN_REGION" --meta "Cache-Control:public,max-age=86400"
+
+      - name: Refresh CDN cache
+        shell: bash
+        run: |
+          set -euo pipefail
+          aliyun_cmd() {
+            aliyun \
+              --mode StsToken \
+              --access-key-id "$ALIBABA_CLOUD_ACCESS_KEY_ID" \
+              --access-key-secret "$ALIBABA_CLOUD_ACCESS_KEY_SECRET" \
+              --sts-token "$ALIBABA_CLOUD_SECURITY_TOKEN" \
+              "$@"
+          }
+          aliyun_cmd cdn RefreshObjectCaches --ObjectPath "https://$CDN_DOMAIN/index.html" --ObjectType File --Force true
+          aliyun_cmd cdn RefreshObjectCaches --ObjectPath "https://$CDN_DOMAIN/css/" --ObjectType Directory --Force true
+          aliyun_cmd cdn RefreshObjectCaches --ObjectPath "https://$CDN_DOMAIN/js/" --ObjectType Directory --Force true
+          aliyun_cmd cdn RefreshObjectCaches --ObjectPath "https://$CDN_DOMAIN/assets/" --ObjectType Directory --Force true

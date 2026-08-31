@@ -1,0 +1,63 @@
+{
+  "Version": "1",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "oss:ListObjects",
+        "oss:GetBucketInfo"
+      ],
+      "Resource": [
+        "acs:oss:*:*:bj-ali-cdn-rodeosocial-static"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "oss:PutObject",
+        "oss:HeadObject",
+        "oss:GetObject"
+      ],
+      "Resource": [
+        "acs:oss:*:*:bj-ali-cdn-rodeosocial-static/*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "cdn:RefreshObjectCaches"
+      ],
+      "Resource": [
+        "*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "cr:GetAuthorizationToken"
+      ],
+      "Resource": [
+        "*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "cr:PullRepository",
+        "cr:PushRepository"
+      ],
+      "Resource": [
+        "acs:cr:cn-beijing:34737237:repository/cri-7k15mmcjbq9qlyw3/opp/rodeo-social-api"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "cs:DescribeClusterUserKubeconfig"
+      ],
+      "Resource": [
+        "*"
+      ]
+    }
+  ]
+}

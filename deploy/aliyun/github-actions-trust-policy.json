@@ -1,0 +1,20 @@
+{
+  "Version": "1",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Federated": [
+          "acs:ram::34737237:oidc-provider/github-actions-rodeosocial"
+        ]
+      },
+      "Condition": {
+        "StringEquals": {
+          "oidc:aud": "sts.aliyuncs.com",
+          "oidc:sub": "repo:Yodo1Games/Rodeo-CN-social-media:ref:refs/heads/main"
+        }
+      }
+    }
+  ]
+}

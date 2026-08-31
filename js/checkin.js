@@ -110,7 +110,7 @@
       locations: Array.from(visited)
     };
     try {
-      const r = await fetch("/api/checkin", {
+      const r = await zooApiFetch("/api/checkin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
@@ -165,7 +165,7 @@
     const body = mount.querySelector("#admCheckinBody") || mount;
     body.innerHTML = '<p class="adm-hint">加载数据中…</p>';
     try {
-      const r = await fetch("/api/checkin", { cache: "no-store" });
+      const r = await zooApiFetch("/api/checkin", { cache: "no-store" });
       if (!r.ok) throw new Error("bad");
       const d = await r.json();
       const total = d.total || 0;

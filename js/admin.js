@@ -72,7 +72,7 @@ let API_OK = false;   /* 服务器持久存储是否可用（不可用时自动�
 function saveS(){
   try{ localStorage.setItem(S_KEY, JSON.stringify(S)); }catch(e){}
   if(API_OK){
-    fetch("/api/settings", { method:"PUT", headers: zooAuthHeaders({ "Content-Type":"application/json" }), body: JSON.stringify(S) })
+    zooApiFetch("/api/settings", { method:"PUT", headers: zooAuthHeaders({ "Content-Type":"application/json" }), body: JSON.stringify(S) })
       .catch(() => {});
   }
 }
@@ -81,12 +81,12 @@ function saveS(){
 function loadTax(){
   return new Promise(async resolve => {
     try{
-      const r = await fetch("/api/ping", { cache:"no-store" });
+      const r = await zooApiFetch("/api/ping", { cache:"no-store" });
       API_OK = !!r.ok;
     }catch(e){ API_OK = false; }
     if(API_OK){
       try{
-        const r = await fetch("/api/taxonomy", { cache:"no-store" });
+        const r = await zooApiFetch("/api/taxonomy", { cache:"no-store" });
         if(r.ok){ const d = await r.json(); if(Array.isArray(d) && d.length) TAX = d; }
       }catch(e){}
     }
@@ -99,7 +99,7 @@ function loadTax(){
 }
 function saveTax(){
   if(API_OK){
-    fetch("/api/taxonomy", { method:"PUT", headers: zooAuthHeaders({ "Content-Type":"application/json" }), body: JSON.stringify(TAX) })
+    zooApiFetch("/api/taxonomy", { method:"PUT", headers: zooAuthHeaders({ "Content-Type":"application/json" }), body: JSON.stringify(TAX) })
       .catch(() => {});
   }
 }
@@ -107,7 +107,7 @@ function saveTax(){
 /* ---------- 初始化存储：探测服务器；服务器为空时把浏览器旧数据迁移上去 ---------- */
 async function initStorage(){
   try{
-    const r = await fetch("/api/ping", { cache:"no-store" });
+    const r = await zooApiFetch("/api/ping", { cache:"no-store" });
     API_OK = !!r.ok;
   }catch(e){ API_OK = false; }
   if(!API_OK) return;
@@ -115,20 +115,20 @@ async function initStorage(){
   /* ① 设置：服务器优先；服务器为空则把本浏览器设置迁移上去 */
   let srv = {};
   try{
-    const r = await fetch("/api/settings", { cache:"no-store" });
+    const r = await zooApiFetch("/api/settings", { cache:"no-store" });
     if(r.ok) srv = await r.json();
   }catch(e){}
   if(srv && Object.keys(srv).length){
     S = deepMerge(structuredClone(DEFAULTS), srv);
   }else if(localStorage.getItem(S_KEY)){
-    fetch("/api/settings", { method:"PUT", headers: zooAuthHeaders({ "Content-Type":"application/json" }), body: JSON.stringify(S) })
+    zooApiFetch("/api/settings", { method:"PUT", headers: zooAuthHeaders({ "Content-Type":"application/json" }), body: JSON.stringify(S) })
       .catch(() => {});
   }
 
   /* ② 图片：服务器为空时，把本浏览器 IndexedDB 里的图片一次性迁移上去 */
   let cnt = -1;
   try{
-    const r = await fetch("/api/count", { cache:"no-store" });
+    const r = await zooApiFetch("/api/count", { cache:"no-store" });
     if(r.ok) cnt = (await r.json()).count;
   }catch(e){}
   if(cnt === 0 && imgDB){
@@ -140,7 +140,7 @@ async function initStorage(){
         tx.objectStore(IMG_STORE).getAll().onsuccess = e => vals = e.target.result;
         tx.oncomplete = async () => {
           for(let i = 0; i < keys.length; i++){
-            try{ await fetch("/api/img/" + encodeURIComponent(keys[i]), { method:"PUT", headers: zooAuthHeaders(), body: vals[i] }); }catch(e){}
+            try{ await zooApiFetch("/api/img/" + encodeURIComponent(keys[i]), { method:"PUT", headers: zooAuthHeaders(), body: vals[i] }); }catch(e){}
           }
           done();
         };
@@ -201,7 +201,7 @@ const IMG = {
     let blob = null;
     if(API_OK){
       try{
-        const r = await fetch("/api/img/" + encodeURIComponent(id), { cache:"no-store" });
+        const r = await zooApiFetch("/api/img/" + encodeURIComponent(id), { cache:"no-store" });
         if(r.ok) blob = await r.blob();
       }catch(e){}
     }
@@ -212,7 +212,7 @@ const IMG = {
   async set(id, blob){
     if(API_OK){
       try{
-        const r = await fetch("/api/img/" + encodeURIComponent(id), { method:"PUT", headers: zooAuthHeaders(), body: blob });
+        const r = await zooApiFetch("/api/img/" + encodeURIComponent(id), { method:"PUT", headers: zooAuthHeaders(), body: blob });
         if(r.ok){ blobCache.set(id, blob); urlCache.delete(id); return true; }
         /* 服务器可达但写入失败（多为未登录 / token 失效）→ 明确失败，不静默存本地 */
         return false;
@@ -224,7 +224,7 @@ const IMG = {
     return ok;
   },
   async del(id){
-    if(API_OK){ try{ await fetch("/api/img/" + encodeURIComponent(id), { method:"DELETE", headers: zooAuthHeaders() }); }catch(e){} }
+    if(API_OK){ try{ await zooApiFetch("/api/img/" + encodeURIComponent(id), { method:"DELETE", headers: zooAuthHeaders() }); }catch(e){} }
     await idbDel(id);
     blobCache.delete(id); urlCache.delete(id);
     return true;
@@ -232,7 +232,7 @@ const IMG = {
   async count(){
     if(API_OK){
       try{
-        const r = await fetch("/api/count", { cache:"no-store" });
+        const r = await zooApiFetch("/api/count", { cache:"no-store" });
         if(r.ok) return (await r.json()).count;
       }catch(e){}
     }

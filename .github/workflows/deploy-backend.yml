@@ -1,0 +1,125 @@
+name: Build and deploy API to ACK
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - server.js
+      - package.json
+      - Dockerfile
+      - .dockerignore
+      - data/**
+      - k8s/**
+      - .github/workflows/deploy-backend.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: rodeo-social-api-production
+  cancel-in-progress: false
+
+env:
+  ALIYUN_REGION: cn-beijing
+  ACR_INSTANCE_ID: cri-7k15mmcjbq9qlyw3
+  ACR_REGISTRY: yodo1-registry.cn-beijing.cr.aliyuncs.com
+  IMAGE_REPOSITORY: yodo1-registry.cn-beijing.cr.aliyuncs.com/opp/rodeo-social-api
+  ACK_CLUSTER_ID: c816ab02eb585466a87dcec2ebf5a4439
+  ACK_NAMESPACE: prod
+  HELM_RELEASE: rodeo-social
+  ALIYUN_ROLE_ARN: acs:ram::34737237:role/rodeosocialgithubactions
+  OIDC_PROVIDER_ARN: acs:ram::34737237:oidc-provider/github-actions-rodeosocial
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure Alibaba Cloud OIDC credentials
+        uses: aliyun/configure-aliyun-credentials-action@v1
+        with:
+          role-to-assume: ${{ env.ALIYUN_ROLE_ARN }}
+          oidc-provider-arn: ${{ env.OIDC_PROVIDER_ARN }}
+          audience: sts.aliyuncs.com
+
+      - name: Install Alibaba Cloud CLI
+        shell: bash
+        run: |
+          set -euo pipefail
+          cli_dir="$RUNNER_TEMP/aliyun-cli"
+          mkdir -p "$cli_dir"
+          curl -fsSL https://aliyuncli.alicdn.com/aliyun-cli-linux-latest-amd64.tgz -o "$RUNNER_TEMP/aliyun-cli.tgz"
+          tar -xzf "$RUNNER_TEMP/aliyun-cli.tgz" -C "$cli_dir"
+          install -m 0755 "$cli_dir/aliyun" "$RUNNER_TEMP/aliyun"
+          echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
+
+      - name: Log in to ACR
+        shell: bash
+        run: |
+          set -euo pipefail
+          aliyun_cmd() {
+            aliyun \
+              --mode StsToken \
+              --access-key-id "$ALIBABA_CLOUD_ACCESS_KEY_ID" \
+              --access-key-secret "$ALIBABA_CLOUD_ACCESS_KEY_SECRET" \
+              --sts-token "$ALIBABA_CLOUD_SECURITY_TOKEN" \
+              "$@"
+          }
+          auth_json="$(aliyun_cmd cr GetAuthorizationToken --InstanceId "$ACR_INSTANCE_ID" --region "$ALIYUN_REGION")"
+          username="$(jq -r '.TempUsername' <<< "$auth_json")"
+          password="$(jq -r '.AuthorizationToken' <<< "$auth_json")"
+          test -n "$password" && test "$password" != "null"
+          echo "::add-mask::$password"
+          printf '%s' "$password" | docker login "$ACR_REGISTRY" --username "$username" --password-stdin
+
+      - name: Build and push immutable image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64
+          push: true
+          tags: |
+            ${{ env.IMAGE_REPOSITORY }}:${{ github.sha }}
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+
+      - name: Fetch temporary ACK kubeconfig
+        shell: bash
+        run: |
+          set -euo pipefail
+          aliyun_cmd() {
+            aliyun \
+              --mode StsToken \
+              --access-key-id "$ALIBABA_CLOUD_ACCESS_KEY_ID" \
+              --access-key-secret "$ALIBABA_CLOUD_ACCESS_KEY_SECRET" \
+              --sts-token "$ALIBABA_CLOUD_SECURITY_TOKEN" \
+              "$@"
+          }
+          aliyun_cmd cs DescribeClusterUserKubeconfig \
+            --RegionId "$ALIYUN_REGION" \
+            --ClusterId "$ACK_CLUSTER_ID" \
+            --PrivateIpAddress false \
+            --TemporaryDurationMinutes 30 \
+            | jq -r '.config' > "$RUNNER_TEMP/ack-kubeconfig"
+          test -s "$RUNNER_TEMP/ack-kubeconfig"
+          chmod 600 "$RUNNER_TEMP/ack-kubeconfig"
+
+      - name: Lint and deploy Helm release
+        shell: bash
+        env:
+          KUBECONFIG: ${{ runner.temp }}/ack-kubeconfig
+        run: |
+          set -euo pipefail
+          helm lint k8s/rodeo-social
+          helm upgrade --install "$HELM_RELEASE" k8s/rodeo-social \
+            --namespace "$ACK_NAMESPACE" \
+            --create-namespace \
+            --set image.tag="${GITHUB_SHA}" \
+            --wait \
+            --timeout 10m

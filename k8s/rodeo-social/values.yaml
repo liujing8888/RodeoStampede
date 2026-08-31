@@ -1,0 +1,80 @@
+replicaCount: 1
+
+image:
+  repository: yodo1-registry.cn-beijing.cr.aliyuncs.com/opp/rodeo-social-api
+  pullPolicy: IfNotPresent
+  tag: "main"
+
+imagePullSecrets:
+  - name: docker-secret
+
+nameOverride: ""
+fullnameOverride: rodeo-social-api
+
+podAnnotations: {}
+
+podSecurityContext:
+  fsGroup: 10001
+  runAsGroup: 10001
+  runAsNonRoot: true
+  runAsUser: 10001
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+
+service:
+  type: ClusterIP
+  port: 80
+
+persistence:
+  enabled: true
+  storageClass: alicloud-disk-essd
+  accessModes:
+    - ReadWriteOnce
+  size: 20Gi
+  mountPath: /var/data
+
+env:
+  NODE_ENV: production
+  PORT: "8080"
+  DATA_DIR: /var/data
+  CORS_ORIGINS: https://rodeosocial.yodo1.cn
+
+adminSecretName: rodeo-social-api-env
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+probes:
+  path: /api/ping
+  port: http
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 3
+  failureThreshold: 6
+
+ingress:
+  enabled: true
+  className: kong
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    konghq.com/https-redirect-status-code: "301"
+    konghq.com/protocols: https
+  hosts:
+    - host: api.rodeosocial.yodo1.cn
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: tls-rodeosocial-api
+      hosts:
+        - api.rodeosocial.yodo1.cn

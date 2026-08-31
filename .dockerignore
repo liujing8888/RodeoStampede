@@ -1,0 +1,15 @@
+.git
+.github
+.gitignore
+node_modules
+npm-debug.log*
+*.log
+.env*
+DEPLOY.md
+DEPLOY_CN.md
+deploy
+railway.json
+render.yaml
+setup_task.ps1
+watchdog.ps1
+data/taxonomy.backup.json

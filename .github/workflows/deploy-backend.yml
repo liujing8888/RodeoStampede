@@ -120,7 +120,6 @@ jobs:
           helm lint k8s/rodeo-social
           helm upgrade --install "$HELM_RELEASE" k8s/rodeo-social \
             --namespace "$ACK_NAMESPACE" \
-            --create-namespace \
             --set image.tag="${GITHUB_SHA}" \
             --wait \
             --timeout 10m

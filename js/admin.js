@@ -19,7 +19,8 @@ const DEFAULTS = {
   nav: {
     promo: "宣传图",
     creators: "优秀创作者",
-    social: "社区社媒"
+    social: "社区社媒",
+    checkin: "到此一游"
   },
   versions: [
     { id:"v3", title:"时空飞船 · 奥林匹斯启航", tag:"新地图", date:"2026-08-20",
@@ -372,6 +373,13 @@ function buildAdminPanel(){
         <label class="adm-field adm-field--inline"><span>栏目 1</span><input id="admNavPromo" value="${esc(S.nav.promo)}"></label>
         <label class="adm-field adm-field--inline"><span>栏目 2</span><input id="admNavCre" value="${esc(S.nav.creators)}"></label>
         <label class="adm-field adm-field--inline"><span>栏目 3</span><input id="admNavSoc" value="${esc(S.nav.social)}"></label>
+        <label class="adm-field adm-field--inline"><span>栏目 4（到此一游）</span><input id="admNavCheckin" value="${esc(S.nav.checkin || "到此一游")}"></label>
+      </div>
+      <h4 class="adm-sub-title">导航栏背景图</h4>
+      <div class="adm-up-grid">
+        <div class="adm-up adm-up--wide"><img data-slot="nav:bg"><div class="adm-up__t">导航栏背景图（显示在导航栏后方）</div>
+          <button class="btn btn--primary btn--sm" data-up="nav:bg">上传</button>
+          <button class="btn btn--ghost btn--sm" data-del="nav:bg">清除</button></div>
       </div>
     </div>
 
@@ -510,6 +518,7 @@ function buildAdminPanel(){
     S.nav.promo     = wrap.querySelector("#admNavPromo").value.trim() || "宣传图";
     S.nav.creators  = wrap.querySelector("#admNavCre").value.trim() || "优秀创作者";
     S.nav.social    = wrap.querySelector("#admNavSoc").value.trim() || "社区社媒";
+    S.nav.checkin   = wrap.querySelector("#admNavCheckin").value.trim() || "到此一游";
     S.service.qq     = wrap.querySelector("#admSvcQQ").value.trim();
     S.service.wechat = wrap.querySelector("#admSvcWX").value.trim();
     S.service.email  = wrap.querySelector("#admSvcMail").value.trim();

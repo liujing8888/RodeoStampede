@@ -26,6 +26,33 @@ function socIcon(key){
 }
 
 /* ---------- Hero / 公告条 / 导航栏文字 ---------- */
+function setText(elId, value){ const el = document.getElementById(elId); if(el) el.textContent = value ?? el.textContent; }
+function setSetting(path, val){
+  const p = path.split("."); let o = S;
+  for(let i=0;i<p.length-1;i++) o = o[p[i]] || (o[p[i]] = {});
+  o[p[p.length-1]] = val;
+}
+/* 编辑模式下给导航栏链接文字加一个 ✎ 改名按钮 */
+function setNavLinkText(elId, value, key){
+  const el = document.getElementById(elId); if(!el) return;
+  el.textContent = value ?? el.textContent;
+  if(EDIT){
+    let nb = el.parentNode.querySelector(":scope > .nav-edit");
+    if(!nb){
+      nb = document.createElement("button");
+      nb.className = "nav-edit"; nb.type = "button"; nb.textContent = "✎"; nb.title = "修改导航文字";
+      nb.addEventListener("click", async (e) => {
+        e.preventDefault(); e.stopPropagation();
+        const v = await askText("修改导航文字", el.textContent);
+        if(v != null){ setSetting(key, v); saveS(); renderHero(); }
+      });
+      el.insertAdjacentElement("afterend", nb);
+    }
+  } else {
+    const nb = el.parentNode.querySelector(":scope > .nav-edit");
+    if(nb) nb.remove();
+  }
+}
 function renderHero(){
   document.getElementById("promoText").textContent = S.hero.promo;
   document.getElementById("navTitle").textContent = S.hero.title;
@@ -33,12 +60,13 @@ function renderHero(){
   document.getElementById("heroTitle").textContent = S.hero.title;
   document.getElementById("heroSub").textContent = S.hero.sub;
   document.title = S.hero.title + " · 官方玩家社区";
-  document.getElementById("navPromo").textContent = S.nav.promo;
-  document.getElementById("navCreator").textContent = S.nav.creators;
-  document.getElementById("navSocial").textContent = S.nav.social;
-  document.getElementById("secPromoTitle").textContent = S.nav.promo;
-  document.getElementById("secCreTitle").textContent = S.nav.creators;
-  document.getElementById("secSocTitle").textContent = S.nav.social;
+  setNavLinkText("navPromo", S.nav.promo, "nav.promo");
+  setNavLinkText("navCreator", S.nav.creators, "nav.creators");
+  setNavLinkText("navSocial", S.nav.social, "nav.social");
+  setNavLinkText("navCheckin", S.nav.checkin || "到此一游", "nav.checkin");
+  setText("secPromoTitle", S.nav.promo);
+  setText("secCreTitle", S.nav.creators);
+  setText("secSocTitle", S.nav.social);
 }
 
 /* ---------- 版本动态 ---------- */
@@ -948,6 +976,7 @@ function setEditUI(){
   document.getElementById("adminToggle").classList.toggle("is-hidden", EDIT);
   document.getElementById("editTip").classList.toggle("is-hidden", !EDIT);
   renderVersions(); renderCatTabs(); renderSubTabs(); renderSpecies(); renderPosters();
+  renderHero();
 }
 const loginModal  = document.getElementById("loginModal");
 const loginInput  = document.getElementById("loginPassInput");
@@ -960,6 +989,8 @@ function zooAuthHeaders(extra){
   return h;
 }
 
+function showAdminFabs(){ document.getElementById("adminFabs").classList.add("is-visible"); }
+function hideAdminFabs(){ document.getElementById("adminFabs").classList.remove("is-visible"); }
 function openLogin(){
   loginInput.value = ""; loginErr.classList.add("is-hidden");
   openModal("loginModal");
@@ -972,7 +1003,9 @@ async function tryLogin(){
     const r = await zooApiFetch("/api/login", { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ password: pw }) });
     if(r.ok){
       window.ADMIN_TOKEN = pw;
+      localStorage.setItem("zooAdminToken", pw);
       sessionStorage.setItem("zooToken", pw);
+      showAdminFabs();
       closeModals();
       EDIT = true; sessionStorage.setItem("zooEdit", "1");
       setEditUI(); toast("编辑模式已开启");
@@ -989,6 +1022,7 @@ document.getElementById("loginGo").addEventListener("click", tryLogin);
 loginInput.addEventListener("keydown", e => { if(e.key === "Enter") tryLogin(); });
 document.getElementById("adminExit").addEventListener("click", () => {
   EDIT = false; window.ADMIN_TOKEN = ""; sessionStorage.removeItem("zooEdit"); sessionStorage.removeItem("zooToken");
+  localStorage.removeItem("zooAdminToken"); hideAdminFabs();
   setEditUI(); toast("已退出编辑模式");
 });
 document.getElementById("adminOpenPanel").addEventListener("click", () => {
@@ -1017,5 +1051,10 @@ openImgDB().catch(err => console.error("IndexedDB 初始化失败：", err)).fin
   applyImages(document);
   applyFavicon();
   restartCar();
+  /* 恢复管理员登录态：本机曾登录则自动显示编辑入口（仅管理员可见） */
+  const savedAdmin = localStorage.getItem("zooAdminToken") || sessionStorage.getItem("zooToken");
+  if(savedAdmin){ window.ADMIN_TOKEN = savedAdmin; showAdminFabs(); }
+  /* 隐藏入口：URL 带 ?admin=1 时弹出登录框，供管理员首次登录 */
+  if(location.search.indexOf("admin") > -1) openLogin();
 });
 initSearch();

@@ -45,6 +45,17 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
 .nav__links{display:flex;gap:4px;margin-right:auto}
 .nav__links a{padding:8px 16px;border-radius:999px;font-weight:600;transition:.2s}
 .nav__links a:hover{background:#fff3e4;color:var(--orange)}
+
+/* 导航栏背景图（编辑模式可换） */
+.nav__bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;display:none}
+.nav__bg[src]{display:block}
+.nav > *:not(.nav__bg){position:relative;z-index:1}
+.nav:has(.nav__bg[src]){background:rgba(255,255,255,.5)}
+
+/* 编辑模式：导航文字旁的重命名按钮 */
+.nav-edit{display:none;margin-left:5px;border:none;background:rgba(0,0,0,.06);color:var(--ink-2);width:22px;height:22px;border-radius:6px;cursor:pointer;font-size:.75rem;line-height:1;vertical-align:middle;transition:.15s}
+.nav-edit:hover{background:var(--orange);color:#fff}
+body.is-edit .nav-edit{display:inline-flex;align-items:center;justify-content:center}
 .nav__search{position:relative}
 .nav__search input{width:250px;padding:10px 18px;border-radius:999px;border:2px solid #e8ddcc;background:#fffdf8;font-size:.9rem;outline:none;transition:.2s}
 .nav__search input:focus{border-color:var(--orange);box-shadow:0 0 0 4px rgba(255,138,61,.15)}
@@ -212,7 +223,8 @@ body.is-edit .up-btn{display:inline-block}
 .chat-hours{margin-top:10px;font-size:.75rem;color:var(--ink-2);text-align:center}
 
 /* ---------- 编辑模式 ---------- */
-.admin-fabs{position:fixed;left:22px;bottom:22px;z-index:150;display:flex;flex-direction:column;gap:10px}
+.admin-fabs{position:fixed;left:22px;bottom:22px;z-index:150;display:none;flex-direction:column;gap:10px}
+.admin-fabs.is-visible{display:flex}
 .admin-fab{width:52px;height:52px;border-radius:50%;background:#fff;box-shadow:0 8px 24px rgba(30,20,5,.25);font-size:1.25rem;transition:.2s;border:2px solid #eadfc9}
 .admin-fab:hover{transform:scale(1.08)}
 .admin-fab--sub{width:44px;height:44px;font-size:1rem}

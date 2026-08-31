@@ -81,7 +81,7 @@ jobs:
               --sts-token "$ALIBABA_CLOUD_SECURITY_TOKEN" \
               "$@"
           }
-          aliyun_cmd cdn RefreshObjectCaches --ObjectPath "https://$CDN_DOMAIN/index.html" --ObjectType File --Force true
-          aliyun_cmd cdn RefreshObjectCaches --ObjectPath "https://$CDN_DOMAIN/css/" --ObjectType Directory --Force true
-          aliyun_cmd cdn RefreshObjectCaches --ObjectPath "https://$CDN_DOMAIN/js/" --ObjectType Directory --Force true
-          aliyun_cmd cdn RefreshObjectCaches --ObjectPath "https://$CDN_DOMAIN/assets/" --ObjectType Directory --Force true
+          aliyun_cmd cdn RefreshObjectCaches --ObjectPath "https://$CDN_DOMAIN/index.html" --ObjectType File --Force true --region "$ALIYUN_REGION"
+          aliyun_cmd cdn RefreshObjectCaches --ObjectPath "https://$CDN_DOMAIN/css/" --ObjectType Directory --Force true --region "$ALIYUN_REGION"
+          aliyun_cmd cdn RefreshObjectCaches --ObjectPath "https://$CDN_DOMAIN/js/" --ObjectType Directory --Force true --region "$ALIYUN_REGION"
+          aliyun_cmd cdn RefreshObjectCaches --ObjectPath "https://$CDN_DOMAIN/assets/" --ObjectType Directory --Force true --region "$ALIYUN_REGION"

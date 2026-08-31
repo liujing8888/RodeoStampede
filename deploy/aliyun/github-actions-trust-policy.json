@@ -13,7 +13,7 @@
         "StringEquals": {
           "oidc:iss": "https://token.actions.githubusercontent.com",
           "oidc:aud": "sts.aliyuncs.com",
-          "oidc:sub": "repo:Yodo1Games/Rodeo-CN-social-media:ref:refs/heads/main"
+          "oidc:sub": "repo:Yodo1Games@53464979/Rodeo-CN-social-media@1351965338:ref:refs/heads/main"
         }
       }
     }

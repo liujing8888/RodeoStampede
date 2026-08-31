@@ -77,7 +77,21 @@ jobs:
           echo "::add-mask::$password"
           printf '%s' "$password" | docker login "$ACR_REGISTRY" --username "$username" --password-stdin
 
+      - name: Check immutable image
+        id: image
+        shell: bash
+        env:
+          IMAGE: ${{ env.IMAGE_REPOSITORY }}:${{ github.sha }}
+        run: |
+          set -euo pipefail
+          if docker manifest inspect "$IMAGE" >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Build and push immutable image
+        if: steps.image.outputs.exists != 'true'
         uses: docker/build-push-action@v6
         with:
           context: .

@@ -1,0 +1,16 @@
+<view class="page checkin" wx:if="{{!done}}">
+  <view class="big">🤠 你是第几位光临动物园的牛仔？</view>
+  <view class="muted hint">选一下你最常待的区域，然后打卡：</view>
+  <view class="sections">
+    <view class="sec {{section===s?'sec--on':''}}" wx:for="{{['天空飞船','草原','雨林','雪山','沙漠','宠物乐园']}}" wx:key="*this" data-s="{{item}}" bindtap="pickSection">{{item}}</view>
+  </view>
+  <view class="btn" bindtap="submit">{{loading?'打卡中…':'立即打卡'}}</view>
+</view>
+
+<view class="page checkin done" wx:else>
+  <view class="cowboy">🤠</view>
+  <view class="line1">你是为第</view>
+  <view class="seq">{{seq}}</view>
+  <view class="line2">位光临动物园的牛仔！</view>
+  <view class="muted visits">累计打卡 {{visits}} 次</view>
+</view>

@@ -1,0 +1,17 @@
+{
+  "miniprogramRoot": "./",
+  "cloudfunctionRoot": "cloudfunctions/",
+  "appid": "YOUR_APPID",
+  "projectname": "crazy-zoo",
+  "description": "疯狂动物园玩家站 - 微信云开发小程序",
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true,
+    "newFeature": true
+  },
+  "compileType": "miniprogram",
+  "libVersion": "latest"
+}

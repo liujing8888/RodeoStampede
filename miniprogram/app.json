@@ -1,0 +1,28 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/codex/codex",
+    "pages/detail/detail",
+    "pages/checkin/checkin",
+    "pages/admin/admin"
+  ],
+  "window": {
+    "navigationBarTitleText": "疯狂动物园玩家站",
+    "navigationBarBackgroundColor": "#1b1030",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#1b1030"
+  },
+  "tabBar": {
+    "color": "#9a8fb5",
+    "selectedColor": "#ffcf4d",
+    "backgroundColor": "#1b1030",
+    "borderStyle": "black",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "首页" },
+      { "pagePath": "pages/codex/codex", "text": "动物图鉴" },
+      { "pagePath": "pages/checkin/checkin", "text": "到此一游" }
+    ]
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2"
+}

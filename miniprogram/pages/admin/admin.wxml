@@ -1,0 +1,20 @@
+<view class="page admin">
+  <view class="tip muted">管理员上传图片到云存储。slot 决定图片用途，动物图固定为 <text class="code">sp:&lt;物种ID&gt;</text></view>
+
+  <view class="field">
+    <text class="label">管理员密码</text>
+    <input class="input" password value="{{adminPw}}" bindinput="onPw" placeholder="与云函数 ADMIN_PW 一致" />
+  </view>
+
+  <view class="field">
+    <text class="label">Slot</text>
+    <input class="input" value="{{slot}}" bindinput="onSlot" placeholder="如 brand:banner" />
+  </view>
+
+  <view class="presets">
+    <view wx:for="{{presets}}" wx:key="*this" class="preset" data-s="{{item}}" bindtap="fillPreset">{{item}}</view>
+  </view>
+
+  <view class="btn" bindtap="choose">选择图片并上传</view>
+  <view class="status" wx:if="{{status}}">{{status}}</view>
+</view>

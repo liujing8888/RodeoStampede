@@ -1,0 +1,31 @@
+<view class="page">
+  <!-- 顶部英雄区：背景图用 <image> 铺底，云 fileID 可直接作为 src -->
+  <view class="hero">
+    <image wx:if="{{banner}}" class="hero__bg" src="{{banner}}" mode="aspectFill" />
+    <view class="hero__mask"></view>
+    <view class="hero__body">
+      <view class="hero__title">{{settings.siteName || '疯狂动物园玩家站'}}</view>
+      <view class="hero__desc">{{settings.heroDesc || '官方玩家社区 · 动物图鉴 · 到此一游'}}</view>
+      <view class="hero__actions">
+        <view class="btn" bindtap="goCodex">逛动物图鉴</view>
+        <view class="btn btn--ghost" bindtap="goCheckin">到此一游</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 宣传图轮播 -->
+  <swiper wx:if="{{posters.length}}" class="posters" indicator-dots autoplay circular interval="4000">
+    <swiper-item wx:for="{{posters}}" wx:key="*this">
+      <image class="poster" src="{{item}}" mode="aspectFill" />
+    </swiper-item>
+  </swiper>
+
+  <!-- 分类入口 -->
+  <view class="section-title">动物图鉴</view>
+  <view class="cats">
+    <navigator wx:for="{{cats}}" wx:key="id" url="/pages/codex/codex?cat={{item.id}}" class="cat-card">
+      <text class="cat-icon">{{item.icon}}</text>
+      <text class="cat-name">{{item.name}}</text>
+    </navigator>
+  </view>
+</view>

@@ -1,0 +1,9 @@
+.admin { padding: 40rpx 32rpx; }
+.tip { font-size: 24rpx; margin-bottom: 32rpx; line-height: 1.6; }
+.code { color: #ffcf4d; }
+.field { margin-bottom: 28rpx; }
+.label { display: block; font-size: 26rpx; color: #d9cffb; margin-bottom: 10rpx; }
+.input { background: #261646; border-radius: 14rpx; padding: 20rpx 24rpx; color: #fff; font-size: 28rpx; }
+.presets { display: flex; flex-wrap: wrap; gap: 14rpx; margin-bottom: 36rpx; }
+.preset { background: #261646; color: #d9cffb; border-radius: 999rpx; padding: 12rpx 22rpx; font-size: 24rpx; }
+.status { margin-top: 28rpx; color: #ffcf4d; font-size: 26rpx; text-align: center; }

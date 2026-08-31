@@ -19,13 +19,21 @@ export PATH=$PATH:/usr/local/bin:/usr/bin:/root/.npm-global/bin
 apt-get update -y >/dev/null 2>&1 || true
 apt-get install -y curl unzip git >/dev/null 2>&1 || true
 
-# ---------- 1. 安装 Node.js 20 ----------
-if ! command -v node >/dev/null 2>&1 || [ "$(node -v | sed 's/v//' | cut -d. -f1)" -lt 18 ]; then
-  echo ">>> 安装 Node.js 20 ..."
-  curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
-  apt-get install -y nodejs
-fi
-echo "Node 版本: $(node -v)"
+# ---------- 1. 安装 Node.js 20（优先国内镜像，避免海外源超时） ----------
+install_node(){
+  if command -v node >/dev/null 2>&1 && [ "$(node -v | sed 's/v//' | cut -d. -f1)" -ge 18 ]; then return; fi
+  echo ">>> 安装 Node.js 20 (国内镜像) ..."
+  NODE_VER=20.18.1
+  case "$(uname -m)" in x86_64) NA=x64;; aarch64) NA=arm64;; *) NA=x64;; esac
+  URL="https://registry.npmmirror.com/-/binary/node/v${NODE_VER}/node-v${NODE_VER}-linux-${NA}.tar.xz"
+  if curl -fsSL "$URL" -o /tmp/node.tar.xz 2>/dev/null && [ -s /tmp/node.tar.xz ]; then
+    tar -xJf /tmp/node.tar.xz -C /usr/local --strip-components=1 && echo "Node 已装: $(node -v)"
+  else
+    echo ">>> 国内镜像失败，尝试 nodesource 兜底 ..."
+    curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt-get install -y nodejs
+  fi
+}
+install_node
 
 # ---------- 2. 获取代码（本地 zip 优先，其次 git clone） ----------
 APP_DIR=/root/crazyzoo
@@ -63,6 +71,7 @@ fi
 
 # ---------- 4. 安装 pm2 常驻进程管理器 ----------
 echo ">>> 安装 pm2 常驻管理器 ..."
+npm config set registry https://registry.npmmirror.com >/dev/null 2>&1 || true
 npm install -g pm2 >/dev/null 2>&1 || true
 
 # ---------- 5. 启动服务 ----------

@@ -1,0 +1,11 @@
+.checkin { padding: 60rpx 40rpx; text-align: center; }
+.big { font-size: 40rpx; font-weight: 800; margin-bottom: 24rpx; }
+.hint { font-size: 26rpx; margin-bottom: 32rpx; }
+.sections { display: flex; flex-wrap: wrap; gap: 16rpx; justify-content: center; margin-bottom: 40rpx; }
+.sec { background: #261646; color: #d9cffb; border-radius: 999rpx; padding: 14rpx 28rpx; font-size: 26rpx; }
+.sec--on { background: #ffcf4d; color: #1b1030; font-weight: 700; }
+.cowboy { font-size: 120rpx; margin-bottom: 10rpx; }
+.line1, .line2 { font-size: 30rpx; color: #d9cffb; }
+.seq { font-size: 120rpx; font-weight: 900; color: #ffcf4d; line-height: 1.1; margin: 8rpx 0; }
+.visits { margin-top: 24rpx; font-size: 26rpx; }
+.checkin.done { padding-top: 120rpx; }

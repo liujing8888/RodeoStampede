@@ -1,0 +1,15 @@
+<view class="page">
+  <view class="search">
+    <input class="search__input" placeholder="搜索动物名称" placeholder-class="muted" value="{{keyword}}" bindinput="onSearch" />
+  </view>
+
+  <view class="stats muted">共 {{filtered.length}} 种动物</view>
+
+  <view class="grid">
+    <view wx:for="{{filtered}}" wx:key="id" class="sp-card" data-id="{{item.id}}" bindtap="goDetail">
+      <image class="sp-img" src="{{item.img}}" mode="aspectFill" lazy-load />
+      <view class="sp-name">{{item.name}}</view>
+      <view class="sp-sub muted">{{item.sub}}</view>
+    </view>
+  </view>
+</view>

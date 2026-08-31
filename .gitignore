@@ -5,3 +5,6 @@ node_modules/
 # 不入库：弱密码文件、自动备份
 data/admin_pw.txt
 data/taxonomy.backup_*.json
+# 不入库：部署用的压缩包（含 109M 图片，体积过大）与重复解压目录
+deploy/*.tar.gz
+deploy/crazyzoo-src/

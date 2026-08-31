@@ -1,0 +1,9 @@
+{
+  "name": "getInit",
+  "version": "1.0.0",
+  "description": "返回分类树/设置/图片映射",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

@@ -1,0 +1,21 @@
+.hero { position: relative; height: 460rpx; overflow: hidden; }
+.hero__bg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.hero__mask { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(27,16,48,.25), rgba(27,16,48,.85)); }
+.hero__body { position: relative; padding: 60rpx 40rpx; height: 100%; display: flex; flex-direction: column; justify-content: center; }
+.hero__title { font-size: 56rpx; font-weight: 800; letter-spacing: 2rpx; }
+.hero__desc { margin-top: 16rpx; color: #d9cffb; font-size: 28rpx; }
+.hero__actions { margin-top: 40rpx; display: flex; gap: 24rpx; }
+.btn--ghost { background: transparent; color: #ffcf4d; border: 2rpx solid #ffcf4d; }
+
+.posters { height: 320rpx; margin: 24rpx 16rpx; border-radius: 20rpx; overflow: hidden; }
+.poster { width: 100%; height: 100%; }
+
+.section-title { margin: 24rpx 32rpx 8rpx; font-size: 32rpx; font-weight: 700; }
+.cats { display: flex; flex-wrap: wrap; padding: 8rpx 16rpx; }
+.cat-card {
+  width: calc(33.33% - 24rpx); margin: 12rpx; background: #261646;
+  border-radius: 20rpx; padding: 28rpx 0; display: flex; flex-direction: column;
+  align-items: center; gap: 10rpx;
+}
+.cat-icon { font-size: 52rpx; }
+.cat-name { font-size: 26rpx; color: #d9cffb; }

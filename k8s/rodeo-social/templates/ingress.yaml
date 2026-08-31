@@ -10,11 +10,19 @@ metadata:
 spec:
   ingressClassName: {{ .Values.ingress.className }}
   rules:
-    {{- range .Values.ingress.hosts }}
-    - host: {{ .host }}
+    {{- range $host := .Values.ingress.hosts }}
+    - host: {{ $host.host }}
       http:
         paths:
-          {{- toYaml .paths | nindent 10 }}
+          {{- range $path := $host.paths }}
+          - path: {{ $path.path }}
+            pathType: {{ $path.pathType }}
+            backend:
+              service:
+                name: {{ include "rodeo-social.fullname" $ }}
+                port:
+                  number: {{ $.Values.service.port }}
+          {{- end }}
     {{- end }}
   tls:
     {{- toYaml .Values.ingress.tls | nindent 4 }}

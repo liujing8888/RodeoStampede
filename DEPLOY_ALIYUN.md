@@ -12,6 +12,13 @@
 - `.github/workflows/deploy-frontend.yml`：修改 `index.html`、`css/`、`js/` 或 `assets/` 并提交到 `main` 后，上传 OSS 并刷新 CDN。
 - `.github/workflows/deploy-backend.yml`：修改服务端、镜像或 Helm 配置并提交到 `main` 后，构建不可变 SHA 镜像并滚动部署 ACK。
 - GitHub Actions 通过 Alibaba Cloud OIDC AssumeRole 获取短期凭证，仓库不保存长期阿里云 AccessKey。
+- ACK 部署使用 GitHub Actions secret `KUBECONFIG_ALIBASE_ACK_CN_NORTH_NEW`；secret 可保存原始 kubeconfig 或其 Base64 内容，工作流不会打印内容。
+- 镜像推送至 ACR，ACK 通过北京 VPC ACR endpoint 拉取，避免生产 Pod 依赖公网链路。
+
+## 域名与 HTTPS
+
+- 主站 `rodeosocial.yodo1.cn` 使用北京 OSS 私有源站和 CDN 加速，已绑定 `*.yodo1.cn` 证书。
+- API `api.rodeosocial.yodo1.cn` 通过 Kong Ingress 暴露，证书由 ACK 中的 `letsencrypt-prod` 自动签发。
 
 ## 管理员口令
 

@@ -102,7 +102,7 @@ jobs:
               "$@"
           }
           aliyun_cmd cs DescribeClusterUserKubeconfig \
-            --RegionId "$ALIYUN_REGION" \
+            --region "$ALIYUN_REGION" \
             --ClusterId "$ACK_CLUSTER_ID" \
             --PrivateIpAddress false \
             --TemporaryDurationMinutes 30 \

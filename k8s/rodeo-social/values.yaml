@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: yodo1-registry.cn-beijing.cr.aliyuncs.com/opp/rodeo-social-api
+  repository: yodo1-registry-vpc.cn-beijing.cr.aliyuncs.com/opp/rodeo-social-api
   pullPolicy: IfNotPresent
   tag: "main"
 
@@ -42,7 +42,7 @@ env:
   NODE_ENV: production
   PORT: "8080"
   DATA_DIR: /var/data
-  CORS_ORIGINS: https://rodeosocial.yodo1.cn
+  CORS_ORIGINS: http://rodeosocial.yodo1.cn,https://rodeosocial.yodo1.cn
 
 adminSecretName: rodeo-social-api-env
 

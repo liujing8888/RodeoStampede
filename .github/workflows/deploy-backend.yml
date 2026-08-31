@@ -89,26 +89,21 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@v4
 
-      - name: Fetch temporary ACK kubeconfig
+      - name: Write ACK kubeconfig
         shell: bash
+        env:
+          ACK_KUBECONFIG: ${{ secrets.KUBECONFIG_ALIBASE_ACK_CN_NORTH_NEW }}
         run: |
           set -euo pipefail
-          aliyun_cmd() {
-            aliyun \
-              --mode StsToken \
-              --access-key-id "$ALIBABA_CLOUD_ACCESS_KEY_ID" \
-              --access-key-secret "$ALIBABA_CLOUD_ACCESS_KEY_SECRET" \
-              --sts-token "$ALIBABA_CLOUD_SECURITY_TOKEN" \
-              "$@"
-          }
-          aliyun_cmd cs DescribeClusterUserKubeconfig \
-            --region "$ALIYUN_REGION" \
-            --ClusterId "$ACK_CLUSTER_ID" \
-            --PrivateIpAddress false \
-            --TemporaryDurationMinutes 30 \
-            | jq -r '.config' > "$RUNNER_TEMP/ack-kubeconfig"
-          test -s "$RUNNER_TEMP/ack-kubeconfig"
-          chmod 600 "$RUNNER_TEMP/ack-kubeconfig"
+          kubeconfig_path="$RUNNER_TEMP/ack-kubeconfig"
+          if [[ "$ACK_KUBECONFIG" == *"apiVersion:"* ]]; then
+            printf '%s\n' "$ACK_KUBECONFIG" > "$kubeconfig_path"
+          else
+            printf '%s' "$ACK_KUBECONFIG" | base64 --decode > "$kubeconfig_path"
+          fi
+          test -s "$kubeconfig_path"
+          grep -q '^apiVersion:' "$kubeconfig_path"
+          chmod 600 "$kubeconfig_path"
 
       - name: Lint and deploy Helm release
         shell: bash

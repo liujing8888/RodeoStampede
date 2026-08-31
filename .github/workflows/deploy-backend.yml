@@ -114,6 +114,7 @@ jobs:
         shell: bash
         env:
           KUBECONFIG: ${{ runner.temp }}/ack-kubeconfig
+          HELM_DRIVER: configmap
         run: |
           set -euo pipefail
           helm lint k8s/rodeo-social

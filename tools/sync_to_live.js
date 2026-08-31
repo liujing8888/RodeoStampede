@@ -3,15 +3,20 @@
  * 为什么需要本脚本：线上 k8s 用持久卷(PVC)存数据，git push 只更新镜像、不会改写已存在的 PVC，
  * 因此 taxonomy / 图片改动必须经 /api 写入线上 PVC 才会真正生效。
  *
- * 用法（在你本机 F:\网站 目录、能访问 rodeosocial.yodo1.cn 的机器上执行）：
+ * 用法（在你本机 F:\网站 目录、能访问 api.rodeosocial.yodo1.cn 的机器上执行）：
  *   node tools/sync_to_live.js --password <线上管理员密码>
- *   node tools/sync_to_live.js --password <密码> --host https://rodeosocial.yodo1.cn
+ *   node tools/sync_to_live.js --password <密码> --host https://api.rodeosocial.yodo1.cn
  *   node tools/sync_to_live.js --password <密码> --dry     # 只打印计划，不上传
+ *
+ * 注意：线上站点(rodeosocial.yodo1.cn)是静态 OSS/CDN，真正的后端 API 在独立子域名
+ *       api.rodeosocial.yodo1.cn（见 js/config.js）。默认 BASE 已指向该 API 域名。
  */
 const fs = require("fs");
+const path = require("path");
+const ROOT = path.resolve(__dirname, ".."); // 项目根目录（脚本在 tools/ 下，故向上一级）
 
 const idx = k => process.argv.indexOf(k);
-const BASE = idx("--host") >= 0 ? process.argv[idx("--host") + 1] : "https://rodeosocial.yodo1.cn";
+const BASE = idx("--host") >= 0 ? process.argv[idx("--host") + 1] : "https://api.rodeosocial.yodo1.cn";
 const PW = idx("--password") >= 0 ? process.argv[idx("--password") + 1] : (process.env.LIVE_ADMIN_PW || "");
 const DRY = process.argv.includes("--dry");
 
@@ -20,9 +25,10 @@ if (!PW) {
   process.exit(1);
 }
 
-const TAX_FILE = "data/taxonomy.json";
-const HAT_CAT_FILE = "tools/hat_category.json";
-const MANIFEST_FILE = "tools/hat_manifest.json";
+const TAX_FILE = path.join(ROOT, "data/taxonomy.json");
+const HAT_CAT_FILE = path.join(ROOT, "tools/hat_category.json");
+const MANIFEST_FILE = path.join(ROOT, "tools/hat_manifest.json");
+const CONC = 8; // 并发上传数：兼顾速度与线上 LB 稳定性；若频繁 ECONNRESET 可降到 4
 
 const SPECIAL_ID = "cat_special";
 const HAT_ID = "cat_hat";
@@ -92,21 +98,51 @@ async function main() {
     console.log("(dry) 跳过 taxonomy 上传");
   }
 
-  // 5) 上传帽子图（仅 207 张新增）
+  // 5) 上传帽子图（并发上传 + 本地进度文件断点续传 + 重试，单张失败不影响整体）
+  //    注意：线上 server 对 HEAD 返回 405，无法用 HEAD 探测是否已传，故改用本地 tools/.hat_done.json 记录已成功 slot。
   const manifest = JSON.parse(fs.readFileSync(MANIFEST_FILE, "utf8"));
-  console.log("→ 开始上传帽子图:", manifest.length, "张", DRY ? "(dry)" : "");
-  let ok = 0, fail = 0;
-  for (let i = 0; i < manifest.length; i++) {
-    const m = manifest[i];
-    if (DRY) { if ((i + 1) % 40 === 0) console.log("  (dry) 计划:", m.name, "->", m.slot); continue; }
-    const buf = fs.readFileSync(m.file);
-    r = await fetch(BASE + "/api/img/" + encodeURIComponent(m.slot), {
-      method: "PUT", headers: { "X-Admin-Token": PW, "Content-Type": "image/png" }, body: buf
-    });
-    if (r.ok) ok++; else { fail++; console.error("  ✗", m.name, await r.text()); }
-    if ((i + 1) % 30 === 0 || i === manifest.length - 1) console.log(`  进度 ${i + 1}/${manifest.length} (成功 ${ok})`);
+  const total = manifest.length;
+  console.log("→ 准备上传帽子图:", total, "张", DRY ? "(dry)" : `(并发 ${CONC})`);
+  const sleep = ms => new Promise(res => setTimeout(res, ms));
+  const authHdr = { "X-Admin-Token": PW, "Content-Type": "image/png" };
+  const DONE_FILE = path.join(ROOT, "tools", ".hat_done.json");
+  let doneSet = new Set();
+  try { doneSet = new Set(JSON.parse(fs.readFileSync(DONE_FILE, "utf8"))); } catch (_) {}
+
+  let ok = 0, skip = 0, fail = 0, planned = 0;
+  const failed = [];
+  for (let i = 0; i < total; i += CONC) {
+    const batch = manifest.slice(i, i + CONC);
+    const res = await Promise.all(batch.map(async (m) => {
+      if (DRY) return { m, kind: "planned" };
+      if (doneSet.has(m.slot)) return { m, kind: "skip" };
+      const url = BASE + "/api/img/" + encodeURIComponent(m.slot);
+      const buf = fs.readFileSync(path.join(ROOT, m.file));
+      let uploaded = false;
+      for (let attempt = 1; attempt <= 5 && !uploaded; attempt++) {
+        try {
+          const resp = await fetch(url, { method: "PUT", headers: authHdr, body: buf, signal: AbortSignal.timeout(30000) });
+          if (resp.ok) uploaded = true;
+          else console.error(`  ✗ ${m.name} (尝试${attempt}) ${(await resp.text()).slice(0, 120)}`);
+        } catch (e) {
+          console.error(`  ! ${m.name} (尝试${attempt}) ${e.cause?.code || e.message}`);
+        }
+        if (!uploaded && attempt < 5) await sleep(800 * attempt);
+      }
+      return { m, kind: uploaded ? "ok" : "fail" };
+    }));
+    for (const r of res) {
+      if (r.kind === "planned") planned++;
+      else if (r.kind === "skip") skip++;
+      else if (r.kind === "ok") { ok++; doneSet.add(r.m.slot); }
+      else { fail++; failed.push(r.m.slot); }
+    }
+    if (!DRY) fs.writeFileSync(DONE_FILE, JSON.stringify([...doneSet]));
+    console.log(`  进度 ${Math.min(i + CONC, total)}/${total} (新传 ${ok}, 跳过已存在 ${skip}, 失败 ${fail}${DRY ? `, 计划 ${planned}` : ""})`);
+    if (i + CONC < total && !DRY) await sleep(150); // 每批之间轻量停顿，安抚 LB
   }
-  console.log(DRY ? "✓ dry 完成，未实际上传" : `✓ 帽子图上传完成：成功 ${ok} / 失败 ${fail} / 共 ${manifest.length}`);
+  console.log(DRY ? "✓ dry 完成，未实际上传" : `✓ 帽子图上传完成：新传 ${ok} / 跳过已存在 ${skip} / 失败 ${fail} / 共 ${total}`);
+  if (!DRY && fail > 0) console.log("以下 slot 上传失败，可再次运行本脚本自动续传（已成功的不会重复传）：\n  " + failed.join("\n  "));
   if (!DRY && fail === 0) console.log("\n全部完成。请硬刷新站点（Ctrl+F5）查看【特殊动物】与【帽子】分类。");
 }
 

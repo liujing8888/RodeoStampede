@@ -8,3 +8,5 @@ data/taxonomy.backup_*.json
 # 不入库：部署用的压缩包（含 109M 图片，体积过大）与重复解压目录
 deploy/*.tar.gz
 deploy/crazyzoo-src/
+# 不入库：同步脚本的本地上传进度（断点续传用，含机器相关状态）
+tools/.hat_done.json

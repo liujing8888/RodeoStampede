@@ -1,0 +1,1037 @@
+[
+  {
+    "slot": "sp:sp_x8l7wzi8",
+    "file": "data/img/sp%3Asp_x8l7wzi8",
+    "name": "hat_e_hat_ClownFish"
+  },
+  {
+    "slot": "sp:sp_e4cqf4f2",
+    "file": "data/img/sp%3Asp_e4cqf4f2",
+    "name": "hat_e_hat_GoToTheSea"
+  },
+  {
+    "slot": "sp:sp_rctmnslm",
+    "file": "data/img/sp%3Asp_rctmnslm",
+    "name": "hat_e_hat_Octopus"
+  },
+  {
+    "slot": "sp:sp_memx74wn",
+    "file": "data/img/sp%3Asp_memx74wn",
+    "name": "random_hat"
+  },
+  {
+    "slot": "sp:sp_s4hx4xkk",
+    "file": "data/img/sp%3Asp_s4hx4xkk",
+    "name": "不朽绅士"
+  },
+  {
+    "slot": "sp:sp_zwv46xfw",
+    "file": "data/img/sp%3Asp_zwv46xfw",
+    "name": "不败将军"
+  },
+  {
+    "slot": "sp:sp_nzhgvrpy",
+    "file": "data/img/sp%3Asp_nzhgvrpy",
+    "name": "丘比特"
+  },
+  {
+    "slot": "sp:sp_lprqugj5",
+    "file": "data/img/sp%3Asp_lprqugj5",
+    "name": "中华田园犬"
+  },
+  {
+    "slot": "sp:sp_9hejj5dl",
+    "file": "data/img/sp%3Asp_9hejj5dl",
+    "name": "丹先生的帽子"
+  },
+  {
+    "slot": "sp:sp_r4xm681r",
+    "file": "data/img/sp%3Asp_r4xm681r",
+    "name": "九五之尊"
+  },
+  {
+    "slot": "sp:sp_xq4dyyft",
+    "file": "data/img/sp%3Asp_xq4dyyft",
+    "name": "九周年快乐"
+  },
+  {
+    "slot": "sp:sp_tswtj8a9",
+    "file": "data/img/sp%3Asp_tswtj8a9",
+    "name": "二哈"
+  },
+  {
+    "slot": "sp:sp_8r6zloig",
+    "file": "data/img/sp%3Asp_8r6zloig",
+    "name": "亲亲宝贝"
+  },
+  {
+    "slot": "sp:sp_5a50d2gj",
+    "file": "data/img/sp%3Asp_5a50d2gj",
+    "name": "人体彗星"
+  },
+  {
+    "slot": "sp:sp_pq7uo7ul",
+    "file": "data/img/sp%3Asp_pq7uo7ul",
+    "name": "以梦为食"
+  },
+  {
+    "slot": "sp:sp_rne5nv6n",
+    "file": "data/img/sp%3Asp_rne5nv6n",
+    "name": "企鹅装"
+  },
+  {
+    "slot": "sp:sp_nxut23n8",
+    "file": "data/img/sp%3Asp_nxut23n8",
+    "name": "保暖冬装"
+  },
+  {
+    "slot": "sp:sp_jipgw83d",
+    "file": "data/img/sp%3Asp_jipgw83d",
+    "name": "光谱鱿鱼"
+  },
+  {
+    "slot": "sp:sp_6kzrd0tq",
+    "file": "data/img/sp%3Asp_6kzrd0tq",
+    "name": "克朗普斯"
+  },
+  {
+    "slot": "sp:sp_sdylfu89",
+    "file": "data/img/sp%3Asp_sdylfu89",
+    "name": "克苏鲁"
+  },
+  {
+    "slot": "sp:sp_8cqpiso2",
+    "file": "data/img/sp%3Asp_8cqpiso2",
+    "name": "兔兔和服"
+  },
+  {
+    "slot": "sp:sp_yb2oab5g",
+    "file": "data/img/sp%3Asp_yb2oab5g",
+    "name": "兔兔汉服"
+  },
+  {
+    "slot": "sp:sp_9pu1nmwi",
+    "file": "data/img/sp%3Asp_9pu1nmwi",
+    "name": "兔兔韩服"
+  },
+  {
+    "slot": "sp:sp_9i3ccqjf",
+    "file": "data/img/sp%3Asp_9i3ccqjf",
+    "name": "兔子人"
+  },
+  {
+    "slot": "sp:sp_0l8kdck1",
+    "file": "data/img/sp%3Asp_0l8kdck1",
+    "name": "兔耳罩帽"
+  },
+  {
+    "slot": "sp:sp_ubgvjne6",
+    "file": "data/img/sp%3Asp_ubgvjne6",
+    "name": "兔耳花匠"
+  },
+  {
+    "slot": "sp:sp_ac63kknd",
+    "file": "data/img/sp%3Asp_ac63kknd",
+    "name": "公主殿下"
+  },
+  {
+    "slot": "sp:sp_xuj49jiu",
+    "file": "data/img/sp%3Asp_xuj49jiu",
+    "name": "农场主"
+  },
+  {
+    "slot": "sp:sp_xv8j5ioo",
+    "file": "data/img/sp%3Asp_xv8j5ioo",
+    "name": "农场女主"
+  },
+  {
+    "slot": "sp:sp_wn8csur5",
+    "file": "data/img/sp%3Asp_wn8csur5",
+    "name": "冠军伤齿龙"
+  },
+  {
+    "slot": "sp:sp_e9nfyapj",
+    "file": "data/img/sp%3Asp_e9nfyapj",
+    "name": "冠军翼装"
+  },
+  {
+    "slot": "sp:sp_9lzn17u1",
+    "file": "data/img/sp%3Asp_9lzn17u1",
+    "name": "冠军花环"
+  },
+  {
+    "slot": "sp:sp_sqsqodsi",
+    "file": "data/img/sp%3Asp_sqsqodsi",
+    "name": "冬幕国王"
+  },
+  {
+    "slot": "sp:sp_fnrtb9q0",
+    "file": "data/img/sp%3Asp_fnrtb9q0",
+    "name": "冰激凌化了"
+  },
+  {
+    "slot": "sp:sp_9obfiy3x",
+    "file": "data/img/sp%3Asp_9obfiy3x",
+    "name": "冰球冠军"
+  },
+  {
+    "slot": "sp:sp_o8rpj9i6",
+    "file": "data/img/sp%3Asp_o8rpj9i6",
+    "name": "动物园鲸鱼的员工"
+  },
+  {
+    "slot": "sp:sp_tomj9jy7",
+    "file": "data/img/sp%3Asp_tomj9jy7",
+    "name": "北极熊孩子"
+  },
+  {
+    "slot": "sp:sp_k0iav46x",
+    "file": "data/img/sp%3Asp_k0iav46x",
+    "name": "南瓜灯"
+  },
+  {
+    "slot": "sp:sp_goevv5z2",
+    "file": "data/img/sp%3Asp_goevv5z2",
+    "name": "原始人"
+  },
+  {
+    "slot": "sp:sp_ra2o85ng",
+    "file": "data/img/sp%3Asp_ra2o85ng",
+    "name": "原始女人"
+  },
+  {
+    "slot": "sp:sp_cjg2yn7t",
+    "file": "data/img/sp%3Asp_cjg2yn7t",
+    "name": "受困的少女"
+  },
+  {
+    "slot": "sp:sp_u7nbx2rh",
+    "file": "data/img/sp%3Asp_u7nbx2rh",
+    "name": "可爱圣诞服"
+  },
+  {
+    "slot": "sp:sp_bgejsezu",
+    "file": "data/img/sp%3Asp_bgejsezu",
+    "name": "向日葵"
+  },
+  {
+    "slot": "sp:sp_9r17pzip",
+    "file": "data/img/sp%3Asp_9r17pzip",
+    "name": "吸血鬼伯爵"
+  },
+  {
+    "slot": "sp:sp_6l8wk2p0",
+    "file": "data/img/sp%3Asp_6l8wk2p0",
+    "name": "圣诞布丁"
+  },
+  {
+    "slot": "sp:sp_e4l7y5lh",
+    "file": "data/img/sp%3Asp_e4l7y5lh",
+    "name": "圣诞帽"
+  },
+  {
+    "slot": "sp:sp_u4aufxsm",
+    "file": "data/img/sp%3Asp_u4aufxsm",
+    "name": "圣诞棒棒糖"
+  },
+  {
+    "slot": "sp:sp_ubcn8g1q",
+    "file": "data/img/sp%3Asp_ubcn8g1q",
+    "name": "圣诞精灵"
+  },
+  {
+    "slot": "sp:sp_qtz8f3cw",
+    "file": "data/img/sp%3Asp_qtz8f3cw",
+    "name": "圣诞老人"
+  },
+  {
+    "slot": "sp:sp_zbhldxq6",
+    "file": "data/img/sp%3Asp_zbhldxq6",
+    "name": "圣诞老夫人"
+  },
+  {
+    "slot": "sp:sp_jlyun3m9",
+    "file": "data/img/sp%3Asp_jlyun3m9",
+    "name": "地狱骑士"
+  },
+  {
+    "slot": "sp:sp_xq30zqdb",
+    "file": "data/img/sp%3Asp_xq30zqdb",
+    "name": "地狱魔"
+  },
+  {
+    "slot": "sp:sp_gx6frvcd",
+    "file": "data/img/sp%3Asp_gx6frvcd",
+    "name": "复活节兔子"
+  },
+  {
+    "slot": "sp:sp_5imh7m5e",
+    "file": "data/img/sp%3Asp_5imh7m5e",
+    "name": "复活节大耳朵"
+  },
+  {
+    "slot": "sp:sp_cuqi06du",
+    "file": "data/img/sp%3Asp_cuqi06du",
+    "name": "大草帽乐手"
+  },
+  {
+    "slot": "sp:sp_0lsn1j4l",
+    "file": "data/img/sp%3Asp_0lsn1j4l",
+    "name": "大蓝鲨"
+  },
+  {
+    "slot": "sp:sp_bud59e1n",
+    "file": "data/img/sp%3Asp_bud59e1n",
+    "name": "大魔法师"
+  },
+  {
+    "slot": "sp:sp_gcbghn6q",
+    "file": "data/img/sp%3Asp_gcbghn6q",
+    "name": "女王币下"
+  },
+  {
+    "slot": "sp:sp_i8vv8zi1",
+    "file": "data/img/sp%3Asp_i8vv8zi1",
+    "name": "姜饼人先生"
+  },
+  {
+    "slot": "sp:sp_z5zh7k4g",
+    "file": "data/img/sp%3Asp_z5zh7k4g",
+    "name": "娜娜"
+  },
+  {
+    "slot": "sp:sp_ms186qub",
+    "file": "data/img/sp%3Asp_ms186qub",
+    "name": "孙悟空"
+  },
+  {
+    "slot": "sp:sp_jqx5qr3w",
+    "file": "data/img/sp%3Asp_jqx5qr3w",
+    "name": "学生会会长"
+  },
+  {
+    "slot": "sp:sp_d5jan7m3",
+    "file": "data/img/sp%3Asp_d5jan7m3",
+    "name": "寒竹仙灵"
+  },
+  {
+    "slot": "sp:sp_apbkeobm",
+    "file": "data/img/sp%3Asp_apbkeobm",
+    "name": "寻宝勇士"
+  },
+  {
+    "slot": "sp:sp_fbkhp7la",
+    "file": "data/img/sp%3Asp_fbkhp7la",
+    "name": "寻找铲屎官"
+  },
+  {
+    "slot": "sp:sp_0viiy5b7",
+    "file": "data/img/sp%3Asp_0viiy5b7",
+    "name": "寿司师傅"
+  },
+  {
+    "slot": "sp:sp_8dv53vhf",
+    "file": "data/img/sp%3Asp_8dv53vhf",
+    "name": "小丑女王"
+  },
+  {
+    "slot": "sp:sp_yj0gd0y2",
+    "file": "data/img/sp%3Asp_yj0gd0y2",
+    "name": "小兄弟搞砸了"
+  },
+  {
+    "slot": "sp:sp_w3k0gyyp",
+    "file": "data/img/sp%3Asp_w3k0gyyp",
+    "name": "小气财神"
+  },
+  {
+    "slot": "sp:sp_czuc6upu",
+    "file": "data/img/sp%3Asp_czuc6upu",
+    "name": "小龙人"
+  },
+  {
+    "slot": "sp:sp_jd8ybvcc",
+    "file": "data/img/sp%3Asp_jd8ybvcc",
+    "name": "幻影蛙"
+  },
+  {
+    "slot": "sp:sp_03u28dhh",
+    "file": "data/img/sp%3Asp_03u28dhh",
+    "name": "庆祝的烛光"
+  },
+  {
+    "slot": "sp:sp_52erk1ry",
+    "file": "data/img/sp%3Asp_52erk1ry",
+    "name": "建筑工人"
+  },
+  {
+    "slot": "sp:sp_1t60fhns",
+    "file": "data/img/sp%3Asp_1t60fhns",
+    "name": "开发者吉祥物"
+  },
+  {
+    "slot": "sp:sp_q8yvq9w5",
+    "file": "data/img/sp%3Asp_q8yvq9w5",
+    "name": "德古拉"
+  },
+  {
+    "slot": "sp:sp_0p68cqom",
+    "file": "data/img/sp%3Asp_0p68cqom",
+    "name": "急速烧脑"
+  },
+  {
+    "slot": "sp:sp_gktkj8e8",
+    "file": "data/img/sp%3Asp_gktkj8e8",
+    "name": "怪物兜帽"
+  },
+  {
+    "slot": "sp:sp_dpy29le9",
+    "file": "data/img/sp%3Asp_dpy29le9",
+    "name": "您好大夫"
+  },
+  {
+    "slot": "sp:sp_g3fvng2d",
+    "file": "data/img/sp%3Asp_g3fvng2d",
+    "name": "憨直阿汪"
+  },
+  {
+    "slot": "sp:sp_gkegaznm",
+    "file": "data/img/sp%3Asp_gkegaznm",
+    "name": "战刃机器人"
+  },
+  {
+    "slot": "sp:sp_wwj6wkon",
+    "file": "data/img/sp%3Asp_wwj6wkon",
+    "name": "扇舞者"
+  },
+  {
+    "slot": "sp:sp_lw731umx",
+    "file": "data/img/sp%3Asp_lw731umx",
+    "name": "新娘"
+  },
+  {
+    "slot": "sp:sp_iq9g9ox0",
+    "file": "data/img/sp%3Asp_iq9g9ox0",
+    "name": "新年鸡祥"
+  },
+  {
+    "slot": "sp:sp_7ctefi6x",
+    "file": "data/img/sp%3Asp_7ctefi6x",
+    "name": "旺虎"
+  },
+  {
+    "slot": "sp:sp_edg2anv0",
+    "file": "data/img/sp%3Asp_edg2anv0",
+    "name": "星际探险"
+  },
+  {
+    "slot": "sp:sp_xpox06rb",
+    "file": "data/img/sp%3Asp_xpox06rb",
+    "name": "智械医师"
+  },
+  {
+    "slot": "sp:sp_c4mcq05p",
+    "file": "data/img/sp%3Asp_c4mcq05p",
+    "name": "暗黑破坏神"
+  },
+  {
+    "slot": "sp:sp_vcy5xesk",
+    "file": "data/img/sp%3Asp_vcy5xesk",
+    "name": "未来勇士"
+  },
+  {
+    "slot": "sp:sp_t9a73ofd",
+    "file": "data/img/sp%3Asp_t9a73ofd",
+    "name": "朱丽叶"
+  },
+  {
+    "slot": "sp:sp_cazwlm79",
+    "file": "data/img/sp%3Asp_cazwlm79",
+    "name": "机甲玩偶"
+  },
+  {
+    "slot": "sp:sp_hsj5slxb",
+    "file": "data/img/sp%3Asp_hsj5slxb",
+    "name": "梦者"
+  },
+  {
+    "slot": "sp:sp_jjsmcwsh",
+    "file": "data/img/sp%3Asp_jjsmcwsh",
+    "name": "棒球帽"
+  },
+  {
+    "slot": "sp:sp_iv0pngfv",
+    "file": "data/img/sp%3Asp_iv0pngfv",
+    "name": "森之守卫"
+  },
+  {
+    "slot": "sp:sp_w3jh2h82",
+    "file": "data/img/sp%3Asp_w3jh2h82",
+    "name": "植物蝠鲼"
+  },
+  {
+    "slot": "sp:sp_s6rsn381",
+    "file": "data/img/sp%3Asp_s6rsn381",
+    "name": "死神"
+  },
+  {
+    "slot": "sp:sp_8udd391m",
+    "file": "data/img/sp%3Asp_8udd391m",
+    "name": "毁灭之刃"
+  },
+  {
+    "slot": "sp:sp_8nbdmuxk",
+    "file": "data/img/sp%3Asp_8nbdmuxk",
+    "name": "母仪天下"
+  },
+  {
+    "slot": "sp:sp_3z9t6uju",
+    "file": "data/img/sp%3Asp_3z9t6uju",
+    "name": "毛线帽"
+  },
+  {
+    "slot": "sp:sp_73kb4yme",
+    "file": "data/img/sp%3Asp_73kb4yme",
+    "name": "毛耳罩帽"
+  },
+  {
+    "slot": "sp:sp_2on7i1g9",
+    "file": "data/img/sp%3Asp_2on7i1g9",
+    "name": "汉堡包"
+  },
+  {
+    "slot": "sp:sp_v43uw7i9",
+    "file": "data/img/sp%3Asp_v43uw7i9",
+    "name": "沉浸式体验"
+  },
+  {
+    "slot": "sp:sp_7d21c77f",
+    "file": "data/img/sp%3Asp_7d21c77f",
+    "name": "波塞冬"
+  },
+  {
+    "slot": "sp:sp_kgtfi6fa",
+    "file": "data/img/sp%3Asp_kgtfi6fa",
+    "name": "波比"
+  },
+  {
+    "slot": "sp:sp_8re9594m",
+    "file": "data/img/sp%3Asp_8re9594m",
+    "name": "派对少女"
+  },
+  {
+    "slot": "sp:sp_v1dpzypk",
+    "file": "data/img/sp%3Asp_v1dpzypk",
+    "name": "海盗鲸鱼的船员"
+  },
+  {
+    "slot": "sp:sp_ihg5wqjl",
+    "file": "data/img/sp%3Asp_ihg5wqjl",
+    "name": "温暖绒衣"
+  },
+  {
+    "slot": "sp:sp_bxhbmm4n",
+    "file": "data/img/sp%3Asp_bxhbmm4n",
+    "name": "游园小丑"
+  },
+  {
+    "slot": "sp:sp_rx2fh5mf",
+    "file": "data/img/sp%3Asp_rx2fh5mf",
+    "name": "滑板少年"
+  },
+  {
+    "slot": "sp:sp_ionwezya",
+    "file": "data/img/sp%3Asp_ionwezya",
+    "name": "滑雪装备"
+  },
+  {
+    "slot": "sp:sp_ml11ptfr",
+    "file": "data/img/sp%3Asp_ml11ptfr",
+    "name": "潜水服"
+  },
+  {
+    "slot": "sp:sp_c24kosn2",
+    "file": "data/img/sp%3Asp_c24kosn2",
+    "name": "火炬手"
+  },
+  {
+    "slot": "sp:sp_baedyhdj",
+    "file": "data/img/sp%3Asp_baedyhdj",
+    "name": "炫舞鹦"
+  },
+  {
+    "slot": "sp:sp_12w3h1ip",
+    "file": "data/img/sp%3Asp_12w3h1ip",
+    "name": "热狗"
+  },
+  {
+    "slot": "sp:sp_mn0wm8vd",
+    "file": "data/img/sp%3Asp_mn0wm8vd",
+    "name": "熊猫"
+  },
+  {
+    "slot": "sp:sp_jbaacr26",
+    "file": "data/img/sp%3Asp_jbaacr26",
+    "name": "爆裂贝斯手"
+  },
+  {
+    "slot": "sp:sp_eoi7zyk4",
+    "file": "data/img/sp%3Asp_eoi7zyk4",
+    "name": "牛先生很牛"
+  },
+  {
+    "slot": "sp:sp_mcggye7l",
+    "file": "data/img/sp%3Asp_mcggye7l",
+    "name": "牛头人"
+  },
+  {
+    "slot": "sp:sp_b1tr3s9f",
+    "file": "data/img/sp%3Asp_b1tr3s9f",
+    "name": "狮心王"
+  },
+  {
+    "slot": "sp:sp_4kuxyujd",
+    "file": "data/img/sp%3Asp_4kuxyujd",
+    "name": "狼人"
+  },
+  {
+    "slot": "sp:sp_a17nlu1h",
+    "file": "data/img/sp%3Asp_a17nlu1h",
+    "name": "猪大年"
+  },
+  {
+    "slot": "sp:sp_emskc8bp",
+    "file": "data/img/sp%3Asp_emskc8bp",
+    "name": "猪猪侠"
+  },
+  {
+    "slot": "sp:sp_1pfowjzx",
+    "file": "data/img/sp%3Asp_1pfowjzx",
+    "name": "猫咪奥黛"
+  },
+  {
+    "slot": "sp:sp_butu9ghe",
+    "file": "data/img/sp%3Asp_butu9ghe",
+    "name": "猫帽"
+  },
+  {
+    "slot": "sp:sp_fnjc6xim",
+    "file": "data/img/sp%3Asp_fnjc6xim",
+    "name": "王子殿下"
+  },
+  {
+    "slot": "sp:sp_x14craen",
+    "file": "data/img/sp%3Asp_x14craen",
+    "name": "环球守卫"
+  },
+  {
+    "slot": "sp:sp_jbwupacw",
+    "file": "data/img/sp%3Asp_jbwupacw",
+    "name": "玻璃鸡"
+  },
+  {
+    "slot": "sp:sp_mz0xbykw",
+    "file": "data/img/sp%3Asp_mz0xbykw",
+    "name": "瓷器书生"
+  },
+  {
+    "slot": "sp:sp_d2yzqxty",
+    "file": "data/img/sp%3Asp_d2yzqxty",
+    "name": "甜蜜圣诞女生"
+  },
+  {
+    "slot": "sp:sp_7s6u1cyo",
+    "file": "data/img/sp%3Asp_7s6u1cyo",
+    "name": "男学生"
+  },
+  {
+    "slot": "sp:sp_6x5rh3lk",
+    "file": "data/img/sp%3Asp_6x5rh3lk",
+    "name": "男爵夫人"
+  },
+  {
+    "slot": "sp:sp_oeew1ser",
+    "file": "data/img/sp%3Asp_oeew1ser",
+    "name": "男爵本爵"
+  },
+  {
+    "slot": "sp:sp_rzu0xr8f",
+    "file": "data/img/sp%3Asp_rzu0xr8f",
+    "name": "白色小丑"
+  },
+  {
+    "slot": "sp:sp_2pg1b534",
+    "file": "data/img/sp%3Asp_2pg1b534",
+    "name": "白衣天使"
+  },
+  {
+    "slot": "sp:sp_1g22ih5j",
+    "file": "data/img/sp%3Asp_1g22ih5j",
+    "name": "皇家骑士"
+  },
+  {
+    "slot": "sp:sp_buc4tlf6",
+    "file": "data/img/sp%3Asp_buc4tlf6",
+    "name": "石斑鱼警长"
+  },
+  {
+    "slot": "sp:sp_g5b667yp",
+    "file": "data/img/sp%3Asp_g5b667yp",
+    "name": "礼盒装"
+  },
+  {
+    "slot": "sp:sp_vv700uwj",
+    "file": "data/img/sp%3Asp_vv700uwj",
+    "name": "神准之谜"
+  },
+  {
+    "slot": "sp:sp_2lzgu1s9",
+    "file": "data/img/sp%3Asp_2lzgu1s9",
+    "name": "神秘部落"
+  },
+  {
+    "slot": "sp:sp_al8nez02",
+    "file": "data/img/sp%3Asp_al8nez02",
+    "name": "福来到"
+  },
+  {
+    "slot": "sp:sp_dt1blh90",
+    "file": "data/img/sp%3Asp_dt1blh90",
+    "name": "科学怪人"
+  },
+  {
+    "slot": "sp:sp_6e36ysnk",
+    "file": "data/img/sp%3Asp_6e36ysnk",
+    "name": "科技三角龙"
+  },
+  {
+    "slot": "sp:sp_z2pq5zqf",
+    "file": "data/img/sp%3Asp_z2pq5zqf",
+    "name": "童真年代（女）"
+  },
+  {
+    "slot": "sp:sp_e3bc2ad2",
+    "file": "data/img/sp%3Asp_e3bc2ad2",
+    "name": "童真年代（男）"
+  },
+  {
+    "slot": "sp:sp_apepzi58",
+    "file": "data/img/sp%3Asp_apepzi58",
+    "name": "管家机器人"
+  },
+  {
+    "slot": "sp:sp_izxa7ex7",
+    "file": "data/img/sp%3Asp_izxa7ex7",
+    "name": "紫晶王族"
+  },
+  {
+    "slot": "sp:sp_aimlcmo0",
+    "file": "data/img/sp%3Asp_aimlcmo0",
+    "name": "红绫君主"
+  },
+  {
+    "slot": "sp:sp_ea1r3yhw",
+    "file": "data/img/sp%3Asp_ea1r3yhw",
+    "name": "红色泳装"
+  },
+  {
+    "slot": "sp:sp_hw3nnr2s",
+    "file": "data/img/sp%3Asp_hw3nnr2s",
+    "name": "维西尔"
+  },
+  {
+    "slot": "sp:sp_ow24is0e",
+    "file": "data/img/sp%3Asp_ow24is0e",
+    "name": "绿色泳装"
+  },
+  {
+    "slot": "sp:sp_ob7pjc6b",
+    "file": "data/img/sp%3Asp_ob7pjc6b",
+    "name": "罗密欧"
+  },
+  {
+    "slot": "sp:sp_emrdb9br",
+    "file": "data/img/sp%3Asp_emrdb9br",
+    "name": "罗德"
+  },
+  {
+    "slot": "sp:sp_9nzrk8sg",
+    "file": "data/img/sp%3Asp_9nzrk8sg",
+    "name": "罪恶魔神"
+  },
+  {
+    "slot": "sp:sp_1qs80i5r",
+    "file": "data/img/sp%3Asp_1qs80i5r",
+    "name": "胆小鬼"
+  },
+  {
+    "slot": "sp:sp_rv50eq3c",
+    "file": "data/img/sp%3Asp_rv50eq3c",
+    "name": "腾虎"
+  },
+  {
+    "slot": "sp:sp_9v0jrqs6",
+    "file": "data/img/sp%3Asp_9v0jrqs6",
+    "name": "至尊上将"
+  },
+  {
+    "slot": "sp:sp_pqhqx4hx",
+    "file": "data/img/sp%3Asp_pqhqx4hx",
+    "name": "芝麻官"
+  },
+  {
+    "slot": "sp:sp_77vnrlfm",
+    "file": "data/img/sp%3Asp_77vnrlfm",
+    "name": "花之环"
+  },
+  {
+    "slot": "sp:sp_vrzr5qhp",
+    "file": "data/img/sp%3Asp_vrzr5qhp",
+    "name": "菲菲"
+  },
+  {
+    "slot": "sp:sp_uvndwjel",
+    "file": "data/img/sp%3Asp_uvndwjel",
+    "name": "萨满"
+  },
+  {
+    "slot": "sp:sp_7sggt8m9",
+    "file": "data/img/sp%3Asp_7sggt8m9",
+    "name": "蒙面怪咖"
+  },
+  {
+    "slot": "sp:sp_zlbop6ws",
+    "file": "data/img/sp%3Asp_zlbop6ws",
+    "name": "蓝色潜水服"
+  },
+  {
+    "slot": "sp:sp_racvt1jt",
+    "file": "data/img/sp%3Asp_racvt1jt",
+    "name": "虎年大吉"
+  },
+  {
+    "slot": "sp:sp_s1v1tovr",
+    "file": "data/img/sp%3Asp_s1v1tovr",
+    "name": "蝉露营者"
+  },
+  {
+    "slot": "sp:sp_5sd53dmp",
+    "file": "data/img/sp%3Asp_5sd53dmp",
+    "name": "蟹先生"
+  },
+  {
+    "slot": "sp:sp_h2x5se88",
+    "file": "data/img/sp%3Asp_h2x5se88",
+    "name": "裂变兔"
+  },
+  {
+    "slot": "sp:sp_m6fbwy1s",
+    "file": "data/img/sp%3Asp_m6fbwy1s",
+    "name": "装甲激战"
+  },
+  {
+    "slot": "sp:sp_y7x4bp05",
+    "file": "data/img/sp%3Asp_y7x4bp05",
+    "name": "该换尿布了"
+  },
+  {
+    "slot": "sp:sp_j8tpu0hw",
+    "file": "data/img/sp%3Asp_j8tpu0hw",
+    "name": "请查收包裹"
+  },
+  {
+    "slot": "sp:sp_sgmok40o",
+    "file": "data/img/sp%3Asp_sgmok40o",
+    "name": "调皮圣诞雪人"
+  },
+  {
+    "slot": "sp:sp_u4rtmkmp",
+    "file": "data/img/sp%3Asp_u4rtmkmp",
+    "name": "豆豆龙"
+  },
+  {
+    "slot": "sp:sp_32njlz5r",
+    "file": "data/img/sp%3Asp_32njlz5r",
+    "name": "财神到"
+  },
+  {
+    "slot": "sp:sp_ujvwm8sf",
+    "file": "data/img/sp%3Asp_ujvwm8sf",
+    "name": "财神帽"
+  },
+  {
+    "slot": "sp:sp_9bdsch99",
+    "file": "data/img/sp%3Asp_9bdsch99",
+    "name": "贱贱狗"
+  },
+  {
+    "slot": "sp:sp_ychjaqm9",
+    "file": "data/img/sp%3Asp_ychjaqm9",
+    "name": "赛马选手"
+  },
+  {
+    "slot": "sp:sp_izub09ss",
+    "file": "data/img/sp%3Asp_izub09ss",
+    "name": "超人强"
+  },
+  {
+    "slot": "sp:sp_uo29b1ml",
+    "file": "data/img/sp%3Asp_uo29b1ml",
+    "name": "转运锦鲤"
+  },
+  {
+    "slot": "sp:sp_qo7hjoq3",
+    "file": "data/img/sp%3Asp_qo7hjoq3",
+    "name": "送福灵童"
+  },
+  {
+    "slot": "sp:sp_9d9qvukw",
+    "file": "data/img/sp%3Asp_9d9qvukw",
+    "name": "邪神之巅"
+  },
+  {
+    "slot": "sp:sp_i6v6p0kz",
+    "file": "data/img/sp%3Asp_i6v6p0kz",
+    "name": "金刚狒狒"
+  },
+  {
+    "slot": "sp:sp_yld781h5",
+    "file": "data/img/sp%3Asp_yld781h5",
+    "name": "金刚猿"
+  },
+  {
+    "slot": "sp:sp_ia24gu3u",
+    "file": "data/img/sp%3Asp_ia24gu3u",
+    "name": "金属狂潮"
+  },
+  {
+    "slot": "sp:sp_5nz1d5hd",
+    "file": "data/img/sp%3Asp_5nz1d5hd",
+    "name": "金矿王"
+  },
+  {
+    "slot": "sp:sp_4ytr2xy1",
+    "file": "data/img/sp%3Asp_4ytr2xy1",
+    "name": "铁喙邪神"
+  },
+  {
+    "slot": "sp:sp_o5ridw2i",
+    "file": "data/img/sp%3Asp_o5ridw2i",
+    "name": "铜火锅"
+  },
+  {
+    "slot": "sp:sp_e3rn86jz",
+    "file": "data/img/sp%3Asp_e3rn86jz",
+    "name": "银河战士·绀"
+  },
+  {
+    "slot": "sp:sp_b2a8wv5d",
+    "file": "data/img/sp%3Asp_b2a8wv5d",
+    "name": "银河战士·赤"
+  },
+  {
+    "slot": "sp:sp_qnigevbf",
+    "file": "data/img/sp%3Asp_qnigevbf",
+    "name": "银河战士·青"
+  },
+  {
+    "slot": "sp:sp_n121cb9f",
+    "file": "data/img/sp%3Asp_n121cb9f",
+    "name": "闪亮盔甲骑士"
+  },
+  {
+    "slot": "sp:sp_lwlnhhx0",
+    "file": "data/img/sp%3Asp_lwlnhhx0",
+    "name": "阔边帽"
+  },
+  {
+    "slot": "sp:sp_6z3sy7wu",
+    "file": "data/img/sp%3Asp_6z3sy7wu",
+    "name": "雪人装"
+  },
+  {
+    "slot": "sp:sp_nc3toil6",
+    "file": "data/img/sp%3Asp_nc3toil6",
+    "name": "雪球龟"
+  },
+  {
+    "slot": "sp:sp_xs63s3f5",
+    "file": "data/img/sp%3Asp_xs63s3f5",
+    "name": "霸王"
+  },
+  {
+    "slot": "sp:sp_3m9g5if2",
+    "file": "data/img/sp%3Asp_3m9g5if2",
+    "name": "霹雳云"
+  },
+  {
+    "slot": "sp:sp_qe3fpo13",
+    "file": "data/img/sp%3Asp_qe3fpo13",
+    "name": "面点师"
+  },
+  {
+    "slot": "sp:sp_q0glniw5",
+    "file": "data/img/sp%3Asp_q0glniw5",
+    "name": "风驰虎"
+  },
+  {
+    "slot": "sp:sp_zybn7xb2",
+    "file": "data/img/sp%3Asp_zybn7xb2",
+    "name": "马戏团团长"
+  },
+  {
+    "slot": "sp:sp_dix744dq",
+    "file": "data/img/sp%3Asp_dix744dq",
+    "name": "马术骑手"
+  },
+  {
+    "slot": "sp:sp_lo5s3oo9",
+    "file": "data/img/sp%3Asp_lo5s3oo9",
+    "name": "驯兽精英"
+  },
+  {
+    "slot": "sp:sp_tp3629ys",
+    "file": "data/img/sp%3Asp_tp3629ys",
+    "name": "驯马师"
+  },
+  {
+    "slot": "sp:sp_8fn6p273",
+    "file": "data/img/sp%3Asp_8fn6p273",
+    "name": "驯鹿老人"
+  },
+  {
+    "slot": "sp:sp_qnxx8p7a",
+    "file": "data/img/sp%3Asp_qnxx8p7a",
+    "name": "驯鹿装"
+  },
+  {
+    "slot": "sp:sp_ms6pbl5x",
+    "file": "data/img/sp%3Asp_ms6pbl5x",
+    "name": "驱魔人"
+  },
+  {
+    "slot": "sp:sp_69cqwz29",
+    "file": "data/img/sp%3Asp_69cqwz29",
+    "name": "魔法少女"
+  },
+  {
+    "slot": "sp:sp_s65ngekh",
+    "file": "data/img/sp%3Asp_s65ngekh",
+    "name": "鱼叉潜水员"
+  },
+  {
+    "slot": "sp:sp_qoqu7t7w",
+    "file": "data/img/sp%3Asp_qoqu7t7w",
+    "name": "鳟鱼公主"
+  },
+  {
+    "slot": "sp:sp_qat82ahl",
+    "file": "data/img/sp%3Asp_qat82ahl",
+    "name": "鹿型人偶"
+  },
+  {
+    "slot": "sp:sp_uurv55ai",
+    "file": "data/img/sp%3Asp_uurv55ai",
+    "name": "鼠年大吉"
+  }
+]

@@ -211,8 +211,9 @@ function renderSpecies(){
   const flat = curCat().subs.length === 0;   // 无下级分类（如帽子）→ 个体平铺，不再套物种外壳
   const inBatch = EDIT && batchDelMode;
   grid.innerHTML = sub.species.map(sp => {
+    const imgSlot = spSlot(sp.id);   // 帽子等无下级分类：图片就在物种槽(sp:)，线上实测有图
     const sel = batchDelSel.has(sp.id);
-    const lightbox = inBatch ? "" : `data-lightbox-slot="${spSlot(sp.id)}" data-lightbox-cap="${esc(sub.name)} · ${esc(sp.name)}"`;
+    const lightbox = inBatch ? "" : `data-lightbox-slot="${imgSlot}" data-lightbox-cap="${esc(sub.name)} · ${esc(sp.name)}"`;
     const tools = inBatch
       ? `<label class="sp-check"><input type="checkbox" data-batch-check="${sp.id}" ${sel ? "checked" : ""}><span>选择</span></label>`
       : (EDIT ? `<div class="sp-card__tools">
@@ -229,7 +230,7 @@ function renderSpecies(){
     return `
     <div class="sp-card ${sel ? "is-sel" : ""}" data-sp="${sp.id}">
       <div class="sp-card__media" ${lightbox}>
-        <img data-slot="${spSlot(sp.id)}" alt="${esc(sp.name)}">
+        <img data-slot="${imgSlot}" alt="${esc(sp.name)}">
         <span class="sp-card__icon">${sub.icon}</span>
         ${tools}
       </div>
@@ -324,6 +325,10 @@ function renderBatchBar(){
 function openSpecies(cat, sub, sp){
   const body = document.getElementById("speciesModalBody");
   const inVaBatch = EDIT && vaBatchMode;
+  /* 帽子等 sync 上传时只在 sp: 槽留图、留下幽灵 variant（无图，var: 槽 404）。
+     "所有 variant 名都 == 物种名"即 ghost 模式，v-grid 用 sp 封面图替代，避免空白个体卡。 */
+  const ghostOnly = sp.variants.every(v => v.name === sp.name);
+  const ghostCard = ghostOnly ? `<div class="v-card r-${(sp.variants[0] && sp.variants[0].rarity) || 'common'}" data-va="${(sp.variants[0] && sp.variants[0].id) || sp.id}"><div class="v-card__media" data-lightbox-slot="${spSlot(sp.id)}" data-lightbox-cap="${esc(sp.name)}"><img data-slot="${spSlot(sp.id)}" alt="${esc(sp.name)}"><span class="v-card__ph">${esc(sp.name)}</span>${EDIT && !inVaBatch ? `<div class="v-card__tools"><button class="up-btn up-btn--sm" data-upslot="${spSlot(sp.id)}">⬆</button>${sp.variants[0] ? `<button class="v-del" data-act="delVa" data-id="${sp.variants[0].id}">🗑</button>` : ''}</div>` : ''}</div><span class="v-rarity r-${(sp.variants[0] && sp.variants[0].rarity) || 'common'}">${RARITY_LABEL[(sp.variants[0] && sp.variants[0].rarity) || 'common'] || '普通'}</span><div class="v-name">${esc(sp.name)}</div></div>` : "";
   body.innerHTML = `
     <div class="sp-head">
       <div class="sp-head__media" data-lightbox-slot="${spSlot(sp.id)}" data-lightbox-cap="${esc(sub.name)} · ${esc(sp.name)}">
@@ -350,7 +355,7 @@ function openSpecies(cat, sub, sp){
     </div>
     <div class="va-batchbar is-hidden" id="vaBatchBar"></div>
     <div class="v-grid">
-      ${sp.variants.map(v => {
+      ${ghostOnly ? ghostCard : sp.variants.map(v => {
         const sel = vaBatchSel.has(v.id);
         const tools = inVaBatch
           ? `<label class="sp-check"><input type="checkbox" data-va-check="${v.id}" ${sel ? "checked" : ""}><span>选择</span></label>`

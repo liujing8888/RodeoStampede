@@ -1,1 +1,92 @@
-{"adminPass":"admin","hero":{"title":"疯狂动物园","sub":"开局一头牛，动物全靠套！十周年感恩有你！","promo":"🎉 4.24新版本「玩偶系列」现已启航"},"nav":{"promo":"宣传图","creators":"优秀创作者","social":"社区社媒"},"versions":[{"id":"v3","title":"Q萌玩偶动物来袭 · 狂奔夺宝亦启航","tag":"新皮肤","date":"2026-08-28","detail":"嘿，牛仔们！新版本4.24来啦，快来看看这次带来了什么好东西！\n\n1. 🎫 新手专属 Pass —— 牛仔启程\n新玩家专属福利！完成日常任务即可领取免费奖励，解锁付费档位（仅需¥6）还能获得更多专属好礼。积分没有每日上限，手速快的话一天就能通关！\n\n2. 🎪 新活动：狂奔夺宝\n全新活动开启！完成每日任务、收集活动专属代币，去兑换商店看看有什么好东西等着你～\n\n3. 🐾 新动物登场\n一批新动物正式亮相！去活动兑换商店和 Battle Pass 里找找它们吧👀\n\n4. 🧹 主界面小调整\n幸运转盘和签到已整合至「活动」入口\n新手 Battle Pass 与通用 Battle Pass 现已统一使用同一个顶部图标，更简洁直观！\n\n5. 🔧 Bug 修复与优化\n修复了若干已知问题，游戏体验更顺畅！\n\niOS 现已上架，前往 App Store 更新即可！安卓各渠道陆续发布中🤠"}],"posters":[{"title":"经典永流传"},{"title":"新年快乐"},{"title":"深海秘境 · 鲸之歌"}],"creators":[{"name":"Q版","role":"自创大神","desc":"","link":"https://www.douyin.com/user/MS4wLjABAAAAEzrXSzzMoZGcgYH0g7o1oOK2kr4MNmxX6VHHazCc1NrkJWfR6aNzEzcj9Swxf7eU?from_tab_name=main"},{"name":"78赛罗1919810","role":"爆款王者","desc":"","link":"https://www.bilibili.com/video/BV1Z3ud6yEFs/?spm_id_from=333.1387.homepage.video_card.click"},{"name":"NanLi-Gamer","role":"天才画师","desc":"","link":"https://www.bilibili.com/video/BV1qGj26BEYH/?spm_id_from=333.1387.list.card_archive.click"}],"social":[{"key":"douyin","name":"抖音","url":"https://www.douyin.com/user/self?from_tab_name=main&showSubTab=video&showTab=post"},{"key":"bilibili","name":"B站","url":"https://space.bilibili.com/1684197191?spm_id_from=333.337.0.0"},{"key":"xhs","name":"小红书","url":"https://xhslink.cn/m/27THWEzQWgp"},{"key":"ks","name":"快手","url":"https://v.kuaishou.com/KucIlgaN"},{"key":"forum","name":"玩家社区","url":"https://in.fanbook.cn/mNZYQF7D"}],"service":{"qq":"无，可进社区：下载Fanbook-搜索疯狂动物园-加入","wechat":"请搜索微信服务号：游道易游戏，直接反馈问题哦！","email":"/","hours":"每周一二三、五六10:00-18:00！"}}
+{
+  "hero": {
+    "title": "疯狂动物园",
+    "sub": "开局一头牛，动物全靠套！十周年感恩有你！",
+    "promo": "🎉 4.24新版本「玩偶系列」现已启航"
+  },
+  "nav": {
+    "promo": "宣传图",
+    "creators": "优秀创作者",
+    "social": "社区&社媒"
+  },
+  "versions": [
+    {
+      "id": "v3",
+      "title": "Q萌玩偶动物来袭 · 狂奔夺宝亦启航",
+      "tag": "新皮肤",
+      "date": "2026-08-28",
+      "detail": "嘿，牛仔们！新版本4.24来啦，快来看看这次带来了什么好东西！\n\n1. 🎫 新手专属 Pass —— 牛仔启程\n新玩家专属福利！完成日常任务即可领取免费奖励，解锁付费档位（仅需¥6）还能获得更多专属好礼。积分没有每日上限，手速快的话一天就能通关！\n\n2. 🎪 新活动：狂奔夺宝\n全新活动开启！完成每日任务、收集活动专属代币，去兑换商店看看有什么好东西等着你～\n\n3. 🐾 新动物登场\n一批新动物正式亮相！去活动兑换商店和 Battle Pass 里找找它们吧👀\n\n4. 🧹 主界面小调整\n幸运转盘和签到已整合至「活动」入口\n新手 Battle Pass 与通用 Battle Pass 现已统一使用同一个顶部图标，更简洁直观！\n\n5. 🔧 Bug 修复与优化\n修复了若干已知问题，游戏体验更顺畅！\n\niOS 现已上架，前往 App Store 更新即可！安卓各渠道陆续发布中🤠"
+    },
+    {
+      "id": "v1788180488389",
+      "title": "抖音热门视频",
+      "tag": "社媒",
+      "date": "2026-08-20",
+      "detail": "牛来！牛来！"
+    }
+  ],
+  "posters": [
+    {
+      "title": "经典永流传"
+    },
+    {
+      "title": "新年快乐"
+    },
+    {
+      "title": "深海秘境 · 鲸之歌"
+    }
+  ],
+  "creators": [
+    {
+      "name": "Q版",
+      "role": "自创大神",
+      "desc": "",
+      "link": "https://www.douyin.com/user/MS4wLjABAAAAEzrXSzzMoZGcgYH0g7o1oOK2kr4MNmxX6VHHazCc1NrkJWfR6aNzEzcj9Swxf7eU?from_tab_name=main"
+    },
+    {
+      "name": "78赛罗1919810",
+      "role": "爆款王者",
+      "desc": "",
+      "link": "https://www.bilibili.com/video/BV1Z3ud6yEFs/?spm_id_from=333.1387.homepage.video_card.click"
+    },
+    {
+      "name": "NanLi-Gamer",
+      "role": "天才画师",
+      "desc": "",
+      "link": "https://www.bilibili.com/video/BV1qGj26BEYH/?spm_id_from=333.1387.list.card_archive.click"
+    }
+  ],
+  "social": [
+    {
+      "key": "douyin",
+      "name": "抖音",
+      "url": "https://www.douyin.com/user/self?modal_id=7649296526179478911"
+    },
+    {
+      "key": "bilibili",
+      "name": "B站",
+      "url": "https://space.bilibili.com/1684197191?spm_id_from=333.337.0.0"
+    },
+    {
+      "key": "xhs",
+      "name": "小红书",
+      "url": "https://xhslink.cn/m/27THWEzQWgp"
+    },
+    {
+      "key": "ks",
+      "name": "快手",
+      "url": "https://v.kuaishou.com/KucIlgaN"
+    },
+    {
+      "key": "forum",
+      "name": "玩家社区",
+      "url": "https://in.fanbook.cn/mNZYQF7D"
+    }
+  ],
+  "service": {
+    "qq": "无，可进社区：下载Fanbook-搜索疯狂动物园-加入",
+    "wechat": "请搜索微信服务号：【游道易游戏】，直接反馈问题哦！",
+    "email": "/",
+    "hours": "每周一二三、五六10:00-18:00！"
+  }
+}

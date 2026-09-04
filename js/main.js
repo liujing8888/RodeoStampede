@@ -148,7 +148,7 @@ function renderCatTabs(){
   box.innerHTML = TAX.map(cat => `
     <button class="cat-tab ${cat.id === curCatId ? "is-active" : ""}" data-cat="${cat.id}">
       <span class="cat-tab__icon">${cat.icon}</span>${esc(cat.name)}
-      <span class="cat-tab__n">${cat.subs.length ? cat.subs.length + " 区域" : (cat.species ? cat.species.length : 0) + " 物种"}</span>
+      <span class="cat-tab__n">${cat.subs.length ? cat.subs.length + " 区域" : (cat.species ? cat.species.length : 0) + " 张"}</span>
       ${EDIT ? `<span class="row-tools">
         <button class="row-btn" data-act="ordCat" data-dir="up" data-id="${cat.id}" title="上移">↑</button>
         <button class="row-btn" data-act="ordCat" data-dir="down" data-id="${cat.id}" title="下移">↓</button>
@@ -208,6 +208,7 @@ function renderSubTabs(){
 function renderSpecies(){
   const grid = document.getElementById("speciesGrid");
   const sub = curSub();
+  const flat = curCat().subs.length === 0;   // 无下级分类（如帽子）→ 个体平铺，不再套物种外壳
   const inBatch = EDIT && batchDelMode;
   grid.innerHTML = sub.species.map(sp => {
     const sel = batchDelSel.has(sp.id);
@@ -233,7 +234,7 @@ function renderSpecies(){
         ${tools}
       </div>
       ${nameEl}
-      <span class="sp-card__count">${sp.variants.length} 种个体</span>
+      ${flat ? "" : `<span class="sp-card__count">${sp.variants.length} 种个体</span>`}
     </div>`;
   }).join("") +
     (EDIT && !inBatch ? `<button class="sp-card sp-card--add" data-act="addSp" data-sub="${sub.id}">＋ 添加物种</button>` : "");
@@ -254,6 +255,7 @@ function renderSpecies(){
     }
     c.addEventListener("click", e => {
       if(e.target.closest("[data-upslot],[data-batch],[data-act],[data-rename-sp]")) return;
+      if(flat && !EDIT){ openLightbox(spSlot(sp.id), sp.name); return; }
       const sp = curSub().species.find(p => p.id === c.dataset.sp);
       openSpecies(curCat(), curSub(), sp);
     });

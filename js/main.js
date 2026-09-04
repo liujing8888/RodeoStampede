@@ -325,9 +325,10 @@ function renderBatchBar(){
 function openSpecies(cat, sub, sp){
   const body = document.getElementById("speciesModalBody");
   const inVaBatch = EDIT && vaBatchMode;
-  /* 帽子等 sync 上传时只在 sp: 槽留图、留下幽灵 variant（无图，var: 槽 404）。
-     "所有 variant 名都 == 物种名"即 ghost 模式，v-grid 用 sp 封面图替代，避免空白个体卡。 */
-  const ghostOnly = sp.variants.every(v => v.name === sp.name);
+  /* 帽子等无下级分类(flat)的物种：图片只在 sp: 槽，variant 是幽灵(或为空/改名后名字不符) → var: 槽 404。
+     对 flat 分类一律按"封面图"渲染个体卡，彻底避免空白；其余分类仍用"所有 variant 名==物种名"判定。 */
+  const flat = cat.subs.length === 0;
+  const ghostOnly = flat || sp.variants.every(v => v.name === sp.name);
   const ghostCard = ghostOnly ? `<div class="v-card r-${(sp.variants[0] && sp.variants[0].rarity) || 'common'}" data-va="${(sp.variants[0] && sp.variants[0].id) || sp.id}"><div class="v-card__media" data-lightbox-slot="${spSlot(sp.id)}" data-lightbox-cap="${esc(sp.name)}"><img data-slot="${spSlot(sp.id)}" alt="${esc(sp.name)}"><span class="v-card__ph">${esc(sp.name)}</span>${EDIT && !inVaBatch ? `<div class="v-card__tools"><button class="up-btn up-btn--sm" data-upslot="${spSlot(sp.id)}">⬆</button>${sp.variants[0] ? `<button class="v-del" data-act="delVa" data-id="${sp.variants[0].id}">🗑</button>` : ''}</div>` : ''}</div><span class="v-rarity r-${(sp.variants[0] && sp.variants[0].rarity) || 'common'}">${RARITY_LABEL[(sp.variants[0] && sp.variants[0].rarity) || 'common'] || '普通'}</span><div class="v-name">${esc(sp.name)}</div></div>` : "";
   body.innerHTML = `
     <div class="sp-head">

@@ -601,11 +601,6 @@
                 "rarity": "common"
               },
               {
-                "id": "va_ll7gf10j",
-                "name": "超神狮子（订阅）",
-                "rarity": "common"
-              },
-              {
                 "id": "va_y6xc20d9",
                 "name": "海狮",
                 "rarity": "common"
@@ -3574,6 +3569,11 @@
                 "id": "va_oflulf0s",
                 "name": "玄武",
                 "rarity": "common"
+              },
+              {
+                "id": "va_z0hjanz6",
+                "name": "玄武2",
+                "rarity": "common"
               }
             ]
           }
@@ -3680,8 +3680,8 @@
                 "rarity": "common"
               },
               {
-                "id": "va_qzp9isbaimc",
-                "name": "龙蜻蜓",
+                "id": "va_k250rnqs",
+                "name": "小辣椒",
                 "rarity": "common"
               }
             ]
@@ -4236,6 +4236,11 @@
                 "id": "va_qau1omdej7s",
                 "name": "龙葫芦",
                 "rarity": "common"
+              },
+              {
+                "id": "va_whf37bqy",
+                "name": "龙蜻蜓",
+                "rarity": "common"
               }
             ]
           },
@@ -4674,6 +4679,11 @@
               {
                 "id": "va_jn38c73mjiq",
                 "name": "蓝鲸",
+                "rarity": "common"
+              },
+              {
+                "id": "va_fksj746d",
+                "name": "鲲鹏",
                 "rarity": "common"
               }
             ]
@@ -5413,6 +5423,11 @@
                 "rarity": "common"
               }
             ]
+          },
+          {
+            "id": "sp_fuqg0poz",
+            "name": "超神狮子（订阅）",
+            "variants": []
           }
         ]
       }
@@ -5429,13 +5444,7 @@
         "id": "sp_x8l7wzi8",
         "name": "小丑鱼不丑",
         "rarity": "common",
-        "variants": [
-          {
-            "id": "va_6zglfw8b",
-            "name": "hat_e_hat_ClownFish",
-            "rarity": "common"
-          }
-        ]
+        "variants": []
       },
       {
         "id": "sp_e4cqf4f2",

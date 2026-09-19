@@ -88,14 +88,16 @@ function defaultTaxonomy(){
   return [ ...builtSubs, ...builtFlat ];
 }
 
-/* 统计 */
+/* 统计（帽子为装饰分类：仍算作一个分类 tab，但不计入图鉴的物种/个体规模） */
 function taxCount(){
-  let sp = 0, va = 0;
+  let sp = 0, va = 0, subN = 0;
   TAX.forEach(c => {
+    if (c.id === "cat_hat") return;          // 帽子不计入动物图鉴的物种/个体统计（分类数仍用 TAX.length 保留）
     const subs = c.subs || [];
     const direct = c.species || [];
+    subN += subs.length;
     subs.forEach(s => s.species.forEach(p => { sp++; va += (p.variants && p.variants.length) ? p.variants.length : 1; }));
     direct.forEach(p => { sp++; va += (p.variants && p.variants.length) ? p.variants.length : 1; });
   });
-  return { cats: TAX.length, subs: TAX.reduce((n,c)=>n+(c.subs?c.subs.length:0),0), species: sp, variants: va };
+  return { cats: TAX.length, subs: subN, species: sp, variants: va };
 }

@@ -94,8 +94,8 @@ function taxCount(){
   TAX.forEach(c => {
     const subs = c.subs || [];
     const direct = c.species || [];
-    subs.forEach(s => s.species.forEach(p => { sp++; va += p.variants.length; }));
-    direct.forEach(p => { sp++; va += p.variants.length; });
+    subs.forEach(s => s.species.forEach(p => { sp++; va += (p.variants && p.variants.length) ? p.variants.length : 1; }));
+    direct.forEach(p => { sp++; va += (p.variants && p.variants.length) ? p.variants.length : 1; });
   });
   return { cats: TAX.length, subs: TAX.reduce((n,c)=>n+(c.subs?c.subs.length:0),0), species: sp, variants: va };
 }

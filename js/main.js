@@ -205,6 +205,14 @@ function renderSubTabs(){
   }));
 }
 
+/* 物种实际会渲染出的「个体卡」数量：
+   - 有 variants 时 = variants.length
+   - 无 variants 时 = 1（封面图经 ghostCard 渲染成 1 张个体卡，见 openSpecies）
+   用于让"个体数"标签与真实显示一致，避免"有封面图却显示个体为0"。 */
+function effInd(sp){
+  return (sp.variants && sp.variants.length) ? sp.variants.length : 1;
+}
+
 function renderSpecies(){
   const grid = document.getElementById("speciesGrid");
   const sub = curSub();
@@ -235,7 +243,7 @@ function renderSpecies(){
         ${tools}
       </div>
       ${nameEl}
-      ${flat ? "" : `<span class="sp-card__count">${sp.variants.length} 种个体</span>`}
+      ${flat ? "" : `<span class="sp-card__count">${effInd(sp)} 种个体</span>`}
     </div>`;
   }).join("") +
     (EDIT && !inBatch ? `<button class="sp-card sp-card--add" data-act="addSp" data-sub="${sub.id}">＋ 添加物种</button>` : "");
@@ -343,7 +351,7 @@ function openSpecies(cat, sub, sp){
         <div class="sp-head__meta">
           <span class="card__tag">${sub.icon} ${esc(sub.name)}</span>
           <span class="card__tag">${cat.icon} ${esc(cat.name)}</span>
-          <span>共 ${sp.variants.length} 种个体</span>
+          <span>共 ${effInd(sp)} 种个体</span>
         </div>
         ${EDIT ? `<div class="sp-head__tools">
           <button class="btn btn--ghost btn--sm" data-upslot="${spSlot(sp.id)}">⬆ 上传封面</button>

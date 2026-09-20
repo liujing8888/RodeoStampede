@@ -5,6 +5,7 @@
 
 /* ---------- 小工具 ---------- */
 let toastTimer;
+function esc(s){ return String(s ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;"); }
 function toast(msg){
   const t = document.getElementById("toast");
   t.textContent = msg; t.classList.add("show");
@@ -59,6 +60,8 @@ function renderHero(){
   document.getElementById("footerTitle").textContent = S.hero.title;
   document.getElementById("heroTitle").textContent = S.hero.title;
   document.getElementById("heroSub").textContent = S.hero.sub;
+  const greetEl = document.getElementById("chatGreeting");
+  if(greetEl) greetEl.innerHTML = esc(S.service.greeting || "你好，牛仔们，这里是疯狂动物园客服 🦁") + "<br>请选择下方任意方式联系我们：";
   document.title = S.hero.title + " · 官方玩家社区";
   setNavLinkText("navPromo", S.nav.promo, "nav.promo");
   setNavLinkText("navCreator", S.nav.creators, "nav.creators");

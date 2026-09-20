@@ -51,6 +51,7 @@ const DEFAULTS = {
     { key:"forum",   name:"玩家社区", url:"#" }
   ],
   service: {
+    greeting:"你好，牛仔们，这里是疯狂动物园客服 🦁",
     qq:"800123456", wechat:"fengkuang-zoo",
     email:"service@zoo.game", hours:"工作日 9:00 – 21:00"
   }
@@ -416,6 +417,7 @@ function buildAdminPanel(){
       <h4>社区社媒链接</h4>
       <div id="admSocial"></div>
       <h4>客服信息（右下角对话框展示）</h4>
+      <label class="adm-field"><span>客服欢迎语（对话框首句）</span><textarea id="admSvcGreet" rows="2">${esc(serv.greeting || "你好，牛仔们，这里是疯狂动物园客服 🦁")}</textarea></label>
       <label class="adm-field"><span>QQ 群</span><input id="admSvcQQ" value="${esc(serv.qq)}"></label>
       <label class="adm-field"><span>微信号</span><input id="admSvcWX" value="${esc(serv.wechat)}"></label>
       <label class="adm-field"><span>邮箱</span><input id="admSvcMail" value="${esc(serv.email)}"></label>
@@ -519,6 +521,7 @@ function buildAdminPanel(){
     S.nav.creators  = wrap.querySelector("#admNavCre").value.trim() || "优秀创作者";
     S.nav.social    = wrap.querySelector("#admNavSoc").value.trim() || "社区社媒";
     S.nav.checkin   = wrap.querySelector("#admNavCheckin").value.trim() || "到此一游";
+    S.service.greeting = wrap.querySelector("#admSvcGreet").value.trim() || "你好，牛仔们，这里是疯狂动物园客服 🦁";
     S.service.qq     = wrap.querySelector("#admSvcQQ").value.trim();
     S.service.wechat = wrap.querySelector("#admSvcWX").value.trim();
     S.service.email  = wrap.querySelector("#admSvcMail").value.trim();

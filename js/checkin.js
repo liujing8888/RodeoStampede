@@ -212,7 +212,7 @@
       });
       if (!r.ok) throw new Error("bad");
       const d = await r.json();
-      showResult(d.seq, d.isNew, dev);
+      showResult(d.seq, d.isNew, dev, d.total);
     } catch (e) {
       const prev = (function () { try { return localStorage.getItem("zooCheckedIn"); } catch (x) { return null; } })();
       if (prev) {
@@ -228,7 +228,16 @@
     }
   }
 
-  function showResult(seq, isNew, dev) {
+  /* ---------- 总访客数（公开接口，无需登录） ---------- */
+  function showTotal(n) {
+    const el = document.getElementById("checkinTotalNum");
+    if (!el) return;
+    if (typeof n !== "number" || !isFinite(n)) { el.textContent = "—"; return; }
+    animateNumber(el, n);
+  }
+
+  function showResult(seq, isNew, dev, total) {
+    if (typeof total === "number") showTotal(total);
     animateNumber(document.getElementById("checkinNum"), seq);
     document.getElementById("checkinSub").textContent = isNew
       ? "🎉 欢迎加入牛仔名册！你已是官方记录的第 " + Number(seq).toLocaleString() + " 位牛仔"
@@ -252,6 +261,11 @@
         "👋 你已是牛仔名册第 " + Number(prev).toLocaleString() + " 位，点击按钮可刷新你的足迹";
       document.getElementById("checkinHint").textContent = "· 数据已本地保存，点击按钮同步到全局名册 ·";
     }
+    /* 拉取全局总访客数（公开接口，无需登录）——未打卡的访客也能看到"目前共有多少位来访者" */
+    zooApiFetch("/api/checkin", { cache: "no-store" })
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d && typeof d.total === "number") showTotal(d.total); })
+      .catch(() => {});
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initCheckin);

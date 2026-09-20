@@ -381,6 +381,8 @@ body.is-edit .sp-card__media,body.is-edit .v-card__media{outline:2px dashed rgba
 .checkin__title{font-size:clamp(2rem,6vw,3.6rem);line-height:1.25;font-weight:900;text-shadow:0 4px 30px rgba(0,0,0,.5)}
 .checkin__title b{background:linear-gradient(90deg,#ffc93c,#ff6b9d);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .checkin__num{display:inline-block;min-width:1.3em;font-weight:900;color:#ffd24a;font-size:1.15em;text-shadow:0 0 24px rgba(255,210,74,.85);animation:numGlow 2s ease-in-out infinite}
+.checkin__total{margin:14px auto 4px;font-size:1.05rem;color:#cfe3ff;letter-spacing:.5px}
+.checkin__totalnum{display:inline-block;min-width:1.2em;font-weight:900;color:#7CFFB2;font-size:1.18em;text-shadow:0 0 20px rgba(124,255,178,.7)}
 @keyframes numGlow{0%,100%{text-shadow:0 0 18px rgba(255,210,74,.6)}50%{text-shadow:0 0 38px rgba(255,210,74,1)}}
 .checkin__sub{margin:20px auto 8px;font-size:1.1rem;color:#e9e4ff;max-width:540px}
 .checkin__btn{margin-top:24px;padding:16px 44px;font-size:1.2rem;font-weight:800;border-radius:999px;color:#3a1d6e;

@@ -247,6 +247,7 @@ function renderSpecies(){
       </div>
       ${nameEl}
       ${flat ? "" : `<span class="sp-card__count">${effInd(sp)} 种个体</span>`}
+      ${!EDIT ? `<button class="sp-vote" data-vote="${sp.id}" type="button">🔥 期待<span class="sp-vote__n" data-votecount="${sp.id}">0</span></button>` : ""}
     </div>`;
   }).join("") +
     (EDIT && !inBatch ? `<button class="sp-card sp-card--add" data-act="addSp" data-sub="${sub.id}">＋ 添加物种</button>` : "");
@@ -285,6 +286,12 @@ function renderSpecies(){
       e.stopPropagation();
       const sp2 = curSub().species.find(p => p.id === mv.dataset.move);
       if(sp2) openMoveSpecies(curCat(), curSub(), sp2);
+    });
+  });
+  grid.querySelectorAll("[data-vote]").forEach(b => {
+    b.addEventListener("click", e => {
+      e.stopPropagation();
+      voteSpecies(b.dataset.vote);
     });
   });
   grid.querySelectorAll("[data-act]").forEach(b => b.addEventListener("click", e => {
@@ -1061,6 +1068,79 @@ function refreshAll(){
   renderPosters(); renderCreators(); renderSocial(); renderService();
 }
 
+/* ---------- 返场期待投票 ---------- */
+function getVoteDeviceId(){
+  let id; try { id = localStorage.getItem("zooDeviceId"); } catch(e){}
+  if(id) return id;
+  id = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : "d" + Date.now() + Math.random().toString(16).slice(2);
+  try { localStorage.setItem("zooDeviceId", id); } catch(e){}
+  return id;
+}
+function speciesNameById(id){
+  for(const c of TAX){
+    const subs = c.subs || [];
+    const direct = c.species || [];
+    for(const s of subs) for(const sp of s.species) if(sp.id === id) return sp.name;
+    for(const sp of direct) if(sp.id === id) return sp.name;
+  }
+  return null;
+}
+let VOTE_COUNTS = {};
+function markVotedLocal(){
+  let voted = []; try { voted = JSON.parse(localStorage.getItem("zooVoted") || "[]"); } catch(e){}
+  voted.forEach(id => { const b = document.querySelector('[data-vote="'+id+'"]'); if(b) b.classList.add("is-voted"); });
+}
+async function voteSpecies(id){
+  const btn = document.querySelector('[data-vote="'+id+'"]');
+  const n = document.querySelector('[data-votecount="'+id+'"]');
+  const dev = getVoteDeviceId();
+  try{
+    const r = await zooApiFetch("/api/vote", { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ id, deviceId: dev }) });
+    if(!r.ok) return;
+    const d = await r.json();
+    if(n) n.textContent = d.count || 0;
+    if(btn) btn.classList.add("is-voted");
+    if(d.ok || d.already){
+      let voted = []; try { voted = JSON.parse(localStorage.getItem("zooVoted") || "[]"); } catch(e){}
+      if(!voted.includes(id)){ voted.push(id); try{ localStorage.setItem("zooVoted", JSON.stringify(voted)); }catch(e){} }
+      VOTE_COUNTS[id] = d.count || 0;
+      renderReturnsBoard();
+    }
+  }catch(e){}
+}
+async function loadVotes(){
+  try{
+    const r = await zooApiFetch("/api/votes");
+    const d = await r.json();
+    VOTE_COUNTS = d.counts || {};
+    document.querySelectorAll("[data-votecount]").forEach(el => { el.textContent = VOTE_COUNTS[el.dataset.votecount] || 0; });
+    markVotedLocal();
+    renderReturnsBoard();
+    const sum = document.getElementById("returnsSummary");
+    if(sum) sum.textContent = `🔥 全站已投 ${d.total || 0} 票 · 共 ${Object.keys(VOTE_COUNTS).length} 种动物被期待返场`;
+  }catch(e){}
+}
+function renderReturnsBoard(){
+  const board = document.getElementById("returnsBoard");
+  if(!board) return;
+  const arr = [];
+  let total = 0;
+  for(const k in VOTE_COUNTS){ const c = VOTE_COUNTS[k] || 0; total += c; arr.push([k, c]); }
+  arr.sort((a, b) => b[1] - a[1]);
+  const top = arr.slice(0, 20);
+  const max = top.length ? top[0][1] : 1;
+  board.innerHTML = top.map(([id, c], i) => {
+    const name = speciesNameById(id) || id;
+    const pct = Math.max(4, Math.round(c / max * 100));
+    return `<li class="returns__row">
+      <span class="returns__rank">${i + 1}</span>
+      <span class="returns__name">${esc(name)}</span>
+      <span class="returns__bar"><i style="width:${pct}%"></i></span>
+      <span class="returns__count">${c}</span>
+    </li>`;
+  }).join("");
+}
+
 /* ---------- 初始化 ---------- */
 openImgDB().catch(err => console.error("IndexedDB 初始化失败：", err)).finally(async () => {
   try{ await initStorage(); }catch(e){ console.error("存储初始化失败：", e); }
@@ -1070,6 +1150,7 @@ openImgDB().catch(err => console.error("IndexedDB 初始化失败：", err)).fin
   applyImages(document);
   applyFavicon();
   restartCar();
+  loadVotes();
   /* 恢复管理员登录态：本机曾登录则自动显示编辑入口（仅管理员可见） */
   const savedAdmin = localStorage.getItem("zooAdminToken") || sessionStorage.getItem("zooToken");
   if(savedAdmin){ window.ADMIN_TOKEN = savedAdmin; showAdminFabs(); }

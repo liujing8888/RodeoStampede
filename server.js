@@ -201,6 +201,41 @@ const server = http.createServer(async (req, res) => {
       return send(res, 405, "method not allowed");
     }
 
+    /* ---------- 返场期待投票 ---------- */
+    if (p === "/api/votes") {
+      const VFile = path.join(DATA_DIR, "votes.json");
+      const readV = () => {
+        try { return fs.existsSync(VFile) ? JSON.parse(fs.readFileSync(VFile, "utf8")) : { counts: {}, log: {} }; }
+        catch (e) { return { counts: {}, log: {} }; }
+      };
+      const writeV = o => { try { fs.writeFileSync(VFile, JSON.stringify(o)); return true; } catch (e) { return false; } };
+
+      if (req.method === "GET") {
+        const o = readV();
+        o.counts = o.counts || {};
+        let total = 0; for (const k in o.counts) total += o.counts[k];
+        return send(res, 200, JSON.stringify({ counts: o.counts, total }), "application/json");
+      }
+      if (req.method === "POST" || req.method === "PUT") {
+        let d; try { d = JSON.parse((await readBody(req)).toString("utf8")); } catch (e) { return send(res, 400, JSON.stringify({ error: "bad json" }), "application/json"); }
+        const id = String(d.id || "").slice(0, 64);
+        const dev = String(d.deviceId || "").slice(0, 64);
+        if (!id || !dev) return send(res, 400, JSON.stringify({ error: "missing params" }), "application/json");
+        const o = readV();
+        o.counts = o.counts || {}; o.log = o.log || {};
+        const voted = o.log[dev] || [];
+        if (voted.includes(id)) {
+          return send(res, 200, JSON.stringify({ ok: false, already: true, count: o.counts[id] || 0 }), "application/json");
+        }
+        o.counts[id] = (o.counts[id] || 0) + 1;
+        o.log[dev] = voted.concat(id);
+        writeV(o);
+        let total = 0; for (const k in o.counts) total += o.counts[k];
+        return send(res, 200, JSON.stringify({ ok: true, count: o.counts[id], total }), "application/json");
+      }
+      return send(res, 405, "method not allowed");
+    }
+
     const m = p.match(/^\/api\/img\/(.+)$/);
     if (m) {
       let slot;

@@ -412,11 +412,19 @@ body.is-edit .sp-card__media,body.is-edit .v-card__media{outline:2px dashed rgba
 .ck-tr span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* ---------- 返场期待投票 ---------- */
-.sp-vote{display:inline-flex;align-items:center;gap:5px;margin-top:8px;padding:5px 14px;border:none;border-radius:999px;background:rgba(255,107,157,.16);color:#e0558c;font-size:.82rem;font-weight:700;cursor:pointer;transition:.2s}
-.sp-vote:hover{background:rgba(255,107,157,.3)}
+.sp-votes{display:flex;gap:6px;margin-top:8px;justify-content:center;flex-wrap:wrap}
+.sp-vote{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border:none;border-radius:999px;font-size:.78rem;font-weight:700;cursor:pointer;transition:.2s}
+.sp-vote--fav{background:rgba(255,107,157,.16);color:#e0558c}
+.sp-vote--fav:hover{background:rgba(255,107,157,.3)}
+.sp-vote--gift{background:rgba(80,160,120,.16);color:#2f8f5b}
+.sp-vote--gift:hover{background:rgba(80,160,120,.3)}
 .sp-vote.is-voted{background:rgba(255,201,60,.22);color:#c9982a;cursor:default}
 .sp-vote__n{font-weight:900}
-.returns__summary{text-align:center;color:var(--ink-2);margin:4px 0 24px;font-weight:700;font-size:1.05rem}
+.returns__tabs{display:flex;gap:10px;justify-content:center;margin:6px 0 4px}
+.returns__tab{padding:8px 22px;border:1px solid #f1e9d8;border-radius:999px;background:#fff;color:var(--ink-2);font-weight:700;font-size:.95rem;cursor:pointer;transition:.2s}
+.returns__tab:hover{border-color:#e9c98a}
+.returns__tab.is-active{background:linear-gradient(135deg,var(--pink),var(--orange));color:#fff;border-color:transparent;box-shadow:0 6px 16px rgba(224,85,140,.25)}
+.returns__summary{text-align:center;color:var(--ink-2);margin:10px 0 24px;font-weight:700;font-size:1.05rem}
 .returns__board{list-style:none;max-width:680px;margin:0 auto;padding:0;display:flex;flex-direction:column;gap:10px}
 .returns__row{display:grid;grid-template-columns:36px 1fr 2fr 52px;align-items:center;gap:12px;background:#fff;border:1px solid #f1e9d8;border-radius:14px;padding:11px 16px;box-shadow:0 4px 14px rgba(80,60,20,.06)}
 .returns__rank{display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--orange),var(--pink));color:#fff;font-weight:900;font-size:.9rem}

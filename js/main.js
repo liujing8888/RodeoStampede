@@ -247,7 +247,10 @@ function renderSpecies(){
       </div>
       ${nameEl}
       ${flat ? "" : `<span class="sp-card__count">${effInd(sp)} 种个体</span>`}
-      ${!EDIT ? `<button class="sp-vote" data-vote="${sp.id}" type="button">🔥 期待<span class="sp-vote__n" data-votecount="${sp.id}">0</span></button>` : ""}
+      ${!EDIT ? `<div class="sp-votes">
+        <button class="sp-vote sp-vote--fav" data-vote="${sp.id}" data-cat="fav" type="button">❤️ 喜爱<span class="sp-vote__n" data-votecount="fav:${sp.id}">0</span></button>
+        <button class="sp-vote sp-vote--gift" data-vote="${sp.id}" data-cat="gift" type="button">🎁 礼包<span class="sp-vote__n" data-votecount="gift:${sp.id}">0</span></button>
+      </div>` : ""}
     </div>`;
   }).join("") +
     (EDIT && !inBatch ? `<button class="sp-card sp-card--add" data-act="addSp" data-sub="${sub.id}">＋ 添加物种</button>` : "");
@@ -291,7 +294,7 @@ function renderSpecies(){
   grid.querySelectorAll("[data-vote]").forEach(b => {
     b.addEventListener("click", e => {
       e.stopPropagation();
-      voteSpecies(b.dataset.vote);
+      voteSpecies(b.dataset.vote, b.dataset.cat);
     });
   });
   grid.querySelectorAll("[data-act]").forEach(b => b.addEventListener("click", e => {
@@ -1085,26 +1088,35 @@ function speciesNameById(id){
   }
   return null;
 }
-let VOTE_COUNTS = {};
+let VOTE_COUNTS = { fav: {}, gift: {} };
 function markVotedLocal(){
   let voted = []; try { voted = JSON.parse(localStorage.getItem("zooVoted") || "[]"); } catch(e){}
-  voted.forEach(id => { const b = document.querySelector('[data-vote="'+id+'"]'); if(b) b.classList.add("is-voted"); });
+  voted.forEach(key => {
+    const i = key.indexOf(":");
+    const cat = i > 0 ? key.slice(0, i) : "fav";
+    const id = i > 0 ? key.slice(i + 1) : key;
+    const b = document.querySelector('[data-vote="'+id+'"][data-cat="'+cat+'"]');
+    if(b) b.classList.add("is-voted");
+  });
 }
-async function voteSpecies(id){
-  const btn = document.querySelector('[data-vote="'+id+'"]');
-  const n = document.querySelector('[data-votecount="'+id+'"]');
+async function voteSpecies(id, cat){
+  cat = (cat === "gift") ? "gift" : "fav";
+  const btn = document.querySelector('[data-vote="'+id+'"][data-cat="'+cat+'"]');
+  const n = document.querySelector('[data-votecount="'+cat+":"+id+'"]');
   const dev = getVoteDeviceId();
   try{
-    const r = await zooApiFetch("/api/vote", { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ id, deviceId: dev }) });
+    const r = await zooApiFetch("/api/votes", { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ id, deviceId: dev, cat }) });
     if(!r.ok) return;
     const d = await r.json();
     if(n) n.textContent = d.count || 0;
     if(btn) btn.classList.add("is-voted");
     if(d.ok || d.already){
       let voted = []; try { voted = JSON.parse(localStorage.getItem("zooVoted") || "[]"); } catch(e){}
-      if(!voted.includes(id)){ voted.push(id); try{ localStorage.setItem("zooVoted", JSON.stringify(voted)); }catch(e){} }
-      VOTE_COUNTS[id] = d.count || 0;
-      renderReturnsBoard();
+      const key = cat + ":" + id;
+      if(!voted.includes(key)){ voted.push(key); try{ localStorage.setItem("zooVoted", JSON.stringify(voted)); }catch(e){} }
+      if(!VOTE_COUNTS[cat]) VOTE_COUNTS[cat] = {};
+      VOTE_COUNTS[cat][id] = d.count || 0;
+      renderReturnsBoard(cat);
     }
   }catch(e){}
 }
@@ -1112,20 +1124,29 @@ async function loadVotes(){
   try{
     const r = await zooApiFetch("/api/votes");
     const d = await r.json();
-    VOTE_COUNTS = d.counts || {};
-    document.querySelectorAll("[data-votecount]").forEach(el => { el.textContent = VOTE_COUNTS[el.dataset.votecount] || 0; });
+    VOTE_COUNTS = {
+      fav: (d.cats && d.cats.fav && d.cats.fav.counts) || {},
+      gift: (d.cats && d.cats.gift && d.cats.gift.counts) || {}
+    };
+    document.querySelectorAll("[data-votecount]").forEach(el => {
+      const i = el.dataset.votecount.indexOf(":");
+      const cat = el.dataset.votecount.slice(0, i);
+      const id = el.dataset.votecount.slice(i + 1);
+      el.textContent = (VOTE_COUNTS[cat] && VOTE_COUNTS[cat][id]) || 0;
+    });
     markVotedLocal();
-    renderReturnsBoard();
+    renderReturnsBoard("fav");
     const sum = document.getElementById("returnsSummary");
-    if(sum) sum.textContent = `🔥 全站已投 ${d.total || 0} 票 · 共 ${Object.keys(VOTE_COUNTS).length} 种动物被期待返场`;
+    if(sum) sum.textContent = `❤️ 最喜爱 ${ (d.totals && d.totals.fav) || 0 } 票 · 🎁 最希望礼包 ${ (d.totals && d.totals.gift) || 0 } 票`;
   }catch(e){}
 }
-function renderReturnsBoard(){
+function renderReturnsBoard(cat){
+  cat = (cat === "gift") ? "gift" : "fav";
   const board = document.getElementById("returnsBoard");
   if(!board) return;
+  const counts = VOTE_COUNTS[cat] || {};
   const arr = [];
-  let total = 0;
-  for(const k in VOTE_COUNTS){ const c = VOTE_COUNTS[k] || 0; total += c; arr.push([k, c]); }
+  for(const k in counts){ const c = counts[k] || 0; arr.push([k, c]); }
   arr.sort((a, b) => b[1] - a[1]);
   const top = arr.slice(0, 20);
   const max = top.length ? top[0][1] : 1;
@@ -1151,6 +1172,13 @@ openImgDB().catch(err => console.error("IndexedDB 初始化失败：", err)).fin
   applyFavicon();
   restartCar();
   loadVotes();
+  /* 动物投票双标签切换 */
+  const vTabs = document.querySelectorAll(".returns__tab");
+  vTabs.forEach(b => b.addEventListener("click", () => {
+    vTabs.forEach(x => x.classList.remove("is-active"));
+    b.classList.add("is-active");
+    renderReturnsBoard(b.dataset.vtab);
+  }));
   /* 恢复管理员登录态：本机曾登录则自动显示编辑入口（仅管理员可见） */
   const savedAdmin = localStorage.getItem("zooAdminToken") || sessionStorage.getItem("zooToken");
   if(savedAdmin){ window.ADMIN_TOKEN = savedAdmin; showAdminFabs(); }

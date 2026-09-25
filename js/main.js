@@ -1291,10 +1291,17 @@ function renderReturnsBoard(cat, month){
 }
 
 function fillVoteDesc(){
+  if(!S.vote) return; // 未配置过则保留 HTML 内置默认文案
   const d = document.getElementById("voteDesc");
-  if(d && S.vote && S.vote.desc) d.textContent = S.vote.desc;
+  if(d){
+    if(S.vote.desc != null && S.vote.desc.trim() !== ""){ d.textContent = S.vote.desc; d.style.display = ""; }
+    else { d.style.display = "none"; } // 留空则隐藏
+  }
   const h = document.getElementById("voteHint");
-  if(h && S.vote && S.vote.hint) h.textContent = S.vote.hint;
+  if(h){
+    if(S.vote.hint != null && S.vote.hint.trim() !== ""){ h.textContent = S.vote.hint; h.style.display = ""; }
+    else { h.style.display = "none"; } // 留空则隐藏
+  }
 }
 window.fillVoteDesc = fillVoteDesc;
 

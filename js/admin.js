@@ -430,8 +430,8 @@ function buildAdminPanel(){
       <label class="adm-field"><span>邮箱</span><input id="admSvcMail" value="${esc(serv.email)}"></label>
       <label class="adm-field"><span>服务时间</span><input id="admSvcHours" value="${esc(serv.hours)}"></label>
       <h4>动物投票文案</h4>
-      <label class="adm-field"><span>投票页标题说明</span><textarea id="admVoteDesc" rows="3">${esc((S.vote && S.vote.desc) || "为你最喜爱的动物、最希望出现在礼包的动物投上一票。\n规则：每月每设备 ❤️ 与 🎁 各 10 票，同一动物可重复投。\n点开任意物种，在每个「动物卡片」下方点击 ❤️ / 🎁 即可。")}</textarea></label>
-      <label class="adm-field"><span>投票页底部提示</span><textarea id="admVoteHint" rows="2">${esc((S.vote && S.vote.hint) || "榜单数据来自全站玩家投票，去 动物图鉴 点开物种、在「个体卡片」上点 ❤️ / 🎁 即可参与。")}</textarea></label>
+      <label class="adm-field"><span>投票页标题说明</span><textarea id="admVoteDesc" rows="3">${esc(S.vote && S.vote.desc != null ? S.vote.desc : "为你最喜爱的动物、最希望出现在礼包的动物投上一票。\n规则：每月每设备 ❤️ 与 🎁 各 10 票，同一动物可重复投。\n点开任意物种，在每个「动物卡片」下方点击 ❤️ / 🎁 即可。")}</textarea></label>
+      <label class="adm-field"><span>投票页底部提示（留空则不显示）</span><textarea id="admVoteHint" rows="2">${esc(S.vote && S.vote.hint != null ? S.vote.hint : "榜单数据来自全站玩家投票，去 动物图鉴 每张卡片上点 ❤️ / 🎁 即可参与。")}</textarea></label>
     </div>
 
     <!-- 图鉴管理 -->
@@ -537,8 +537,8 @@ function buildAdminPanel(){
     S.service.email  = wrap.querySelector("#admSvcMail").value.trim();
     S.service.hours  = wrap.querySelector("#admSvcHours").value.trim();
     S.vote = S.vote || {};
-    S.vote.desc = wrap.querySelector("#admVoteDesc").value.trim() || "为你最喜爱的动物、最希望出现在礼包的动物投上一票。\n规则：每月每设备 ❤️ 与 🎁 各 10 票，同一动物可重复投。\n点开任意物种，在每个「动物卡片」下方点击 ❤️ / 🎁 即可。";
-    S.vote.hint = wrap.querySelector("#admVoteHint").value.trim() || "榜单数据来自全站玩家投票，去 动物图鉴 每张卡片上点 ❤️ / 🎁 即可参与。";
+    S.vote.desc = wrap.querySelector("#admVoteDesc").value.trim();
+    S.vote.hint = wrap.querySelector("#admVoteHint").value.trim();
     if(window.fillVoteDesc) window.fillVoteDesc();
     wrap.querySelectorAll("[data-poster-title]").forEach(i => {
       const idx = +i.dataset.posterTitle;

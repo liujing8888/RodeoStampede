@@ -1114,11 +1114,11 @@ function individualNameById(id){
     const direct = c.species || [];
     for(const s of subs) for(const sp of s.species){
       if(sp.id === id) return sp.name;
-      for(const v of (sp.variants || [])) if(v.id === id) return sp.name + " · " + v.name;
+      for(const v of (sp.variants || [])) if(v.id === id) return v.name;
     }
     for(const sp of direct){
       if(sp.id === id) return sp.name;
-      for(const v of (sp.variants || [])) if(v.id === id) return sp.name + " · " + v.name;
+      for(const v of (sp.variants || [])) if(v.id === id) return v.name;
     }
   }
   return null;

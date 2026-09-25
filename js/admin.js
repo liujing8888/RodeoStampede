@@ -75,12 +75,15 @@ try { S = deepMerge(structuredClone(DEFAULTS), JSON.parse(localStorage.getItem(S
 catch(e){ S = structuredClone(DEFAULTS); }
 
 let API_OK = false;   /* 服务器持久存储是否可用（不可用时自动回退浏览器本地） */
-function saveS(){
+async function saveS(){
   try{ localStorage.setItem(S_KEY, JSON.stringify(S)); }catch(e){}
   if(API_OK){
-    zooApiFetch("/api/settings", { method:"PUT", headers: zooAuthHeaders({ "Content-Type":"application/json" }), body: JSON.stringify(S) })
-      .catch(() => {});
+    try{
+      const r = await zooApiFetch("/api/settings", { method:"PUT", headers: zooAuthHeaders({ "Content-Type":"application/json" }), body: JSON.stringify(S) });
+      return !!r.ok;   /* 返回真实成败，便于上层提示 */
+    }catch(e){ return false; }
   }
+  return false;        /* 仅落本机，未同步服务器 */
 }
 
 /* ---------- 图鉴树（活数据，落盘 data/taxonomy.json） ---------- */
@@ -520,7 +523,7 @@ function buildAdminPanel(){
     S = structuredClone(DEFAULTS); saveS(); refreshAll(); buildAdminPanel(); toast("已恢复默认文字");
   });
 
-  wrap.querySelector("#admSaveAll").addEventListener("click", () => {
+  wrap.querySelector("#admSaveAll").addEventListener("click", async () => {
     S.hero.title   = wrap.querySelector("#admHeroTitle").value.trim() || S.hero.title;
     S.hero.sub     = wrap.querySelector("#admHeroSub").value.trim();
     S.hero.promo   = wrap.querySelector("#admPromo").value.trim();
@@ -542,7 +545,10 @@ function buildAdminPanel(){
       if(S.posters[idx]) S.posters[idx].title = i.value.trim();
     });
     collectAdmVersions(); collectAdmCreators(); collectAdmSocial();
-    saveS(); refreshAll(); toast("已保存");
+    const ok = await saveS(); refreshAll();
+    if(ok) toast("已保存并同步到服务器 ✅");
+    else if(API_OK) toast("⚠️ 保存失败：服务器拒绝，请先登录编辑模式（网址加 ?admin=1）");
+    else toast("⚠️ 仅保存到本机：服务器不可达，上线后请在后台重新保存");
   });
 }
 

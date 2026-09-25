@@ -247,7 +247,7 @@ function renderSpecies(){
       </div>
       ${nameEl}
       ${flat ? "" : `<span class="sp-card__count">${effInd(sp)} 种个体</span>`}
-      ${!EDIT ? `<div class="sp-votes">
+      ${!EDIT && flat ? `<div class="sp-votes">
         <button class="sp-vote sp-vote--fav" data-vote="${sp.id}" data-cat="fav" type="button">❤️ 喜爱<span class="sp-vote__n" data-votecount="fav:${sp.id}">0</span></button>
         <button class="sp-vote sp-vote--gift" data-vote="${sp.id}" data-cat="gift" type="button">🎁 礼包<span class="sp-vote__n" data-votecount="gift:${sp.id}">0</span></button>
       </div>` : ""}
@@ -270,7 +270,7 @@ function renderSpecies(){
       return;
     }
     c.addEventListener("click", e => {
-      if(e.target.closest("[data-upslot],[data-batch],[data-act],[data-rename-sp]")) return;
+      if(e.target.closest("[data-upslot],[data-batch],[data-act],[data-rename-sp],[data-vote]")) return;
       if(flat && !EDIT){ openLightbox(spSlot(sp.id), sp.name); return; }
       const sp = curSub().species.find(p => p.id === c.dataset.sp);
       openSpecies(curCat(), curSub(), sp);
@@ -451,6 +451,25 @@ function openSpecies(cat, sub, sp){
       if(v) openMoveVariant(cat, sub, sp, v);
     }));
   renderVaBatchBar(cat, sub, sp, body);
+
+  /* 个体投票按钮：非编辑模式下，给每张个体卡注入 ❤️/🎁（投票目标=个体 id） */
+  if(!EDIT){
+    body.querySelectorAll(".v-card").forEach(card => {
+      const vid = card.dataset.va;
+      if(!vid || card.querySelector(".v-votes")) return;
+      const wrap = document.createElement("div");
+      wrap.className = "sp-votes v-votes";
+      wrap.innerHTML = `<button class="sp-vote sp-vote--fav" data-vote="${vid}" data-cat="fav" type="button">❤️<span class="sp-vote__n" data-votecount="fav:${vid}">0</span></button>`
+        + `<button class="sp-vote sp-vote--gift" data-vote="${vid}" data-cat="gift" type="button">🎁<span class="sp-vote__n" data-votecount="gift:${vid}">0</span></button>`;
+      card.appendChild(wrap);
+    });
+    body.querySelectorAll("[data-vote]").forEach(b => b.addEventListener("click", e => {
+      e.stopPropagation();
+      voteSpecies(b.dataset.vote, b.dataset.cat);
+    }));
+    updateVoteCountsDom(VOTE_MONTH);
+    updateVoteLeftDom();
+  }
 
   openModal("speciesModal");
   applyImages(body);
@@ -1088,70 +1107,179 @@ function speciesNameById(id){
   }
   return null;
 }
-let VOTE_COUNTS = { fav: {}, gift: {} };
-function markVotedLocal(){
-  let voted = []; try { voted = JSON.parse(localStorage.getItem("zooVoted") || "[]"); } catch(e){}
-  voted.forEach(key => {
-    const i = key.indexOf(":");
-    const cat = i > 0 ? key.slice(0, i) : "fav";
-    const id = i > 0 ? key.slice(i + 1) : key;
-    const b = document.querySelector('[data-vote="'+id+'"][data-cat="'+cat+'"]');
-    if(b) b.classList.add("is-voted");
+/* 投票榜单按「个体」解析：优先返回“物种 · 个体”，无匹配再退回物种名（flat 帽子分类） */
+function individualNameById(id){
+  for(const c of TAX){
+    const subs = c.subs || [];
+    const direct = c.species || [];
+    for(const s of subs) for(const sp of s.species){
+      if(sp.id === id) return sp.name;
+      for(const v of (sp.variants || [])) if(v.id === id) return sp.name + " · " + v.name;
+    }
+    for(const sp of direct){
+      if(sp.id === id) return sp.name;
+      for(const v of (sp.variants || [])) if(v.id === id) return sp.name + " · " + v.name;
+    }
+  }
+  return null;
+}
+/* ---------- 动物投票：按月归档，每设备每类每月上限 10 票，可重复投同一动物 ---------- */
+const VOTE_LIMIT = 10;
+let VOTE_MONTH = "";
+let VOTE_MONTHS = [];
+const VOTE_CATS_BY_MONTH = {};     // { "2026-09": { fav:{counts,log}, gift:{counts,log} } }
+let VOTE_LEFT = { fav: VOTE_LIMIT, gift: VOTE_LIMIT }; // 当前设备本月剩余（本地预估，以服务端为准）
+let curTabCat = "fav";
+function curMonthKey(){
+  const d = new Date();
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0");
+}
+function loadVoteUsedLocal(){
+  let month = ""; try { month = localStorage.getItem("zooVoteMonth") || ""; } catch(e){}
+  let used = { fav: 0, gift: 0 };
+  if(month === curMonthKey()){
+    try { used = JSON.parse(localStorage.getItem("zooVoteUsed") || "{}") || used; } catch(e){}
+  } else {
+    try { localStorage.setItem("zooVoteMonth", curMonthKey()); localStorage.setItem("zooVoteUsed", JSON.stringify(used)); } catch(e){}
+  }
+  VOTE_LEFT = { fav: VOTE_LIMIT - (used.fav||0), gift: VOTE_LIMIT - (used.gift||0) };
+}
+function saveVoteUsedLocal(cat){
+  let used = { fav: 0, gift: 0 };
+  try { used = JSON.parse(localStorage.getItem("zooVoteUsed") || "{}") || used; } catch(e){}
+  used[cat] = (used[cat]||0) + 1;
+  try { localStorage.setItem("zooVoteUsed", JSON.stringify(used)); localStorage.setItem("zooVoteMonth", curMonthKey()); } catch(e){}
+  VOTE_LEFT = { fav: VOTE_LIMIT - (used.fav||0), gift: VOTE_LIMIT - (used.gift||0) };
+}
+function updateVoteCountsDom(month){
+  const cats = VOTE_CATS_BY_MONTH[month] || { fav: { counts:{} }, gift: { counts:{} } };
+  document.querySelectorAll("[data-votecount]").forEach(el => {
+    const i = el.dataset.votecount.indexOf(":");
+    const cat = el.dataset.votecount.slice(0, i);
+    const id = el.dataset.votecount.slice(i + 1);
+    const c = (cats[cat] && cats[cat].counts && cats[cat].counts[id]) || 0;
+    el.textContent = c;
   });
+}
+function updateVoteLeftDom(){
+  const box = document.getElementById("voteLeft");
+  if(box) box.innerHTML = `本月还可投：❤️ <b>${Math.max(0,VOTE_LEFT.fav)}</b> / 🎁 <b>${Math.max(0,VOTE_LEFT.gift)}</b>`;
+  document.querySelectorAll(".sp-vote--fav").forEach(b => b.classList.toggle("is-full", VOTE_LEFT.fav <= 0));
+  document.querySelectorAll(".sp-vote--gift").forEach(b => b.classList.toggle("is-full", VOTE_LEFT.gift <= 0));
+}
+/* 离线/预览降级：当 API 不可达（如静态预览面板无法访问本地后端）时，
+   用 localStorage 维持交互演示，避免点击无反应。仅本地模式启用。 */
+const VOTE_DEMO = (window.ZOO_API_BASE === "");
+const DEMO_KEY = "zooVoteDemo";
+function loadDemoStore(){
+  let s = { months: {} };
+  try { s = JSON.parse(localStorage.getItem(DEMO_KEY) || "{}") || s; } catch(e){}
+  s.months = s.months || {};
+  return s;
+}
+function saveDemoStore(s){ try { localStorage.setItem(DEMO_KEY, JSON.stringify(s)); } catch(e){} }
+function demoVote(id, cat){
+  const m = (VOTE_MONTH || curMonthKey());
+  const s = loadDemoStore();
+  s.months[m] = s.months[m] || { fav:{counts:{}}, gift:{counts:{}} };
+  const counts = s.months[m][cat].counts;
+  counts[id] = (counts[id] || 0) + 1;
+  saveDemoStore(s);
+  VOTE_CATS_BY_MONTH[m] = { fav:{counts:s.months[m].fav.counts}, gift:{counts:s.months[m].gift.counts} };
+  VOTE_LEFT[cat] = Math.max(0, VOTE_LEFT[cat] - 1);
+  updateVoteCountsDom(m);
+  updateVoteLeftDom();
+  renderReturnsBoard(cat, m);
+  showDemoBadge();
+}
+function showDemoBadge(){
+  const b = document.getElementById("voteDemo");
+  if(b) b.style.display = "inline-block";
 }
 async function voteSpecies(id, cat){
   cat = (cat === "gift") ? "gift" : "fav";
-  const btn = document.querySelector('[data-vote="'+id+'"][data-cat="'+cat+'"]');
-  const n = document.querySelector('[data-votecount="'+cat+":"+id+'"]');
+  if(VOTE_LEFT[cat] <= 0){ toast("本月「" + (cat==="fav"?"最喜爱":"最希望礼包") + "」已投满 " + VOTE_LIMIT + " 票"); return; }
   const dev = getVoteDeviceId();
   try{
-    const r = await zooApiFetch("/api/votes", { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ id, deviceId: dev, cat }) });
-    if(!r.ok) return;
+    const r = await zooApiFetch("/api/votes", { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ id, deviceId: dev, cat, month: VOTE_MONTH }) });
+    if(!r.ok){ if(VOTE_DEMO){ demoVote(id, cat); } return; }
     const d = await r.json();
-    if(n) n.textContent = d.count || 0;
-    if(btn) btn.classList.add("is-voted");
-    if(d.ok || d.already){
-      let voted = []; try { voted = JSON.parse(localStorage.getItem("zooVoted") || "[]"); } catch(e){}
-      const key = cat + ":" + id;
-      if(!voted.includes(key)){ voted.push(key); try{ localStorage.setItem("zooVoted", JSON.stringify(voted)); }catch(e){} }
-      if(!VOTE_COUNTS[cat]) VOTE_COUNTS[cat] = {};
-      VOTE_COUNTS[cat][id] = d.count || 0;
-      renderReturnsBoard(cat);
+    if(d.full){ toast("本月「" + (cat==="fav"?"最喜爱":"最希望礼包") + "」已投满 " + VOTE_LIMIT + " 票"); return; }
+    if(d.ok){
+      const cats = VOTE_CATS_BY_MONTH[VOTE_MONTH] || (VOTE_CATS_BY_MONTH[VOTE_MONTH] = { fav:{counts:{}}, gift:{counts:{}} });
+      if(!cats[cat].counts) cats[cat].counts = {};
+      cats[cat].counts[id] = d.count;
+      if(typeof d.left === "number") VOTE_LEFT[cat] = d.left;
+      saveVoteUsedLocal(cat);
+      updateVoteCountsDom(VOTE_MONTH);
+      updateVoteLeftDom();
+      renderReturnsBoard(cat, VOTE_MONTH);
     }
-  }catch(e){}
+  }catch(e){ if(VOTE_DEMO){ demoVote(id, cat); } }
 }
 async function loadVotes(){
   try{
+    VOTE_MONTH = curMonthKey();
     const r = await zooApiFetch("/api/votes");
+    if(!r.ok) throw new Error("api");
     const d = await r.json();
-    VOTE_COUNTS = {
-      fav: (d.cats && d.cats.fav && d.cats.fav.counts) || {},
-      gift: (d.cats && d.cats.gift && d.cats.gift.counts) || {}
-    };
-    document.querySelectorAll("[data-votecount]").forEach(el => {
-      const i = el.dataset.votecount.indexOf(":");
-      const cat = el.dataset.votecount.slice(0, i);
-      const id = el.dataset.votecount.slice(i + 1);
-      el.textContent = (VOTE_COUNTS[cat] && VOTE_COUNTS[cat][id]) || 0;
-    });
-    markVotedLocal();
-    renderReturnsBoard("fav");
-    const sum = document.getElementById("returnsSummary");
-    if(sum) sum.textContent = `❤️ 最喜爱 ${ (d.totals && d.totals.fav) || 0 } 票 · 🎁 最希望礼包 ${ (d.totals && d.totals.gift) || 0 } 票`;
-  }catch(e){}
+    VOTE_MONTHS = (d.months || []).slice();
+    if(!VOTE_MONTHS.includes(VOTE_MONTH)) VOTE_MONTHS.unshift(VOTE_MONTH);
+    VOTE_MONTHS.sort().reverse();
+    VOTE_CATS_BY_MONTH[VOTE_MONTH] = d.cats || { fav:{counts:{}}, gift:{counts:{}} };
+    updateVoteCountsDom(VOTE_MONTH);
+    loadVoteUsedLocal();
+    updateVoteLeftDom();
+    renderReturnsBoard("fav", VOTE_MONTH);
+    fillVoteMonths();
+  }catch(e){
+    if(VOTE_DEMO){
+      const m = VOTE_MONTH || curMonthKey();
+      const s = loadDemoStore();
+      const mm = s.months[m] || { fav:{counts:{}}, gift:{counts:{}} };
+      VOTE_CATS_BY_MONTH[m] = { fav:{counts:mm.fav.counts||{}}, gift:{counts:mm.gift.counts||{}} };
+      VOTE_MONTHS = Object.keys(s.months).sort().reverse();
+      if(!VOTE_MONTHS.length) VOTE_MONTHS = [m];
+      updateVoteCountsDom(m);
+      loadVoteUsedLocal();
+      updateVoteLeftDom();
+      renderReturnsBoard("fav", m);
+      fillVoteMonths();
+      showDemoBadge();
+    }
+  }
 }
-function renderReturnsBoard(cat){
+function fillVoteMonths(){
+  const sel = document.getElementById("returnsMonth");
+  if(!sel) return;
+  sel.innerHTML = VOTE_MONTHS.map(m => `<option value="${m}"${m===VOTE_MONTH?" selected":""}>${m}${m===VOTE_MONTH?"（本月）":""}</option>`).join("");
+}
+async function loadMonth(month){
+  if(!VOTE_CATS_BY_MONTH[month]){
+    try{
+      const r = await zooApiFetch("/api/votes?month=" + encodeURIComponent(month));
+      const d = await r.json();
+      VOTE_CATS_BY_MONTH[month] = d.cats || { fav:{counts:{}}, gift:{counts:{}} };
+    }catch(e){}
+  }
+  renderReturnsBoard(curTabCat, month);
+}
+function renderReturnsBoard(cat, month){
   cat = (cat === "gift") ? "gift" : "fav";
+  curTabCat = cat;
+  month = month || VOTE_MONTH || curMonthKey();
   const board = document.getElementById("returnsBoard");
   if(!board) return;
-  const counts = VOTE_COUNTS[cat] || {};
+  const cats = VOTE_CATS_BY_MONTH[month] || { fav:{counts:{}}, gift:{counts:{}} };
+  const counts = (cats[cat] && cats[cat].counts) || {};
   const arr = [];
   for(const k in counts){ const c = counts[k] || 0; arr.push([k, c]); }
   arr.sort((a, b) => b[1] - a[1]);
-  const top = arr.slice(0, 20);
+  const top = arr.slice(0, 5);
   const max = top.length ? top[0][1] : 1;
+  if(!top.length){ board.innerHTML = `<li class="returns__empty">本月还没有投票，去 <a href="#codex">动物图鉴</a> 给喜欢的动物投上一票吧～</li>`; return; }
   board.innerHTML = top.map(([id, c], i) => {
-    const name = speciesNameById(id) || id;
+    const name = individualNameById(id) || id;
     const pct = Math.max(4, Math.round(c / max * 100));
     return `<li class="returns__row">
       <span class="returns__rank">${i + 1}</span>
@@ -1161,6 +1289,14 @@ function renderReturnsBoard(cat){
     </li>`;
   }).join("");
 }
+
+function fillVoteDesc(){
+  const d = document.getElementById("voteDesc");
+  if(d && S.vote && S.vote.desc) d.textContent = S.vote.desc;
+  const h = document.getElementById("voteHint");
+  if(h && S.vote && S.vote.hint) h.textContent = S.vote.hint;
+}
+window.fillVoteDesc = fillVoteDesc;
 
 /* ---------- 初始化 ---------- */
 openImgDB().catch(err => console.error("IndexedDB 初始化失败：", err)).finally(async () => {
@@ -1172,13 +1308,17 @@ openImgDB().catch(err => console.error("IndexedDB 初始化失败：", err)).fin
   applyFavicon();
   restartCar();
   loadVotes();
-  /* 动物投票双标签切换 */
+  fillVoteDesc();
+  /* 动物投票：双标签切换 + 月份切换 */
   const vTabs = document.querySelectorAll(".returns__tab");
   vTabs.forEach(b => b.addEventListener("click", () => {
     vTabs.forEach(x => x.classList.remove("is-active"));
     b.classList.add("is-active");
-    renderReturnsBoard(b.dataset.vtab);
+    const msel = document.getElementById("returnsMonth");
+    renderReturnsBoard(b.dataset.vtab, msel ? msel.value : VOTE_MONTH);
   }));
+  const msel = document.getElementById("returnsMonth");
+  if(msel) msel.addEventListener("change", () => loadMonth(msel.value));
   /* 恢复管理员登录态：本机曾登录则自动显示编辑入口（仅管理员可见） */
   const savedAdmin = localStorage.getItem("zooAdminToken") || sessionStorage.getItem("zooToken");
   if(savedAdmin){ window.ADMIN_TOKEN = savedAdmin; showAdminFabs(); }

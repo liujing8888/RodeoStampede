@@ -24,7 +24,6 @@
       <a href="#wallpapers" id="navPromo">宣传图</a>
       <a href="#creators" id="navCreator">优秀创作者</a>
       <a href="#social" id="navSocial">社区社媒</a>
-      <a href="#returns" id="navReturns">动物投票</a>
       <a href="#checkin" id="navCheckin">到此一游</a>
     </nav>
     <div class="nav__search">
@@ -45,7 +44,8 @@
       <p id="heroSub"></p>
       <div class="hero__btns">
         <a class="btn btn--primary btn--lg" href="#codex">📖 进入图鉴</a>
-        <a class="btn btn--ghost btn--lg" href="#versions">🆕 版本动态</a>
+        <a class="btn btn--versions btn--lg" href="#versions">🆕 版本动态</a>
+        <a class="btn btn--vote btn--lg" href="#returns">🗳️ 动物投票</a>
       </div>
     </div>
   </section>
@@ -56,8 +56,33 @@
     <div class="ver-grid" id="versionGrid"></div>
   </section>
 
+  <!-- 动物投票：先看规则与榜单，再点按钮去图鉴投个体 -->
+  <section class="section section--alt" id="returns">
+    <div class="section__head">
+      <h2>🗳️ 动物投票</h2>
+      <p class="section__desc" id="voteDesc">为你最喜爱的动物、最希望出现在礼包的动物投上一票。
+规则：每月每设备 ❤️ 与 🎁 各 10 票，同一动物可重复投。
+点开任意物种，在每个「动物卡片」下方点击 ❤️ / 🎁 即可。</p>
+    </div>
+    <div class="returns__guide">
+      <span class="returns__demo" id="voteDemo" style="display:none">⚠️ 预览模式：后端不可达，数据仅存本机（上线后为全站实时聚合）</span>
+      <div class="returns__meta">
+        <p class="returns__left" id="voteLeft">本月还可投：❤️ <b>10</b> / 🎁 <b>10</b></p>
+        <label class="returns__month-wrap">往期榜单
+          <select id="returnsMonth" class="returns__month"></select>
+        </label>
+      </div>
+    </div>
+    <div class="returns__tabs">
+      <button class="returns__tab is-active" data-vtab="fav" type="button">❤️ 最喜爱</button>
+      <button class="returns__tab" data-vtab="gift" type="button">🎁 最希望礼包</button>
+    </div>
+    <ol class="returns__board" id="returnsBoard"></ol>
+    <p class="returns__hint" id="voteHint">榜单数据来自全站玩家投票，去 <a href="#codex">动物图鉴</a> 点开物种、在「个体卡片」上点 ❤️ / 🎁 即可参与。</p>
+  </section>
+
   <!-- 动物图鉴 -->
-  <section class="section section--alt" id="codex">
+  <section class="section" id="codex">
     <div class="section__head"><h2>动物图鉴</h2><p class="section__desc" id="codexDesc">正在加载图鉴统计…</p></div>
     <div class="cat-tabs" id="catTabs"></div>
     <div class="filters" id="subTabs"></div>
@@ -86,21 +111,6 @@
   <section class="section" id="social">
     <div class="section__head"><h2 id="secSocTitle">社区社媒</h2><p class="section__desc">关注官方账号，获取活动福利与最新情报</p></div>
     <div class="social-grid" id="socialGrid"></div>
-  </section>
-
-  <!-- 动物投票：最喜爱 / 最希望礼包 实时排行 -->
-  <section class="section" id="returns">
-    <div class="section__head">
-      <h2>🗳️ 动物投票</h2>
-      <p class="section__desc">为你最喜爱的动物、最希望出现在礼包的动物投上一票，实时揭晓全站玩家的心动榜单</p>
-    </div>
-    <div class="returns__tabs">
-      <button class="returns__tab is-active" data-vtab="fav" type="button">❤️ 最喜爱</button>
-      <button class="returns__tab" data-vtab="gift" type="button">🎁 最希望礼包</button>
-    </div>
-    <p class="returns__summary" id="returnsSummary">—</p>
-    <ol class="returns__board" id="returnsBoard"></ol>
-    <p class="returns__hint">榜单数据来自全站玩家投票，去 <a href="#codex">动物图鉴</a> 每张卡片上点 ❤️ / 🎁 即可参与。</p>
   </section>
 
   <!-- 到此一游 · 全屏打卡纪念 -->

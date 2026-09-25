@@ -201,44 +201,55 @@ const server = http.createServer(async (req, res) => {
       return send(res, 405, "method not allowed");
     }
 
-    /* ---------- 动物投票（最喜爱 / 最希望礼包） ---------- */
+    /* ---------- 动物投票（最喜爱 / 最希望礼包，按月归档） ---------- */
     if (p === "/api/votes") {
       const VFile = path.join(DATA_DIR, "votes.json");
       const CATS = ["fav", "gift"];
+      const LIMIT = 10; // 每月每设备每类投票上限
+      const monthKey = (m) => {
+        if (m && /^\d{4}-\d{2}$/.test(m)) return m;
+        const d = new Date();
+        return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0");
+      };
       const emptyCats = () => { const o = {}; CATS.forEach(c => o[c] = { counts: {}, log: {} }); return o; };
       const readV = () => {
         try {
           const o = fs.existsSync(VFile) ? JSON.parse(fs.readFileSync(VFile, "utf8")) : {};
-          o.cats = o.cats || {};
-          CATS.forEach(c => { o.cats[c] = o.cats[c] || { counts: {}, log: {} }; });
+          if (o.cats && !o.months) { o.months = { [monthKey()]: o.cats }; delete o.cats; } // 旧格式迁移
+          o.months = o.months || {};
           return o;
-        } catch (e) { return { cats: emptyCats() }; }
+        } catch (e) { return { months: {} }; }
       };
       const writeV = o => { try { fs.writeFileSync(VFile, JSON.stringify(o)); return true; } catch (e) { return false; } };
+      const totalsOf = (mc) => { let t = 0; for (const k in mc.counts) t += mc.counts[k]; return t; };
 
       if (req.method === "GET") {
+        const m = monthKey(url.searchParams.get("month"));
         const o = readV();
-        const totals = {};
-        CATS.forEach(c => { let t = 0; for (const k in o.cats[c].counts) t += o.cats[c].counts[k]; totals[c] = t; });
-        return send(res, 200, JSON.stringify({ cats: o.cats, totals }), "application/json");
+        const mc = o.months[m] || emptyCats();
+        const totals = {}; CATS.forEach(c => totals[c] = totalsOf(mc[c]));
+        const months = Object.keys(o.months).sort().reverse();
+        return send(res, 200, JSON.stringify({ month: m, cats: mc, totals, months }), "application/json");
       }
       if (req.method === "POST" || req.method === "PUT") {
         let d; try { d = JSON.parse((await readBody(req)).toString("utf8")); } catch (e) { return send(res, 400, JSON.stringify({ error: "bad json" }), "application/json"); }
         const id = String(d.id || "").slice(0, 64);
         const dev = String(d.deviceId || "").slice(0, 64);
         const cat = CATS.includes(d.cat) ? d.cat : "fav";
+        const m = monthKey(d.month);
         if (!id || !dev) return send(res, 400, JSON.stringify({ error: "missing params" }), "application/json");
         const o = readV();
-        const bucket = o.cats[cat];
-        const voted = bucket.log[dev] || [];
-        if (voted.includes(id)) {
-          return send(res, 200, JSON.stringify({ ok: false, already: true, count: bucket.counts[id] || 0 }), "application/json");
+        o.months[m] = o.months[m] || emptyCats();
+        const bucket = o.months[m][cat];
+        const used = (bucket.log[dev] || []).length;
+        if (used >= LIMIT) {
+          return send(res, 200, JSON.stringify({ ok: false, full: true, left: 0, limit: LIMIT, count: bucket.counts[id] || 0 }), "application/json");
         }
         bucket.counts[id] = (bucket.counts[id] || 0) + 1;
-        bucket.log[dev] = voted.concat(id);
+        bucket.log[dev] = (bucket.log[dev] || []).concat(id);
         writeV(o);
-        let total = 0; for (const k in bucket.counts) total += bucket.counts[k];
-        return send(res, 200, JSON.stringify({ ok: true, count: bucket.counts[id], total }), "application/json");
+        const left = LIMIT - (bucket.log[dev] || []).length;
+        return send(res, 200, JSON.stringify({ ok: true, count: bucket.counts[id], total: totalsOf(bucket), left, limit: LIMIT }), "application/json");
       }
       return send(res, 405, "method not allowed");
     }

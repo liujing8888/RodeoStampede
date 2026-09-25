@@ -54,6 +54,10 @@ const DEFAULTS = {
     greeting:"你好，牛仔们，这里是疯狂动物园客服 🦁",
     qq:"800123456", wechat:"fengkuang-zoo",
     email:"service@zoo.game", hours:"工作日 9:00 – 21:00"
+  },
+  vote: {
+    desc:"为你最喜爱的动物、最希望出现在礼包的动物投上一票。\n规则：每月每设备 ❤️ 与 🎁 各 10 票，同一动物可重复投。\n点开任意物种，在每个「动物卡片」下方点击 ❤️ / 🎁 即可。",
+    hint:"榜单数据来自全站玩家投票，去 动物图鉴 点开物种、在「个体卡片」上点 ❤️ / 🎁 即可参与。"
   }
 };
 
@@ -401,7 +405,7 @@ function buildAdminPanel(){
 
     <!-- 版本动态 -->
     <div class="adm-pane is-hidden" data-pane="ver">
-      <p class="adm-hint">用户先看到活动图卡片，点进去是这里的详细内容。活动图可在下方每条的「上传活动图」中设置。</p>
+      <p class="adm-hint">用户先看到活动图卡片，点进去是这里的详细内容。活动图可在下方每条的「上传活动图」中设置。用每条右侧的 ⬆ / ⬇ 调整展示顺序（首条不可上移、末条不可下移），最后点「保存全部」生效。</p>
       <div id="admVersions"></div>
       <button class="btn btn--primary btn--sm" id="admAddVersion">＋ 新增版本</button>
     </div>
@@ -422,6 +426,9 @@ function buildAdminPanel(){
       <label class="adm-field"><span>微信号</span><input id="admSvcWX" value="${esc(serv.wechat)}"></label>
       <label class="adm-field"><span>邮箱</span><input id="admSvcMail" value="${esc(serv.email)}"></label>
       <label class="adm-field"><span>服务时间</span><input id="admSvcHours" value="${esc(serv.hours)}"></label>
+      <h4>动物投票文案</h4>
+      <label class="adm-field"><span>投票页标题说明</span><textarea id="admVoteDesc" rows="3">${esc((S.vote && S.vote.desc) || "为你最喜爱的动物、最希望出现在礼包的动物投上一票。\n规则：每月每设备 ❤️ 与 🎁 各 10 票，同一动物可重复投。\n点开任意物种，在每个「动物卡片」下方点击 ❤️ / 🎁 即可。")}</textarea></label>
+      <label class="adm-field"><span>投票页底部提示</span><textarea id="admVoteHint" rows="2">${esc((S.vote && S.vote.hint) || "榜单数据来自全站玩家投票，去 动物图鉴 点开物种、在「个体卡片」上点 ❤️ / 🎁 即可参与。")}</textarea></label>
     </div>
 
     <!-- 图鉴管理 -->
@@ -526,6 +533,10 @@ function buildAdminPanel(){
     S.service.wechat = wrap.querySelector("#admSvcWX").value.trim();
     S.service.email  = wrap.querySelector("#admSvcMail").value.trim();
     S.service.hours  = wrap.querySelector("#admSvcHours").value.trim();
+    S.vote = S.vote || {};
+    S.vote.desc = wrap.querySelector("#admVoteDesc").value.trim() || "为你最喜爱的动物、最希望出现在礼包的动物投上一票。\n规则：每月每设备 ❤️ 与 🎁 各 10 票，同一动物可重复投。\n点开任意物种，在每个「动物卡片」下方点击 ❤️ / 🎁 即可。";
+    S.vote.hint = wrap.querySelector("#admVoteHint").value.trim() || "榜单数据来自全站玩家投票，去 动物图鉴 每张卡片上点 ❤️ / 🎁 即可参与。";
+    if(window.fillVoteDesc) window.fillVoteDesc();
     wrap.querySelectorAll("[data-poster-title]").forEach(i => {
       const idx = +i.dataset.posterTitle;
       if(S.posters[idx]) S.posters[idx].title = i.value.trim();
@@ -560,6 +571,10 @@ function renderAdmVersions(){
         <input class="adm-inline" placeholder="标题" value="${esc(v.title)}" data-vf="title">
         <input class="adm-inline adm-inline--s" placeholder="标签" value="${esc(v.tag)}" data-vf="tag">
         <input class="adm-inline adm-inline--s" placeholder="日期" value="${esc(v.date)}" data-vf="date">
+        <span class="adm-move">
+          <button class="btn btn--ghost btn--sm" data-vmove="up"${i===0?' disabled':''} title="上移">⬆</button>
+          <button class="btn btn--ghost btn--sm" data-vmove="down"${i===S.versions.length-1?' disabled':''} title="下移">⬇</button>
+        </span>
         <button class="btn btn--danger btn--sm" data-vdel>删除</button>
       </div>
       <textarea rows="4" placeholder="版本详细内容（点开活动图后显示）" data-vf="detail">${esc(v.detail)}</textarea>
@@ -579,6 +594,15 @@ function renderAdmVersions(){
   box.querySelectorAll("[data-vimgdel]").forEach(b => b.addEventListener("click", () => {
     const id = S.versions[+b.closest(".adm-item").dataset.vi].id;
     IMG.del("version:" + id).then(renderVersions);
+  }));
+  box.querySelectorAll("[data-vmove]").forEach(b => b.addEventListener("click", () => {
+    collectAdmVersions();
+    const i = +b.closest(".adm-item").dataset.vi;
+    const dir = b.dataset.vmove;
+    if(dir === "up" && i > 0){ const t = S.versions[i-1]; S.versions[i-1] = S.versions[i]; S.versions[i] = t; }
+    else if(dir === "down" && i < S.versions.length - 1){ const t = S.versions[i+1]; S.versions[i+1] = S.versions[i]; S.versions[i] = t; }
+    else return;
+    renderAdmVersions(); renderVersions();
   }));
 }
 function collectAdmVersions(){

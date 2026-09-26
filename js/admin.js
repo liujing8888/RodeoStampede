@@ -422,15 +422,14 @@ async function loadVoteStats(pane){
   if(!log.length){ body.innerHTML = '<p class="adm-hint">暂无投票记录。</p>'; return; }
   const devSet = new Set(log.map(x => x.dev));
   let h = '<div class="adm-vote-log-head">共 <b>' + log.length + '</b> 条投票操作 · <b>' + devSet.size + '</b> 个设备（悬浮「设备」列可见浏览器唯一 ID）</div>';
-  h += '<div class="adm-vote-log-wrap"><table class="adm-vote-log"><thead><tr><th>时间</th><th>设备（品牌·系统）</th><th>地区 / IP</th><th>类别</th><th>对象</th></tr></thead><tbody>';
+  h += '<div class="adm-vote-log-wrap"><table class="adm-vote-log"><thead><tr><th>时间</th><th>设备（品牌·系统）</th><th>地区</th><th>类别</th><th>对象</th></tr></thead><tbody>';
   for(const x of log){
     const devLabel = (x.brand || "未知") + " · " + (x.os || "未知");
-    const region = [x.province, x.city].filter(Boolean).join(" ") || (x.ip || "未知");
-    const ipSub = x.ip ? '<div class="adm-vote-ip">' + esc(x.ip) + '</div>' : "";
+    const region = [x.province, x.city].filter(Boolean).join(" / ") || (x.ip || "未知地区");
     h += '<tr>'
       + '<td class="adm-vote-ts">' + fmtTs(x.ts) + '</td>'
       + '<td class="adm-vote-dev" title="设备ID: ' + esc(x.dev) + '">' + esc(devLabel) + '</td>'
-      + '<td class="adm-vote-region">' + esc(region) + ipSub + '</td>'
+      + '<td class="adm-vote-region">' + esc(region) + '</td>'
       + '<td>' + voteCatLabel(x.cat) + '</td>'
       + '<td>' + esc(voteNameById(x.id)) + '</td>'
       + '</tr>';
@@ -566,7 +565,7 @@ function buildAdminPanel(){
 
     <!-- 动物投票 · 记录 -->
     <div class="adm-pane is-hidden" data-pane="votes" id="admVotePane">
-      <p class="adm-hint">动物投票行为记录（谁 · 哪天 · 哪台设备）。展示每次投票操作：时间、设备（品牌·系统，如 苹果·iOS / 华为·Android / Windows PC）、地区与 IP、类别（❤️ 最喜爱 / 🎁 礼包）、投给了哪个动物。按时间倒序，最新在最上方。地区/城市由访客 IP 经免费地理库尽力解析，解析不到时显示 IP。</p>
+      <p class="adm-hint">动物投票行为记录（谁 · 哪天 · 哪台设备）。展示每次投票操作：时间、设备（品牌·系统，如 苹果·iOS / 华为·Android / Windows PC）、地区、类别（❤️ 最喜爱 / 🎁 礼包）、投给了哪个动物。按时间倒序，最新在最上方。地区/城市由访客 IP 经免费地理库尽力解析（如 Guangdong / Shenzhen），解析不到时显示 IP。</p>
       <div class="adm-row">
         <button class="btn btn--ghost btn--sm" id="admVoteRefresh">刷新数据</button>
         <button class="btn btn--ghost btn--sm" id="admVoteExport">导出记录 JSON</button>

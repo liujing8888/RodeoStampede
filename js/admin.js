@@ -344,6 +344,83 @@ function askConfirm(msg){
 /* ---------- 管理面板 ---------- */
 function esc(s){ return String(s ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
 
+/* ---------- 动物榜单数据：按 id 反查名字 + 按月记录展示 ---------- */
+function voteNameById(id){
+  if(!id) return String(id || "");
+  for(const c of TAX){
+    const subs = c.subs || [];
+    const direct = c.species || [];
+    for(const s of subs) for(const sp of s.species){
+      if(sp.id === id) return sp.name;
+      for(const v of (sp.variants || [])) if(v.id === id) return sp.name + " · " + v.name;
+    }
+    for(const sp of direct){
+      if(sp.id === id) return sp.name;
+      for(const v of (sp.variants || [])) if(v.id === id) return sp.name + " · " + v.name;
+    }
+  }
+  return String(id);
+}
+
+async function loadVoteStats(pane){
+  const body = pane.querySelector("#admVoteBody");
+  body.innerHTML = '<p class="adm-hint">加载中……</p>';
+  let data;
+  try{
+    const r0 = await zooApiFetch("/api/votes", { cache:"no-store" });
+    if(!r0.ok) throw new Error("net");
+    const d0 = await r0.json();
+    const months = (d0.months && d0.months.length) ? d0.months : [d0.month];
+    data = [];
+    for(const m of months){
+      const r = await zooApiFetch("/api/votes?month=" + encodeURIComponent(m), { cache:"no-store" });
+      if(!r.ok) continue;
+      const d = await r.json();
+      data.push({ month:m, cats:d.cats, totals:d.totals });
+    }
+  }catch(e){
+    body.innerHTML = '<p class="adm-hint">⚠️ 加载失败：服务器不可达或未登录编辑模式。请确认已登录（网址加 ?admin=1）。</p>';
+    return;
+  }
+  pane._voteData = data;
+  if(!data.length){ body.innerHTML = '<p class="adm-hint">暂无投票数据。</p>'; return; }
+  body.innerHTML = data.map(d => renderVoteMonth(d.month, d.cats, d.totals)).join("");
+}
+
+function renderVoteMonth(m, cats, totals){
+  const catsInfo = [["fav","❤️ 最喜爱"],["gift","🎁 最希望礼包"]];
+  let h = '<div class="adm-vote-month"><h4 class="adm-sub-title">📅 ' + esc(m) + '</h4>';
+  for(const [k,label] of catsInfo){
+    const bucket = (cats && cats[k]) || { counts:{} };
+    const counts = bucket.counts || {};
+    const entries = Object.entries(counts).sort((a,b) => b[1]-a[1]);
+    const total = (totals && totals[k]) || 0;
+    h += '<div class="adm-vote-cat"><div class="adm-vote-cat__h"><b>' + label + '</b> <span class="adm-vote-total">总票数 ' + total + '</span></div>';
+    if(!entries.length){
+      h += '<p class="adm-hint">本类暂无投票。</p>';
+    } else {
+      h += '<ol class="adm-vote-list">';
+      entries.forEach(([id,n],i) => {
+        const top = i < 3 ? " is-top" : "";
+        h += '<li class="adm-vote-row' + top + '"><span class="adm-vote-rank">' + (i+1) + '</span><span class="adm-vote-name">' + esc(voteNameById(id)) + '</span><span class="adm-vote-num">' + n + ' 票</span></li>';
+      });
+      h += '</ol>';
+    }
+    h += '</div>';
+  }
+  h += '</div>';
+  return h;
+}
+
+function exportVoteStats(pane){
+  const data = pane._voteData;
+  if(!data || !data.length){ toast("暂无可导出的榜单数据"); return; }
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type:"application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = "fengkuang-zoo-votes.json"; a.click();
+  toast("已导出榜单数据");
+}
+
 function buildAdminPanel(){
   const wrap = document.getElementById("adminPanelBody");
   const hero = S.hero, serv = S.service;
@@ -358,6 +435,7 @@ function buildAdminPanel(){
       <button class="adm-tab" data-t="codex">图鉴管理</button>
       <button class="adm-tab" data-t="data">数据</button>
       <button class="adm-tab" data-t="checkin">到此一游数据</button>
+      <button class="adm-tab" data-t="votes">动物榜单数据</button>
     </div>
 
     <!-- 品牌视觉 -->
@@ -458,6 +536,16 @@ function buildAdminPanel(){
       <div id="admCheckinBody"><p class="adm-hint">点击本标签页即自动加载打卡数据……</p></div>
     </div>
 
+    <!-- 动物榜单 · 数据 -->
+    <div class="adm-pane is-hidden" data-pane="votes" id="admVotePane">
+      <p class="adm-hint">动物投票榜单数据记录（按月归档）。展示每个月的「❤️ 最喜爱」与「🎁 最希望礼包」排行榜及总票数。点开任意月份可查看该月完整投票明细。</p>
+      <div class="adm-row">
+        <button class="btn btn--ghost btn--sm" id="admVoteRefresh">刷新数据</button>
+        <button class="btn btn--ghost btn--sm" id="admVoteExport">导出榜单 JSON</button>
+      </div>
+      <div id="admVoteBody"><p class="adm-hint">点击本标签页即自动加载榜单数据……</p></div>
+    </div>
+
     <div class="adm-actions">
       <button class="btn btn--primary" id="admSaveAll">保存全部</button>
     </div>`;
@@ -469,7 +557,14 @@ function buildAdminPanel(){
     if (t.dataset.t === "checkin" && window.loadCheckinStats) {
       window.loadCheckinStats(document.getElementById("admCheckinPane"));
     }
+    if (t.dataset.t === "votes") {
+      loadVoteStats(document.getElementById("admVotePane"));
+    }
   }));
+
+  /* 动物榜单数据：刷新 / 导出 */
+  wrap.querySelector("#admVoteRefresh").addEventListener("click", () => loadVoteStats(document.getElementById("admVotePane")));
+  wrap.querySelector("#admVoteExport").addEventListener("click", () => exportVoteStats(document.getElementById("admVotePane")));
 
   /* 通用：上传 / 清除槽位 */
   wrap.querySelectorAll("[data-up]").forEach(b => b.addEventListener("click", () => uploadToSlot(b.dataset.up, () => { applyImages(wrap); applyImages(document); })));

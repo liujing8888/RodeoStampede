@@ -286,18 +286,15 @@ body.is-edit .sp-card__media,body.is-edit .v-card__media{outline:2px dashed rgba
 .adm-miss{color:var(--red);font-size:.8rem}
 .adm-actions{margin-top:18px;text-align:right}
 
-/* ---------- 动物榜单数据（后台） ---------- */
-.adm-vote-month{border:1.5px solid #eee4d0;border-radius:14px;padding:14px 16px;margin-bottom:16px;background:#fffdf6}
-.adm-vote-cat{margin:10px 0}
-.adm-vote-cat__h{display:flex;align-items:baseline;gap:10px;margin-bottom:6px}
-.adm-vote-total{font-size:.82rem;color:var(--ink-2);font-weight:700}
-.adm-vote-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
-.adm-vote-row{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:10px;background:#fff;border:1px solid #f1e9d8;border-radius:10px;padding:8px 12px}
-.adm-vote-row.is-top{background:linear-gradient(135deg,#fff6ec,#fff0f5);border-color:#f6d9c4}
-.adm-vote-rank{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:#f1e9d8;color:var(--ink);font-weight:900;font-size:.82rem}
-.adm-vote-row.is-top .adm-vote-rank{background:linear-gradient(135deg,var(--orange),var(--pink));color:#fff}
-.adm-vote-name{font-weight:700;color:var(--ink)}
-.adm-vote-num{font-weight:900;color:#e0558c;font-size:.95rem}
+/* ---------- 动物投票记录（后台：行为日志） ---------- */
+.adm-vote-log-head{font-size:.85rem;color:var(--ink-2);font-weight:700;margin:2px 0 10px}
+.adm-vote-log-wrap{max-height:440px;overflow:auto;border:1px solid #eee4d0;border-radius:12px;background:#fffdf6}
+.adm-vote-log{width:100%;border-collapse:collapse;font-size:.86rem}
+.adm-vote-log thead th{position:sticky;top:0;background:#f7efe0;color:var(--ink);font-weight:800;padding:9px 12px;text-align:left;white-space:nowrap;border-bottom:1.5px solid #e6d8bf}
+.adm-vote-log tbody td{padding:8px 12px;border-bottom:1px solid #f3ecdd;color:var(--ink);vertical-align:middle}
+.adm-vote-log tbody tr:nth-child(even){background:#fffaf0}
+.adm-vote-ts{font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ink-2)}
+.adm-vote-dev{max-width:230px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.8rem;color:var(--ink-2)}
 
 /* ---------- 灯箱 ---------- */
 .lightbox{position:fixed;inset:0;z-index:300;display:none;align-items:center;justify-content:center;flex-direction:column;padding:30px}

@@ -245,8 +245,9 @@ const server = http.createServer(async (req, res) => {
         if (used >= LIMIT) {
           return send(res, 200, JSON.stringify({ ok: false, full: true, left: 0, limit: LIMIT, count: bucket.counts[id] || 0 }), "application/json");
         }
+        const nowIso = new Date().toISOString();
         bucket.counts[id] = (bucket.counts[id] || 0) + 1;
-        bucket.log[dev] = (bucket.log[dev] || []).concat(id);
+        bucket.log[dev] = (bucket.log[dev] || []).concat({ id, ts: nowIso });
         writeV(o);
         const left = LIMIT - (bucket.log[dev] || []).length;
         return send(res, 200, JSON.stringify({ ok: true, count: bucket.counts[id], total: totalsOf(bucket), left, limit: LIMIT }), "application/json");

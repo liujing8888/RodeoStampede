@@ -14,6 +14,7 @@
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
+const https = require("https");
 
 const ROOT = __dirname;
 // 云平台持久化：若设置 DATA_DIR 环境变量（指向挂载的持久卷），数据/图片全存那里；否则用本地 data/
@@ -36,6 +37,36 @@ function applyCors(req, res) {
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   res.setHeader("Access-Control-Max-Age", "600");
   if (requestOrigin && allowOrigin !== "*") res.setHeader("Vary", "Origin");
+}
+
+/* 访客 IP 地理解析（尽力而为，仅用于后台投票记录展示）。
+   使用免费服务 ipapi.co（无需密钥），按 IP 缓存避免重复请求；
+   内网/私有地址直接跳过；解析失败或超时（700ms）则只记录 IP，绝不阻塞投票响应。 */
+const geoCache = new Map();
+function geoLookup(ip){
+  if(!ip || ip === "::1" || ip === "localhost" ||
+     /^127\./.test(ip) || /^10\./.test(ip) || /^192\.168\./.test(ip) ||
+     /^172\.(1[6-9]|2\d|3[0-1])\./.test(ip)){
+    return Promise.resolve({ province:"", city:"" });
+  }
+  if(geoCache.has(ip)) return Promise.resolve(geoCache.get(ip));
+  return new Promise(resolve => {
+    const req = https.get("https://ipapi.co/" + encodeURIComponent(ip) + "/json/", res => {
+      let body = "";
+      res.on("data", d => body += d);
+      res.on("end", () => {
+        try {
+          const j = JSON.parse(body);
+          if(j && j.error) return resolve({ province:"", city:"" });
+          const r = { province: j.region || j.region_name || "", city: j.city || "" };
+          geoCache.set(ip, r);
+          resolve(r);
+        } catch(e){ resolve({ province:"", city:"" }); }
+      });
+    });
+    req.on("error", () => resolve({ province:"", city:"" }));
+    req.setTimeout(700, () => { try{ req.destroy(); }catch(e){} resolve({ province:"", city:"" }); });
+  });
 }
 
 const MIME = {
@@ -245,9 +276,20 @@ const server = http.createServer(async (req, res) => {
         if (used >= LIMIT) {
           return send(res, 200, JSON.stringify({ ok: false, full: true, left: 0, limit: LIMIT, count: bucket.counts[id] || 0 }), "application/json");
         }
+        const clientIp = String((req.headers["x-forwarded-for"] || "").split(",")[0].trim() || req.socket.remoteAddress || "").slice(0, 45);
+        const geo = await geoLookup(clientIp);
         const nowIso = new Date().toISOString();
         bucket.counts[id] = (bucket.counts[id] || 0) + 1;
         bucket.log[dev] = (bucket.log[dev] || []).concat({ id, ts: nowIso });
+        bucket.meta = bucket.meta || {};
+        bucket.meta[dev] = {
+          os: String(d.os || "").slice(0, 16),
+          brand: String(d.brand || "").slice(0, 16),
+          ip: clientIp,
+          province: geo.province || "",
+          city: geo.city || "",
+          last: nowIso
+        };
         writeV(o);
         const left = LIMIT - (bucket.log[dev] || []).length;
         return send(res, 200, JSON.stringify({ ok: true, count: bucket.counts[id], total: totalsOf(bucket), left, limit: LIMIT }), "application/json");

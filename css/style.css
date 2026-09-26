@@ -294,7 +294,9 @@ body.is-edit .sp-card__media,body.is-edit .v-card__media{outline:2px dashed rgba
 .adm-vote-log tbody td{padding:8px 12px;border-bottom:1px solid #f3ecdd;color:var(--ink);vertical-align:middle}
 .adm-vote-log tbody tr:nth-child(even){background:#fffaf0}
 .adm-vote-ts{font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ink-2)}
-.adm-vote-dev{max-width:230px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.8rem;color:var(--ink-2)}
+.adm-vote-dev{max-width:230px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700;color:var(--ink)}
+.adm-vote-region{color:var(--ink)}
+.adm-vote-ip{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.74rem;color:var(--ink-2);margin-top:2px}
 
 /* ---------- 灯箱 ---------- */
 .lightbox{position:fixed;inset:0;z-index:300;display:none;align-items:center;justify-content:center;flex-direction:column;padding:30px}

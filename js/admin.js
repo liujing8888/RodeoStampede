@@ -400,11 +400,13 @@ async function loadVoteStats(pane){
     for(const k of ["fav","gift"]){
       const bucket = cats[k] || {};
       const devMap = bucket.log || {};
+      const meta = bucket.meta || {};
       for(const dev in devMap){
         const arr = Array.isArray(devMap[dev]) ? devMap[dev] : [];
+        const dm = meta[dev] || {};
         for(const raw of arr){
           const e = normVoteEntry(raw);
-          log.push({ month:m, cat:k, dev, id:e.id, ts:e.ts });
+          log.push({ month:m, cat:k, dev, id:e.id, ts:e.ts, os:dm.os||"", brand:dm.brand||"", ip:dm.ip||"", province:dm.province||"", city:dm.city||"" });
         }
       }
     }
@@ -419,10 +421,19 @@ async function loadVoteStats(pane){
   pane._voteLog = log;
   if(!log.length){ body.innerHTML = '<p class="adm-hint">暂无投票记录。</p>'; return; }
   const devSet = new Set(log.map(x => x.dev));
-  let h = '<div class="adm-vote-log-head">共 <b>' + log.length + '</b> 条投票操作 · <b>' + devSet.size + '</b> 个设备参与（设备ID为该玩家浏览器唯一标识）</div>';
-  h += '<div class="adm-vote-log-wrap"><table class="adm-vote-log"><thead><tr><th>时间</th><th>设备</th><th>类别</th><th>对象</th></tr></thead><tbody>';
+  let h = '<div class="adm-vote-log-head">共 <b>' + log.length + '</b> 条投票操作 · <b>' + devSet.size + '</b> 个设备（悬浮「设备」列可见浏览器唯一 ID）</div>';
+  h += '<div class="adm-vote-log-wrap"><table class="adm-vote-log"><thead><tr><th>时间</th><th>设备（品牌·系统）</th><th>地区 / IP</th><th>类别</th><th>对象</th></tr></thead><tbody>';
   for(const x of log){
-    h += '<tr><td class="adm-vote-ts">' + fmtTs(x.ts) + '</td><td class="adm-vote-dev" title="' + esc(x.dev) + '">' + esc(x.dev) + '</td><td>' + voteCatLabel(x.cat) + '</td><td>' + esc(voteNameById(x.id)) + '</td></tr>';
+    const devLabel = (x.brand || "未知") + " · " + (x.os || "未知");
+    const region = [x.province, x.city].filter(Boolean).join(" ") || (x.ip || "未知");
+    const ipSub = x.ip ? '<div class="adm-vote-ip">' + esc(x.ip) + '</div>' : "";
+    h += '<tr>'
+      + '<td class="adm-vote-ts">' + fmtTs(x.ts) + '</td>'
+      + '<td class="adm-vote-dev" title="设备ID: ' + esc(x.dev) + '">' + esc(devLabel) + '</td>'
+      + '<td class="adm-vote-region">' + esc(region) + ipSub + '</td>'
+      + '<td>' + voteCatLabel(x.cat) + '</td>'
+      + '<td>' + esc(voteNameById(x.id)) + '</td>'
+      + '</tr>';
   }
   h += '</tbody></table></div>';
   body.innerHTML = h;
@@ -431,7 +442,7 @@ async function loadVoteStats(pane){
 function exportVoteStats(pane){
   const log = pane._voteLog;
   if(!log || !log.length){ toast("暂无可导出的投票记录"); return; }
-  const out = log.map(x => ({ 时间:fmtTs(x.ts), 设备:x.dev, 类别:x.cat === "gift" ? "礼包" : "最喜爱", 对象:voteNameById(x.id), 动物ID:x.id, 月份:x.month }));
+  const out = log.map(x => ({ 时间:fmtTs(x.ts), 设备ID:x.dev, 品牌:x.brand, 系统:x.os, 地区:[x.province,x.city].filter(Boolean).join("")||"", IP:x.ip, 类别:x.cat === "gift" ? "礼包" : "最喜爱", 对象:voteNameById(x.id), 动物ID:x.id, 月份:x.month }));
   const blob = new Blob([JSON.stringify(out, null, 2)], { type:"application/json" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob); a.download = "fengkuang-zoo-votes-log.json"; a.click();
@@ -555,7 +566,7 @@ function buildAdminPanel(){
 
     <!-- 动物投票 · 记录 -->
     <div class="adm-pane is-hidden" data-pane="votes" id="admVotePane">
-      <p class="adm-hint">动物投票行为记录（谁 · 哪天）。展示每位玩家（设备ID）的每一次投票操作：时间、设备、类别（❤️ 最喜爱 / 🎁 礼包）、投给了哪个动物。按时间倒序排列，最新操作在最上方。</p>
+      <p class="adm-hint">动物投票行为记录（谁 · 哪天 · 哪台设备）。展示每次投票操作：时间、设备（品牌·系统，如 苹果·iOS / 华为·Android / Windows PC）、地区与 IP、类别（❤️ 最喜爱 / 🎁 礼包）、投给了哪个动物。按时间倒序，最新在最上方。地区/城市由访客 IP 经免费地理库尽力解析，解析不到时显示 IP。</p>
       <div class="adm-row">
         <button class="btn btn--ghost btn--sm" id="admVoteRefresh">刷新数据</button>
         <button class="btn btn--ghost btn--sm" id="admVoteExport">导出记录 JSON</button>

@@ -1098,6 +1098,27 @@ function getVoteDeviceId(){
   try { localStorage.setItem("zooDeviceId", id); } catch(e){}
   return id;
 }
+/* 前端识别访客系统 + 品牌（基于 userAgent，无需外部依赖），随投票上报，供后台展示 */
+function getDeviceInfo(){
+  const ua = navigator.userAgent || "";
+  const uaL = ua.toLowerCase();
+  let os = "其他", brand = "其他";
+  if(/windows nt/i.test(ua)){ os = "Windows"; brand = "PC"; }
+  else if(/iphone|ipad|ipod/i.test(ua)){ os = "iOS"; brand = "苹果"; }
+  else if(/mac os x|macintosh/i.test(ua)){ os = "macOS"; brand = "苹果"; }
+  else if(/android/i.test(uaL)){
+    os = "Android";
+    if(/huawei|honor/i.test(uaL)) brand = "华为";
+    else if(/xiaomi|mi\s|redmi|poco/i.test(uaL)) brand = "小米";
+    else if(/samsung|sm-/i.test(uaL)) brand = "三星";
+    else if(/oppo/i.test(uaL)) brand = "OPPO";
+    else if(/vivo/i.test(uaL)) brand = "vivo";
+    else if(/oneplus/i.test(uaL)) brand = "一加";
+    else brand = "安卓";
+  }
+  else if(/linux/i.test(uaL)){ os = "Linux"; brand = "PC"; }
+  return { os, brand };
+}
 function speciesNameById(id){
   for(const c of TAX){
     const subs = c.subs || [];
@@ -1200,8 +1221,9 @@ async function voteSpecies(id, cat){
   cat = (cat === "gift") ? "gift" : "fav";
   if(VOTE_LEFT[cat] <= 0){ toast("本月「" + (cat==="fav"?"最喜爱":"最希望礼包") + "」已投满 " + VOTE_LIMIT + " 票"); return; }
   const dev = getVoteDeviceId();
+  const di = getDeviceInfo();
   try{
-    const r = await zooApiFetch("/api/votes", { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ id, deviceId: dev, cat, month: VOTE_MONTH }) });
+    const r = await zooApiFetch("/api/votes", { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ id, deviceId: dev, cat, month: VOTE_MONTH, os: di.os, brand: di.brand }) });
     if(!r.ok){ if(VOTE_DEMO){ demoVote(id, cat); } return; }
     const d = await r.json();
     if(d.full){ toast("本月「" + (cat==="fav"?"最喜爱":"最希望礼包") + "」已投满 " + VOTE_LIMIT + " 票"); return; }

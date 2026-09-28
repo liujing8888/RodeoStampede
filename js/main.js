@@ -415,7 +415,11 @@ function openSpecies(cat, sub, sp){
             <span class="v-card__ph">${esc(sp.name)}</span>
             ${tools}
           </div>
-          <span class="v-rarity r-${v.rarity}">${RARITY_LABEL[v.rarity]}</span>
+          ${EDIT
+            ? `<span class="v-rarity r-${v.rarity}">${RARITY_LABEL[v.rarity]}</span>`
+            : (((v.attr && v.attr.trim()) && v.rarity === "common")
+                ? ""
+                : `<span class="v-rarity r-${v.rarity}">${RARITY_LABEL[v.rarity]}</span>`)}
           ${EDIT ? attrEditorHTML(v) : attrBadgeHTML(v)}
           ${nameEl}
         </div>`;

@@ -5647,7 +5647,13 @@
           {
             "id": "sp_fuqg0poz",
             "name": "超神狮子（订阅）",
-            "variants": []
+            "variants": [
+              {
+                "id": "va_mgbwoh1yedx",
+                "name": "超神狮子（订阅）",
+                "rarity": "legend"
+              }
+            ]
           }
         ]
       }

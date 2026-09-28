@@ -753,7 +753,7 @@
               {
                 "id": "va_izsdhote88py",
                 "name": "塔沃里特女神",
-                "rarity": "legend"
+                "rarity": "common"
               },
               {
                 "id": "va_6to1pnfz88q3",
@@ -833,7 +833,7 @@
               {
                 "id": "va_s82oomks88s7",
                 "name": "机械狂犀",
-                "rarity": "epic"
+                "rarity": "common"
               },
               {
                 "id": "va_7awyikhw88sb",
@@ -874,7 +874,7 @@
               {
                 "id": "va_h0ywf5fi88td",
                 "name": "梦露星星",
-                "rarity": "epic",
+                "rarity": "common",
                 "attr": "徽章/自选"
               },
               {
@@ -937,7 +937,7 @@
               {
                 "id": "va_okuqagut88va",
                 "name": "雷神",
-                "rarity": "legend"
+                "rarity": "common"
               },
               {
                 "id": "va_vvvlue4g",
@@ -995,7 +995,7 @@
               {
                 "id": "va_hce85pbt88xc",
                 "name": "魔神玛帕斯",
-                "rarity": "legend",
+                "rarity": "common",
                 "attr": "徽章/自选"
               },
               {
@@ -1390,7 +1390,7 @@
               {
                 "id": "va_53fs0n0d88gi",
                 "name": "烈焰狂牛",
-                "rarity": "rare",
+                "rarity": "common",
                 "attr": "濒危"
               },
               {
@@ -1445,7 +1445,7 @@
               {
                 "id": "va_v8jgbduu88i3",
                 "name": "占星牛",
-                "rarity": "epic",
+                "rarity": "common",
                 "attr": "濒危"
               },
               {
@@ -1461,7 +1461,7 @@
               {
                 "id": "va_0r6o0xju88ik",
                 "name": "爱神牦牛",
-                "rarity": "legend"
+                "rarity": "common"
               },
               {
                 "id": "va_rc7cbv9z88io",
@@ -1611,7 +1611,7 @@
               {
                 "id": "va_jrj8m4ij88mq",
                 "name": "暗影羊驼",
-                "rarity": "rare"
+                "rarity": "common"
               },
               {
                 "id": "va_58ab4elg88mv",
@@ -1622,7 +1622,7 @@
               {
                 "id": "va_4wg916pe88n0",
                 "name": "神兽羊驼",
-                "rarity": "legend"
+                "rarity": "common"
               },
               {
                 "id": "va_e0tzt2d688n5",
@@ -1664,7 +1664,7 @@
               {
                 "id": "va_xd55c6vn88o4",
                 "name": "帝王鹰",
-                "rarity": "legend",
+                "rarity": "common",
                 "attr": "濒危"
               },
               {
@@ -1982,7 +1982,7 @@
               {
                 "id": "va_vztn5nbn6o0h",
                 "name": "袋鼠战神",
-                "rarity": "legend"
+                "rarity": "common"
               },
               {
                 "id": "va_yl9sj1in6o0j",
@@ -2034,7 +2034,7 @@
               {
                 "id": "va_miyjyaav6o18",
                 "name": "外星怪驼",
-                "rarity": "epic"
+                "rarity": "common"
               },
               {
                 "id": "va_wtclyn7b6o1c",
@@ -2183,7 +2183,7 @@
               {
                 "id": "va_324otpkp880c",
                 "name": "神灯企鹅",
-                "rarity": "legend",
+                "rarity": "common",
                 "attr": "濒危"
               },
               {
@@ -2504,13 +2504,13 @@
               {
                 "id": "va_uv0rbr08889h",
                 "name": "明星狐",
-                "rarity": "epic",
+                "rarity": "common",
                 "attr": "濒危"
               },
               {
                 "id": "va_qls034ge889l",
                 "name": "机械狐",
-                "rarity": "epic",
+                "rarity": "common",
                 "attr": "隐藏"
               },
               {
@@ -2579,7 +2579,7 @@
               {
                 "id": "va_wnigjk4w88be",
                 "name": "星尘夜枭",
-                "rarity": "epic"
+                "rarity": "common"
               },
               {
                 "id": "va_pbcmyjse88bl",
@@ -2736,7 +2736,7 @@
               {
                 "id": "va_fajcuhefhqp",
                 "name": "稀有美味三角龙",
-                "rarity": "rare"
+                "rarity": "common"
               },
               {
                 "id": "va_lb2f3avchqp",
@@ -2939,7 +2939,7 @@
               {
                 "id": "va_p70c7yahhv5",
                 "name": "钻石剑龙",
-                "rarity": "rare"
+                "rarity": "common"
               },
               {
                 "id": "va_0t91rekrhv5",
@@ -5308,7 +5308,7 @@
               {
                 "id": "va_oytmpl2d",
                 "name": "冠军牛头人",
-                "rarity": "common"
+                "rarity": "rare"
               }
             ]
           },
@@ -5319,7 +5319,7 @@
               {
                 "id": "va_ryy3gomd",
                 "name": "古树袋鼠",
-                "rarity": "common"
+                "rarity": "rare"
               }
             ]
           },
@@ -5330,7 +5330,7 @@
               {
                 "id": "va_ssag3cfb",
                 "name": "火焰巨龙",
-                "rarity": "common"
+                "rarity": "rare"
               }
             ]
           },
@@ -5341,7 +5341,7 @@
               {
                 "id": "va_l8nev5ou",
                 "name": "熔岩马",
-                "rarity": "common"
+                "rarity": "rare"
               }
             ]
           },
@@ -5352,7 +5352,7 @@
               {
                 "id": "va_o0met37m",
                 "name": "神秘巨龙",
-                "rarity": "common"
+                "rarity": "rare"
               }
             ]
           },
@@ -5363,7 +5363,7 @@
               {
                 "id": "va_cj115ljo",
                 "name": "翠茵牛",
-                "rarity": "common"
+                "rarity": "rare"
               }
             ]
           },
@@ -5374,7 +5374,7 @@
               {
                 "id": "va_on9ipjf9",
                 "name": "西瓜仙鹤",
-                "rarity": "common"
+                "rarity": "rare"
               }
             ]
           },
@@ -5385,7 +5385,7 @@
               {
                 "id": "va_peuos10q",
                 "name": "雷电神鹿",
-                "rarity": "common"
+                "rarity": "rare"
               }
             ]
           },
@@ -5396,7 +5396,7 @@
               {
                 "id": "va_0sahs4ld",
                 "name": "鲜花鸵鸟",
-                "rarity": "common"
+                "rarity": "rare"
               }
             ]
           }
@@ -5440,7 +5440,7 @@
               {
                 "id": "va_x091v50oio",
                 "name": "仿生时光机",
-                "rarity": "rare"
+                "rarity": "epic"
               }
             ]
           },
@@ -5452,7 +5452,7 @@
               {
                 "id": "va_8uxfp40oix",
                 "name": "奥米加圣兽",
-                "rarity": "legend"
+                "rarity": "epic"
               }
             ]
           },
@@ -5464,7 +5464,7 @@
               {
                 "id": "va_r1jisp0oj5",
                 "name": "巴风特",
-                "rarity": "rare"
+                "rarity": "epic"
               }
             ]
           },
@@ -5476,7 +5476,7 @@
               {
                 "id": "va_c9vmwv0oje",
                 "name": "斯芬克斯",
-                "rarity": "rare"
+                "rarity": "epic"
               }
             ]
           },
@@ -5500,7 +5500,7 @@
               {
                 "id": "va_3b1j2q0ojv",
                 "name": "森林精灵王",
-                "rarity": "legend"
+                "rarity": "epic"
               }
             ]
           },
@@ -5512,7 +5512,7 @@
               {
                 "id": "va_3ixbmv0ok3",
                 "name": "破碎钻头",
-                "rarity": "rare"
+                "rarity": "epic"
               }
             ]
           },
@@ -5524,7 +5524,7 @@
               {
                 "id": "va_3xm3am0okc",
                 "name": "荧火之源",
-                "rarity": "rare"
+                "rarity": "epic"
               }
             ]
           },
@@ -5536,7 +5536,7 @@
               {
                 "id": "va_s695ga0ol7",
                 "name": "量子对撞机",
-                "rarity": "rare"
+                "rarity": "epic"
               }
             ]
           },
@@ -5568,7 +5568,7 @@
               {
                 "id": "va_ru0t6o0obr",
                 "name": "任务狂骡",
-                "rarity": "common"
+                "rarity": "legend"
               }
             ]
           },
@@ -5580,7 +5580,7 @@
               {
                 "id": "va_r98u8q0oh2",
                 "name": "复活渡鸦",
-                "rarity": "common"
+                "rarity": "legend"
               }
             ]
           },
@@ -5592,7 +5592,7 @@
               {
                 "id": "va_o82n4a0ohb",
                 "name": "幸运羔羊",
-                "rarity": "common"
+                "rarity": "legend"
               }
             ]
           },
@@ -5604,7 +5604,7 @@
               {
                 "id": "va_842km10ohi",
                 "name": "摇钱牛",
-                "rarity": "common"
+                "rarity": "legend"
               }
             ]
           },
@@ -5616,7 +5616,7 @@
               {
                 "id": "va_ax6bbo0ohp",
                 "name": "金鱼",
-                "rarity": "common"
+                "rarity": "legend"
               }
             ]
           },
@@ -5628,7 +5628,7 @@
               {
                 "id": "va_r28a6w0ogd",
                 "name": "优雅猫",
-                "rarity": "common"
+                "rarity": "legend"
               }
             ]
           },
@@ -5640,7 +5640,7 @@
               {
                 "id": "va_6o1ceu0ohx",
                 "name": "顽皮狗",
-                "rarity": "common"
+                "rarity": "legend"
               }
             ]
           },

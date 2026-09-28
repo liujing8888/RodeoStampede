@@ -11,7 +11,7 @@ const RARITY_LABEL = { common:"普通", rare:"稀有", epic:"史诗", legend:"�
 const ATTR_PRESETS = ["普通", "活动", "付费"];
 const ATTR_CLASS  = { "普通":"normal", "活动":"event", "付费":"pay" };
 const attrClass   = a => ATTR_CLASS[attrLabel(a)] || "custom";
-const attrLabel   = a => (a && a.trim()) ? a.trim() : "普通";
+const attrLabel   = a => (a && a.trim()) ? a.trim() : "";   // 空值返回空（不显示），不再默认"普通"
 const MODS = ["幼年","普通","黄金","白金","钻石","暗影","烈焰","冰霜","雷霆","疾风",
               "大地","星光","幻彩","机械","远古","守护","勇者","王者","传说","神话"];
 const RARITY_OF = i => (i < 2 ? "common" : i < 6 ? "rare" : i < 12 ? "epic" : "legend");

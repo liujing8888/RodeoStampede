@@ -546,6 +546,12 @@
         "id": "va_mc3dcgygu1o",
         "name": "鸵鸟钢琴家",
         "rarity": "common"
+       },
+       {
+        "id": "va_b622wf82iglh",
+        "name": "武侠鸵鸟",
+        "rarity": "common",
+        "attr": "徽章/自选"
        }
       ]
      },
@@ -621,6 +627,12 @@
         "id": "va_e0kavjdk",
         "name": "资本鹰",
         "rarity": "common"
+       },
+       {
+        "id": "va_xn1jhw90hets",
+        "name": "百万伏特鹰",
+        "rarity": "common",
+        "attr": "濒危"
        }
       ]
      },
@@ -995,6 +1007,12 @@
         "name": "魔神玛帕斯",
         "rarity": "legend",
         "attr": "徽章/自选"
+       },
+       {
+        "id": "va_c5krqwnkhuze",
+        "name": "急速肥猪",
+        "rarity": "common",
+        "attr": "Boss"
        }
       ]
      },
@@ -1276,6 +1294,12 @@
         "id": "va_fxpke3s888dp",
         "name": "野山羊",
         "rarity": "common"
+       },
+       {
+        "id": "va_rhkgdu79ktps",
+        "name": "双角兽（伪）",
+        "rarity": "common",
+        "attr": "Boss"
        }
       ]
      },
@@ -2051,6 +2075,12 @@
         "id": "va_tn063z4c6o3x",
         "name": "鲸鱼骆驼",
         "rarity": "common"
+       },
+       {
+        "id": "va_ya4mijfv65wg",
+        "name": "神秘骆驼",
+        "rarity": "common",
+        "attr": "濒危"
        }
       ]
      },
@@ -3457,6 +3487,12 @@
         "id": "va_c211lifkid7",
         "name": "龙尾蛇",
         "rarity": "common"
+       },
+       {
+        "id": "va_bltqy0fumh4c",
+        "name": "蛇女巫",
+        "rarity": "common",
+        "attr": "徽章"
        }
       ]
      },
@@ -4746,6 +4782,12 @@
         "id": "va_k2bo0tozjf9",
         "name": "甜橙海豚",
         "rarity": "common"
+       },
+       {
+        "id": "va_qp5wd0kywa7a",
+        "name": "急速海豚",
+        "rarity": "common",
+        "attr": "PVP"
        }
       ]
      },

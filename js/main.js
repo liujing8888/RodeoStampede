@@ -238,11 +238,6 @@ function renderSpecies(){
     const nameEl = (EDIT && !inBatch)
       ? `<input class="sp-card__name sp-card__name--edit" data-rename-sp="${sp.id}" value="${esc(sp.name)}">`
       : `<div class="sp-card__name">${esc(sp.name)}</div>`;
-    /* 物种卡属性汇总：非编辑模式下，若该物种下存在非「普通」属性的个体，列出这些属性（去重） */
-    const attrBadges = !EDIT ? (() => {
-      const set = [...new Set((sp.variants || []).map(v => attrLabel(v.attr)).filter(a => a && a !== "普通"))];
-      return set.length ? `<div class="sp-card__attrs">${set.map(a => `<span class="sp-card__attr a-${attrClass(a)}">${esc(a)}</span>`).join("")}</div>` : "";
-    })() : "";
     return `
     <div class="sp-card ${sel ? "is-sel" : ""}" data-sp="${sp.id}">
       <div class="sp-card__media" ${lightbox}>
@@ -251,7 +246,6 @@ function renderSpecies(){
         ${tools}
       </div>
       ${nameEl}
-      ${attrBadges}
       ${flat ? "" : `<span class="sp-card__count">${effInd(sp)} 种个体</span>`}
       ${!EDIT && flat ? `<div class="sp-votes">
         <button class="sp-vote sp-vote--fav" data-vote="${sp.id}" data-cat="fav" type="button">❤️ 喜爱<span class="sp-vote__n" data-votecount="fav:${sp.id}">0</span></button>

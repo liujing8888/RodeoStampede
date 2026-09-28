@@ -238,6 +238,11 @@ function renderSpecies(){
     const nameEl = (EDIT && !inBatch)
       ? `<input class="sp-card__name sp-card__name--edit" data-rename-sp="${sp.id}" value="${esc(sp.name)}">`
       : `<div class="sp-card__name">${esc(sp.name)}</div>`;
+    /* 物种卡属性汇总：非编辑模式下，若该物种下存在非「普通」属性的个体，列出这些属性（去重） */
+    const attrBadges = !EDIT ? (() => {
+      const set = [...new Set((sp.variants || []).map(v => attrLabel(v.attr)).filter(a => a !== "普通"))];
+      return set.length ? `<div class="sp-card__attrs">${set.map(a => `<span class="sp-card__attr a-${attrClass(a)}">${esc(a)}</span>`).join("")}</div>` : "";
+    })() : "";
     return `
     <div class="sp-card ${sel ? "is-sel" : ""}" data-sp="${sp.id}">
       <div class="sp-card__media" ${lightbox}>
@@ -246,6 +251,7 @@ function renderSpecies(){
         ${tools}
       </div>
       ${nameEl}
+      ${attrBadges}
       ${flat ? "" : `<span class="sp-card__count">${effInd(sp)} 种个体</span>`}
       ${!EDIT && flat ? `<div class="sp-votes">
         <button class="sp-vote sp-vote--fav" data-vote="${sp.id}" data-cat="fav" type="button">❤️ 喜爱<span class="sp-vote__n" data-votecount="fav:${sp.id}">0</span></button>
@@ -343,6 +349,16 @@ function renderBatchBar(){
   }
 }
 
+/* 个体「属性」标签：非编辑模式显示带底色标签；编辑模式显示下拉（普通/活动/付费/自定义）+ 自定义输入框 */
+function attrEditorHTML(v){
+  const cur = attrLabel(v.attr);
+  const isCustom = !ATTR_PRESETS.includes(cur);
+  const opts = ATTR_PRESETS.map(p => `<option value="${p}"${p === cur ? " selected" : ""}>${p}</option>`).join("")
+    + `<option value="__custom__"${isCustom ? " selected" : ""}>自定义…</option>`;
+  const input = isCustom ? `<input class="v-attr-input" data-attr-va="${v.id}" value="${esc(cur)}" placeholder="自定义属性">` : "";
+  return `<div class="v-attr-edit"><select class="v-attr-select" data-attr-va="${v.id}">${opts}</select>${input}</div>`;
+}
+
 function openSpecies(cat, sub, sp){
   const body = document.getElementById("speciesModalBody");
   const inVaBatch = EDIT && vaBatchMode;
@@ -350,7 +366,7 @@ function openSpecies(cat, sub, sp){
      对 flat 分类一律按"封面图"渲染个体卡，彻底避免空白；其余分类仍用"所有 variant 名==物种名"判定。 */
   const flat = cat.subs.length === 0;
   const ghostOnly = flat || sp.variants.every(v => v.name === sp.name);
-  const ghostCard = ghostOnly ? `<div class="v-card r-${(sp.variants[0] && sp.variants[0].rarity) || 'common'}" data-va="${(sp.variants[0] && sp.variants[0].id) || sp.id}"><div class="v-card__media" data-lightbox-slot="${spSlot(sp.id)}" data-lightbox-cap="${esc(sp.name)}"><img data-slot="${spSlot(sp.id)}" alt="${esc(sp.name)}"><span class="v-card__ph">${esc(sp.name)}</span>${EDIT && !inVaBatch ? `<div class="v-card__tools"><button class="up-btn up-btn--sm" data-upslot="${spSlot(sp.id)}">⬆</button>${sp.variants[0] ? `<button class="v-del" data-act="delVa" data-id="${sp.variants[0].id}">🗑</button>` : ''}</div>` : ''}</div><span class="v-rarity r-${(sp.variants[0] && sp.variants[0].rarity) || 'common'}">${RARITY_LABEL[(sp.variants[0] && sp.variants[0].rarity) || 'common'] || '普通'}</span><div class="v-name">${esc(sp.name)}</div></div>` : "";
+  const ghostCard = ghostOnly ? `<div class="v-card r-${(sp.variants[0] && sp.variants[0].rarity) || 'common'}" data-va="${(sp.variants[0] && sp.variants[0].id) || sp.id}"><div class="v-card__media" data-lightbox-slot="${spSlot(sp.id)}" data-lightbox-cap="${esc(sp.name)}"><img data-slot="${spSlot(sp.id)}" alt="${esc(sp.name)}"><span class="v-card__ph">${esc(sp.name)}</span>${EDIT && !inVaBatch ? `<div class="v-card__tools"><button class="up-btn up-btn--sm" data-upslot="${spSlot(sp.id)}">⬆</button>${sp.variants[0] ? `<button class="v-del" data-act="delVa" data-id="${sp.variants[0].id}">🗑</button>` : ''}</div>` : ''}</div><span class="v-rarity r-${(sp.variants[0] && sp.variants[0].rarity) || 'common'}">${RARITY_LABEL[(sp.variants[0] && sp.variants[0].rarity) || 'common'] || '普通'}</span><span class="v-attr a-${attrClass(sp.variants[0] && sp.variants[0].attr)}">${esc(attrLabel(sp.variants[0] && sp.variants[0].attr))}</span><div class="v-name">${esc(sp.name)}</div></div>` : "";
   body.innerHTML = `
     <div class="sp-head">
       <div class="sp-head__media" data-lightbox-slot="${spSlot(sp.id)}" data-lightbox-cap="${esc(sub.name)} · ${esc(sp.name)}">
@@ -399,6 +415,7 @@ function openSpecies(cat, sub, sp){
             ${tools}
           </div>
           <span class="v-rarity r-${v.rarity}">${RARITY_LABEL[v.rarity]}</span>
+          ${EDIT ? attrEditorHTML(v) : `<span class="v-attr a-${attrClass(v.attr)}">${esc(attrLabel(v.attr))}</span>`}
           ${nameEl}
         </div>`;
       }).join("")}
@@ -428,6 +445,30 @@ function openSpecies(cat, sub, sp){
   /* 各类增删 */
   body.querySelectorAll("[data-act]").forEach(b =>
     b.addEventListener("click", e => { e.stopPropagation(); codexAction(b.dataset.act, b.dataset.id); }));
+
+  /* 个体属性编辑（普通 / 活动 / 付费 / 自定义） */
+  body.querySelectorAll(".v-attr-select").forEach(sel => {
+    sel.addEventListener("change", () => {
+      const v = sp.variants.find(x => x.id === sel.dataset.attrVa);
+      if(!v) return;
+      const wrap = sel.closest(".v-attr-edit");
+      if(sel.value === "__custom__"){
+        v.attr = (wrap.querySelector(".v-attr-input") && wrap.querySelector(".v-attr-input").value) || "自定义";
+        if(!wrap.querySelector(".v-attr-input")){
+          const inp = document.createElement("input");
+          inp.className = "v-attr-input"; inp.dataset.attrVa = v.id; inp.placeholder = "自定义属性";
+          wrap.appendChild(inp); inp.focus();
+          inp.addEventListener("change", () => { v.attr = inp.value.trim() || "自定义"; saveTax(); });
+          inp.addEventListener("keydown", e => { if(e.key === "Enter"){ v.attr = inp.value.trim() || "自定义"; saveTax(); } });
+        }
+      } else {
+        v.attr = sel.value;
+        const inp = wrap.querySelector(".v-attr-input");
+        if(inp) inp.remove();
+        saveTax();
+      }
+    });
+  });
 
   /* 个体批量删除入口 */
   const vaToggle = body.querySelector("#vaBatchToggleBtn");

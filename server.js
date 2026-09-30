@@ -232,7 +232,7 @@ const server = http.createServer(async (req, res) => {
       return send(res, 405, "method not allowed");
     }
 
-    /* ---------- 动物投票（最喜爱 / 最希望礼包，按月归档） ---------- */
+    /* ---------- 动物投票（最喜爱 / 最希望返场动物，按月归档） ---------- */
     if (p === "/api/votes") {
       const VFile = path.join(DATA_DIR, "votes.json");
       const CATS = ["fav", "gift"];

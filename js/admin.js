@@ -56,7 +56,7 @@ const DEFAULTS = {
     email:"service@zoo.game", hours:"工作日 9:00 – 21:00"
   },
   vote: {
-    desc:"为你最喜爱的动物、最希望出现在礼包的动物投上一票。\n规则：每月每设备 ❤️ 与 🎁 各 10 票，同一动物可重复投。\n点开任意物种，在每个「动物卡片」下方点击 ❤️ / 🎁 即可。",
+    desc:"为你最喜爱的动物、最希望返场的动物投上一票。\n规则：每月每设备 ❤️ 与 🎁 各 10 票，同一动物可重复投。\n点开任意物种，在每个「动物卡片」下方点击 ❤️ / 🎁 即可。",
     hint:"榜单数据来自全站玩家投票，去 动物图鉴 点开物种、在「个体卡片」上点 ❤️ / 🎁 即可参与。"
   }
 };
@@ -367,7 +367,7 @@ function normVoteEntry(e){
   if(typeof e === "string") return { id:e, ts:null };
   return { id:(e && e.id) || "", ts:(e && e.ts) || null };
 }
-function voteCatLabel(k){ return k === "gift" ? "🎁 礼包" : "❤️ 最喜爱"; }
+function voteCatLabel(k){ return k === "gift" ? "🎁 返场动物" : "❤️ 最喜爱"; }
 function fmtTs(ts){
   if(!ts) return "未知时间";
   const d = new Date(ts);
@@ -441,7 +441,7 @@ async function loadVoteStats(pane){
 function exportVoteStats(pane){
   const log = pane._voteLog;
   if(!log || !log.length){ toast("暂无可导出的投票记录"); return; }
-  const out = log.map(x => ({ 时间:fmtTs(x.ts), 设备ID:x.dev, 品牌:x.brand, 系统:x.os, 地区:[x.province,x.city].filter(Boolean).join("")||"", IP:x.ip, 类别:x.cat === "gift" ? "礼包" : "最喜爱", 对象:voteNameById(x.id), 动物ID:x.id, 月份:x.month }));
+  const out = log.map(x => ({ 时间:fmtTs(x.ts), 设备ID:x.dev, 品牌:x.brand, 系统:x.os, 地区:[x.province,x.city].filter(Boolean).join("")||"", IP:x.ip, 类别:x.cat === "gift" ? "返场动物" : "最喜爱", 对象:voteNameById(x.id), 动物ID:x.id, 月份:x.month }));
   const blob = new Blob([JSON.stringify(out, null, 2)], { type:"application/json" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob); a.download = "fengkuang-zoo-votes-log.json"; a.click();
@@ -535,7 +535,7 @@ function buildAdminPanel(){
       <label class="adm-field"><span>邮箱</span><input id="admSvcMail" value="${esc(serv.email)}"></label>
       <label class="adm-field"><span>服务时间</span><input id="admSvcHours" value="${esc(serv.hours)}"></label>
       <h4>动物投票文案</h4>
-      <label class="adm-field"><span>投票页标题说明</span><textarea id="admVoteDesc" rows="3">${esc(S.vote && S.vote.desc != null ? S.vote.desc : "为你最喜爱的动物、最希望出现在礼包的动物投上一票。\n规则：每月每设备 ❤️ 与 🎁 各 10 票，同一动物可重复投。\n点开任意物种，在每个「动物卡片」下方点击 ❤️ / 🎁 即可。")}</textarea></label>
+      <label class="adm-field"><span>投票页标题说明</span><textarea id="admVoteDesc" rows="3">${esc(S.vote && S.vote.desc != null ? S.vote.desc : "为你最喜爱的动物、最希望返场的动物投上一票。\n规则：每月每设备 ❤️ 与 🎁 各 10 票，同一动物可重复投。\n点开任意物种，在每个「动物卡片」下方点击 ❤️ / 🎁 即可。")}</textarea></label>
       <label class="adm-field"><span>投票页底部提示（留空则不显示）</span><textarea id="admVoteHint" rows="2">${esc(S.vote && S.vote.hint != null ? S.vote.hint : "榜单数据来自全站玩家投票，去 动物图鉴 每张卡片上点 ❤️ / 🎁 即可参与。")}</textarea></label>
     </div>
 
@@ -565,7 +565,7 @@ function buildAdminPanel(){
 
     <!-- 动物投票 · 记录 -->
     <div class="adm-pane is-hidden" data-pane="votes" id="admVotePane">
-      <p class="adm-hint">动物投票行为记录（谁 · 哪天 · 哪台设备）。展示每次投票操作：时间、设备（品牌·系统，如 苹果·iOS / 华为·Android / Windows PC）、地区、类别（❤️ 最喜爱 / 🎁 礼包）、投给了哪个动物。按时间倒序，最新在最上方。地区/城市由访客 IP 经免费地理库尽力解析（如 Guangdong / Shenzhen），解析不到时显示 IP。</p>
+      <p class="adm-hint">动物投票行为记录（谁 · 哪天 · 哪台设备）。展示每次投票操作：时间、设备（品牌·系统，如 苹果·iOS / 华为·Android / Windows PC）、地区、类别（❤️ 最喜爱 / 🎁 返场动物）、投给了哪个动物。按时间倒序，最新在最上方。地区/城市由访客 IP 经免费地理库尽力解析（如 Guangdong / Shenzhen），解析不到时显示 IP。</p>
       <div class="adm-row">
         <button class="btn btn--ghost btn--sm" id="admVoteRefresh">刷新数据</button>
         <button class="btn btn--ghost btn--sm" id="admVoteExport">导出记录 JSON</button>

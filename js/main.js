@@ -249,7 +249,7 @@ function renderSpecies(){
       ${flat ? "" : `<span class="sp-card__count">${effInd(sp)} 种个体</span>`}
       ${!EDIT && flat ? `<div class="sp-votes">
         <button class="sp-vote sp-vote--fav" data-vote="${sp.id}" data-cat="fav" type="button">❤️ 喜爱<span class="sp-vote__n" data-votecount="fav:${sp.id}">0</span></button>
-        <button class="sp-vote sp-vote--gift" data-vote="${sp.id}" data-cat="gift" type="button">🎁 礼包<span class="sp-vote__n" data-votecount="gift:${sp.id}">0</span></button>
+        <button class="sp-vote sp-vote--gift" data-vote="${sp.id}" data-cat="gift" type="button">🎁 返场动物<span class="sp-vote__n" data-votecount="gift:${sp.id}">0</span></button>
       </div>` : ""}
     </div>`;
   }).join("") +
@@ -1270,14 +1270,14 @@ function showDemoBadge(){
 }
 async function voteSpecies(id, cat){
   cat = (cat === "gift") ? "gift" : "fav";
-  if(VOTE_LEFT[cat] <= 0){ toast("本月「" + (cat==="fav"?"最喜爱":"最希望礼包") + "」已投满 " + VOTE_LIMIT + " 票"); return; }
+  if(VOTE_LEFT[cat] <= 0){ toast("本月「" + (cat==="fav"?"最喜爱":"最希望返场动物") + "」已投满 " + VOTE_LIMIT + " 票"); return; }
   const dev = getVoteDeviceId();
   const di = getDeviceInfo();
   try{
     const r = await zooApiFetch("/api/votes", { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ id, deviceId: dev, cat, month: VOTE_MONTH, os: di.os, brand: di.brand }) });
     if(!r.ok){ if(VOTE_DEMO){ demoVote(id, cat); } return; }
     const d = await r.json();
-    if(d.full){ toast("本月「" + (cat==="fav"?"最喜爱":"最希望礼包") + "」已投满 " + VOTE_LIMIT + " 票"); return; }
+    if(d.full){ toast("本月「" + (cat==="fav"?"最喜爱":"最希望返场动物") + "」已投满 " + VOTE_LIMIT + " 票"); return; }
     if(d.ok){
       const cats = VOTE_CATS_BY_MONTH[VOTE_MONTH] || (VOTE_CATS_BY_MONTH[VOTE_MONTH] = { fav:{counts:{}}, gift:{counts:{}} });
       if(!cats[cat].counts) cats[cat].counts = {};
